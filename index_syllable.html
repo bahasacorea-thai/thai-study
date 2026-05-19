@@ -701,6 +701,60 @@
         size: A4 portrait;
         margin: 12mm;
       }
+
+      @media (max-width: 768px) {
+        body {
+          overflow-x: hidden;
+        }
+
+        .card {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center;
+          height: auto !important;
+          padding: 16px;
+          gap: 20px;
+        }
+
+        .card > div {
+          width: 100% !important;
+          max-width: 100% !important;
+          text-align: center;
+        }
+
+        .symbolBox {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 72px !important;
+        }
+
+        .infoBox {
+          font-size: 20px !important;
+          line-height: 1.8;
+          text-align: center;
+        }
+
+        .modeButtons,
+        .typeButtons {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 8px;
+        }
+
+        button {
+          min-width: 90px;
+          font-size: 16px;
+        }
+
+        .bottomButtons {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+      }
     </style>
   </head>
 
