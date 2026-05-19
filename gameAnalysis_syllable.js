@@ -81,7 +81,7 @@ function makeWrongPairText(pair) {
 
   if (!q || !a) return "";
 
-  return `${q.symbol} (${q.koreanName} ${q.koreanExample}, ${q.rtgsName}) → ${a.symbol} (${a.koreanName} ${a.koreanExample}, ${a.rtgsName}) : ${pair.count}회`;
+  return `${getDisplaySyllable(q)} (${q.korean}, ${q.rtgs}, ${q.ipa}) → ${getDisplaySyllable(a)} (${a.korean}, ${a.rtgs}, ${a.ipa}) : ${pair.count}회`;
 }
 
 function makeStudyStrategy(accuracyInfo, wrongPairs) {
@@ -211,7 +211,7 @@ function makeDiagnosisText(results) {
         label = "일시적 혼동";
       }
 
-      lines.push(`- ${item.symbol}: ${count}회 반복 오답 → ${label}`);
+      lines.push(`- ${getDisplaySyllable(item)} (${item.korean}, ${item.rtgs}, ${item.ipa}): ${count}회 반복 오답 → ${label}`);
     });
   }
 
@@ -260,11 +260,11 @@ function makeStrategyText(results) {
     if (!item) return;
 
     if (count === 2) {
-      weakItems.push(item.symbol);
+      weakItems.push(getDisplaySyllable(item));
     }
 
     if (count >= 3) {
-      coreItems.push(item.symbol);
+      coreItems.push(getDisplaySyllable(item));
     }
   });
 
