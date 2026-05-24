@@ -824,21 +824,18 @@ function quizPromptBlock(item) {
 
 function showQuizAnswer(chosen) {
   document.getElementById("quizInfo").innerHTML = `
-    <div>${chosen.thaiName || ""}</div>
-    <div>${chosen.koreanName || ""}</div>
-    <div>${chosen.rtgsName || ""}</div>
+    <div class="quizAnswerWrap">
+      <div>${chosen.thaiName || ""}</div>
+      <div>${chosen.koreanName || ""}</div>
+      <div>${chosen.rtgsName || ""}</div>
 
-    <div style="
-      width:100%;
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap:8px;
-      margin-top:18px;
-      align-items:center;
-    ">
-      <button id="prevQuizBtn">이전</button>
-      <div></div>
-      <button id="nextQuizBtn">다음</button>
+      <button id="prevQuizBtn" class="quizNavBtn">
+        이전
+      </button>
+
+      <button id="nextQuizBtn" class="quizNavBtn">
+        다음
+      </button>
     </div>
   `;
 
