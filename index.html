@@ -162,25 +162,51 @@
         white-space: pre-wrap;
         overflow-wrap: anywhere;
       }
-      .infoPanel,
-      .extraPanel,
-      .promptPanel,
-      .feedbackPanel {
+      .infoPanel {
         flex-direction: column;
         gap: 6px;
-        font-size: clamp(36px, 10vw, 56px);
+        font-size: clamp(20px, 6vw, 30px);
         font-weight: 800;
         line-height: 1.25;
         overflow-wrap: anywhere;
         word-break: keep-all;
       }
+
+      .extraPanel {
+        flex-direction: column;
+        gap: 6px;
+        font-size: clamp(24px, 6.7vw, 37px);
+        font-weight: 800;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+        word-break: keep-all;
+      }
+      .promptPanel {
+        flex-direction: column;
+        gap: 6px;
+        font-size: clamp(36px, 9vw, 54px);
+        font-weight: 800;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+        word-break: keep-all;
+      }
+
+      .feedbackPanel {
+        flex-direction: column;
+        gap: 6px;
+        font-size: clamp(36px, 9vw, 54px);
+        font-weight: 800;
+        line-height: 1.15;
+        overflow-wrap: anywhere;
+        word-break: keep-all;
+      }
       .extraPanel img {
         max-width: 100%;
-        max-height: calc(100% - 36px);
+        max-height: 100%;
         object-fit: contain;
       }
       .hint {
-        font-size: clamp(26px, 7.2vw, 34px);
+        font-size: clamp(16px, 5vw, 24px);
         font-weight: 700;
         color: #444;
         line-height: 1.35;
@@ -204,7 +230,7 @@
         min-height: 0;
         padding: 0 4px;
         font-family: "Noto Sans Thai", Tahoma, "Leelawadee UI", sans-serif;
-        font-size: clamp(48px, 16vw, 80px);
+        font-size: clamp(24px, 8vw, 40px);
         line-height: 1;
         display: flex;
         align-items: center;
@@ -267,12 +293,12 @@
       }
 
       .stimulusWrap {
-        font-size: 28px;
-        margin-bottom: 16px;
+        font-size: 24px;
+        margin-bottom: 4px;
       }
       .responseWrap {
-        font-size: 28px;
-        margin-top: 16px;
+        font-size: 24px;
+        margin-top: 4px;
       }
 
       #resultCanvas {
