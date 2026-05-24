@@ -77,7 +77,7 @@ function getCurrentItems() {
 function imagePath(path) {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  if (path.startsWith("assets/")) return "../" + path;
+  if (path.startsWith("assets/")) return path;
   return path;
 }
 
