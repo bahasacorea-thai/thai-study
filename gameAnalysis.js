@@ -56,19 +56,23 @@ function getWrongPairs(results) {
 }
 
 function makeLevelComment(accuracy) {
-  if (accuracy >= 95) {
+  if (accuracy === 100) {
+    return "축하합니다. 완벽합니다. 2차례 더 100%가 나오면 다음 단계로 넘어가십시오.";
+  }
+
+  if (accuracy >= 95 && accuracy < 100) {
     return "거의 숙달 단계입니다. 전체 반복보다 틀린 문자쌍만 집중 복습하는 것이 효율적입니다.";
   }
 
-  if (accuracy >= 85) {
+  if (accuracy >= 85 && accuracy < 95) {
     return "안정적인 구별 능력이 형성되고 있습니다. 반복 중 나타나는 특정 혼동 문자쌍을 따로 묶어 복습하면 좋습니다.";
   }
 
-  if (accuracy >= 70) {
+  if (accuracy >= 70 && accuracy < 85) {
     return "기본 구별은 가능하지만 아직 혼동이 남아 있습니다. 그림보다 문자 모양과 이름을 함께 확인하는 연습이 필요합니다.";
   }
 
-  if (accuracy >= 50) {
+  if (accuracy >= 50 && accuracy < 70) {
     return "아직 문자 구별이 충분히 안정되지 않았습니다. 학습 모드로 돌아가 글자 이름과 대표 단어를 먼저 반복하는 것이 좋습니다.";
   }
 
@@ -81,7 +85,7 @@ function makeWrongPairText(pair) {
 
   if (!q || !a) return "";
 
-  return `${q.symbol} (${q.koreanName} ${q.koreanExample}, ${q.rtgsName}) → ${a.symbol} (${a.koreanName} ${a.koreanExample}, ${a.rtgsName}) : ${pair.count}회`;
+  return `${q.symbol} (${q.koreanName}, ${q.rtgsName}) → ${a.symbol} (${a.koreanName}, ${a.rtgsName}) : ${pair.count}회`;
 }
 
 function makeStudyStrategy(accuracyInfo, wrongPairs) {
@@ -97,7 +101,7 @@ function makeStudyStrategy(accuracyInfo, wrongPairs) {
 
   if (wrongPairs.length <= 3) {
     strategies.push("오답이 특정 문자쌍에 제한되어 있습니다.");
-    strategies.push("전체 44자를 다시 반복하기보다 아래 혼동 문자쌍만 집중 복습하십시오.");
+    strategies.push("전체를 다시 반복하기보다 아래 혼동 문자쌍만 집중 복습하십시오.");
   } else {
     strategies.push("오답이 여러 문자에 분산되어 있습니다.");
     strategies.push("학습 모드에서 전체 문자를 한 번 훑은 뒤 다시 게임을 실행하는 것이 좋습니다.");
@@ -157,7 +161,7 @@ function makeDiagnosisText(results) {
 
   const lines = [];
 
-  lines.push("진단과 분석");
+  lines.push("[진단과 분석]");
   lines.push("");
   lines.push(`정답률: ${accuracyInfo.accuracy.toFixed(2)}%`);
   lines.push(`정답: ${accuracyInfo.correct} / ${accuracyInfo.total}`);
@@ -225,7 +229,7 @@ function makeStrategyText(results) {
 
   const lines = [];
 
-  lines.push("대책과 전략");
+  lines.push("[대책과 전략]");
 
   lines.push("");
 
@@ -233,7 +237,7 @@ function makeStrategyText(results) {
   if (wrongPairs.length === 0) {
     lines.push("- 오답이 없습니다.");
 
-    lines.push("- 현재 단계에서는 다음 문자 범주나 모음 학습으로 넘어가도 좋습니다.");
+    lines.push("- 현재 단계에서는 다음 문자 범주로 넘어가도 좋습니다.");
 
     return lines.join("\n");
   }
@@ -281,10 +285,12 @@ function makeStrategyText(results) {
     lines.push("- 퀴즈 모드에서 추가 노출을 권장합니다.");
   }
 
-  if (accuracyInfo.accuracy >= 95) {
+  if (accuracyInfo.accuracy === 100) {
+    lines.push("- 2차례 더 100%가 나오면 다음 단계로 넘어가십시오.");
+  } else if (accuracyInfo.accuracy >= 95 && accuracyInfo.accuracy < 100) {
     lines.push("- 현재 수준이면 다음 단계 진입을 고려할 수 있습니다.");
-  } else if (accuracyInfo.accuracy >= 85) {
-    lines.push("- 고급 게임 1회 추가 후 다음 단계 진입을 권장합니다.");
+  } else if (accuracyInfo.accuracy >= 85 && accuracyInfo.accuracy < 95) {
+    lines.push("- 조금 더 노력하면 이번 단계를 넘어갈 수 있습니다.");
   } else {
     lines.push("- 학습 모드 복습 후 게임을 다시 실행하는 것이 좋습니다.");
   }

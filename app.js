@@ -1,1810 +1,604 @@
-const ITEMS = [
-  {
-    index: 1,
-    collation: 1,
-    koreanName: "꼬",
-    koreanExample: "까이",
-    symbol: "ก",
-    thaiName: "ก ไก่",
-    nameProper: "Ko Kai",
-    rtgsName: "ko kai",
-    meaning: "chicken",
-    korean: "꼬 까이",
-    image: "assets/1.png",
-  },
-  {
-    index: 2,
-    collation: 2,
-    koreanName: "코",
-    koreanExample: "카이",
-    symbol: "ข",
-    thaiName: "ข ไข่",
-    nameProper: "Kho Khai",
-    rtgsName: "kho khai",
-    meaning: "egg",
-    korean: "코 카이",
-    image: "assets/2.png",
-  },
-  {
-    index: 3,
-    collation: 3,
-    koreanName: "코",
-    koreanExample: "쿠앗",
-    symbol: "ฃ",
-    thaiName: "ฃ ขวด",
-    nameProper: "Kho Khuat",
-    rtgsName: "kho khuat",
-    meaning: "bottle",
-    korean: "코 쿠앗",
-    image: "assets/3.png",
-  },
-  {
-    index: 4,
-    collation: 4,
-    koreanName: "코",
-    koreanExample: "콰이",
-    symbol: "ค",
-    thaiName: "ค ควาย",
-    nameProper: "Kho Khwai",
-    rtgsName: "kho khwai",
-    meaning: "buffalo",
-    korean: "코 콰이",
-    image: "assets/4.png",
-  },
-  {
-    index: 5,
-    collation: 5,
-    koreanName: "코",
-    koreanExample: "콘",
-    symbol: "ฅ",
-    thaiName: "ฅ คน",
-    nameProper: "Kho Khon",
-    rtgsName: "kho khon",
-    meaning: "person",
-    korean: "코 콘",
-    image: "assets/5.png",
-  },
-  {
-    index: 6,
-    collation: 6,
-    koreanName: "코",
-    koreanExample: "라캉",
-    symbol: "ฆ",
-    thaiName: "ฆ ระฆัง",
-    nameProper: "Kho Rakhang",
-    rtgsName: "kho rakhang",
-    meaning: "bell",
-    korean: "코 라캉",
-    image: "assets/6.png",
-  },
-  {
-    index: 7,
-    collation: 7,
-    koreanName: "응오",
-    koreanExample: "응우",
-    symbol: "ง",
-    thaiName: "ง งู",
-    nameProper: "Ngo Ngu",
-    rtgsName: "ngo ngu",
-    meaning: "snake",
-    korean: "응오 응우",
-    image: "assets/7.png",
-  },
-  {
-    index: 8,
-    collation: 8,
-    koreanName: "쪼",
-    koreanExample: "짠",
-    symbol: "จ",
-    thaiName: "จ จาน",
-    nameProper: "Cho Chan",
-    rtgsName: "cho chan",
-    meaning: "plate",
-    korean: "쪼 짠",
-    image: "assets/8.png",
-  },
-  {
-    index: 9,
-    collation: 9,
-    koreanName: "초",
-    koreanExample: "칭",
-    symbol: "ฉ",
-    thaiName: "ฉ ฉิ่ง",
-    nameProper: "Cho Ching",
-    rtgsName: "cho ching",
-    meaning: "cymbals",
-    korean: "초 칭",
-    image: "assets/9.png",
-  },
-  {
-    index: 10,
-    collation: 10,
-    koreanName: "초",
-    koreanExample: "창",
-    symbol: "ช",
-    thaiName: "ช ช้าง",
-    nameProper: "Cho Chang",
-    rtgsName: "cho chang",
-    meaning: "elephant",
-    korean: "초 창",
-    image: "assets/10.png",
-  },
-  {
-    index: 11,
-    collation: 11,
-    koreanName: "쏘",
-    koreanExample: "쏘",
-    symbol: "ซ",
-    thaiName: "ซ โซ่",
-    nameProper: "So So",
-    rtgsName: "so so",
-    meaning: "chain",
-    korean: "쏘 쏘",
-    image: "assets/11.png",
-  },
-  {
-    index: 12,
-    collation: 12,
-    koreanName: "초",
-    koreanExample: "츠",
-    symbol: "ฌ",
-    thaiName: "ฌ เฌอ",
-    nameProper: "Cho Choe",
-    rtgsName: "cho choe",
-    meaning: "tree",
-    korean: "초 츠",
-    image: "assets/12.png",
-  },
-  {
-    index: 13,
-    collation: 13,
-    koreanName: "요",
-    koreanExample: "잉",
-    symbol: "ญ",
-    thaiName: "ญ หญิง",
-    nameProper: "Yo Ying",
-    rtgsName: "yo ying",
-    meaning: "woman",
-    korean: "요 잉",
-    image: "assets/13.png",
-  },
-  {
-    index: 14,
-    collation: 14,
-    koreanName: "도",
-    koreanExample: "차다",
-    symbol: "ฎ",
-    thaiName: "ฎ ชฎา",
-    nameProper: "Do Chada",
-    rtgsName: "do chada",
-    meaning: "headdress",
-    korean: "도 차다",
-    image: "assets/14.png",
-  },
-  {
-    index: 15,
-    collation: 15,
-    koreanName: "또",
-    koreanExample: "빠딱",
-    symbol: "ฏ",
-    thaiName: "ฏ ปฏัก",
-    nameProper: "To Patak",
-    rtgsName: "to patak",
-    meaning: "goad, javelin",
-    korean: "또 빠딱",
-    image: "assets/15.png",
-  },
-  {
-    index: 16,
-    collation: 16,
-    koreanName: "토",
-    koreanExample: "탄",
-    symbol: "ฐ",
-    thaiName: "ฐ ฐาน",
-    nameProper: "Tho Than",
-    rtgsName: "tho than",
-    meaning: "pedestal",
-    korean: "토 탄",
-    image: "assets/16.png",
-  },
-  {
-    index: 17,
-    collation: 17,
-    koreanName: "토",
-    koreanExample: "몬토",
-    symbol: "ฑ",
-    thaiName: "ฑ มณโฑ",
-    nameProper: "Tho Montho",
-    rtgsName: "tho montho",
-    meaning: "Montho",
-    korean: "토 몬토",
-    image: "assets/17.png",
-  },
-  {
-    index: 18,
-    collation: 18,
-    koreanName: "토",
-    koreanExample: "푸타우",
-    symbol: "ฒ",
-    thaiName: "ฒ ผู้เฒ่า",
-    nameProper: "Tho Phuthao",
-    rtgsName: "tho phuthao",
-    meaning: "elder",
-    korean: "토 푸타우",
-    image: "assets/18.png",
-  },
-  {
-    index: 19,
-    collation: 19,
-    koreanName: "노",
-    koreanExample: "넨",
-    symbol: "ณ",
-    thaiName: "ณ เณร",
-    nameProper: "No Nen",
-    rtgsName: "no nen",
-    meaning: "samanera",
-    korean: "노 넨",
-    image: "assets/19.png",
-  },
-  {
-    index: 20,
-    collation: 20,
-    koreanName: "도",
-    koreanExample: "덱",
-    symbol: "ด",
-    thaiName: "ด เด็ก",
-    nameProper: "Do Dek",
-    rtgsName: "do dek",
-    meaning: "child",
-    korean: "도 덱",
-    image: "assets/20.png",
-  },
-  {
-    index: 21,
-    collation: 21,
-    koreanName: "또",
-    koreanExample: "따우",
-    symbol: "ต",
-    thaiName: "ต เต่า",
-    nameProper: "To Tao",
-    rtgsName: "to tao",
-    meaning: "turtle",
-    korean: "또 따우",
-    image: "assets/21.png",
-  },
-  {
-    index: 22,
-    collation: 22,
-    koreanName: "토",
-    koreanExample: "퉁",
-    symbol: "ถ",
-    thaiName: "ถ ถุง",
-    nameProper: "Tho Thung",
-    rtgsName: "tho thung",
-    meaning: "sack",
-    korean: "토 퉁",
-    image: "assets/22.png",
-  },
-  {
-    index: 23,
-    collation: 23,
-    koreanName: "토",
-    koreanExample: "타한",
-    symbol: "ท",
-    thaiName: "ท ทหาร",
-    nameProper: "Tho Thahan",
-    rtgsName: "tho thahan",
-    meaning: "soldier",
-    korean: "토 타한",
-    image: "assets/23.png",
-  },
-  {
-    index: 24,
-    collation: 24,
-    koreanName: "토",
-    koreanExample: "통",
-    symbol: "ธ",
-    thaiName: "ธ ธง",
-    nameProper: "Tho Thong",
-    rtgsName: "tho thong",
-    meaning: "flag",
-    korean: "토 통",
-    image: "assets/24.png",
-  },
-  {
-    index: 25,
-    collation: 25,
-    koreanName: "노",
-    koreanExample: "누",
-    symbol: "น",
-    thaiName: "น หนู",
-    nameProper: "No Nu",
-    rtgsName: "no nu",
-    meaning: "mouse",
-    korean: "노 누",
-    image: "assets/25.png",
-  },
-  {
-    index: 26,
-    collation: 26,
-    koreanName: "보",
-    koreanExample: "바이마이",
-    symbol: "บ",
-    thaiName: "บ ใบไม้",
-    nameProper: "Bo Baimai",
-    rtgsName: "bo baimai",
-    meaning: "leaf",
-    korean: "보 바이마이",
-    image: "assets/26.png",
-  },
-  {
-    index: 27,
-    collation: 27,
-    koreanName: "뽀",
-    koreanExample: "쁠라",
-    symbol: "ป",
-    thaiName: "ป ปลา",
-    nameProper: "Po Pla",
-    rtgsName: "po pla",
-    meaning: "fish",
-    korean: "뽀 쁠라",
-    image: "assets/27.png",
-  },
-  {
-    index: 28,
-    collation: 28,
-    koreanName: "포",
-    koreanExample: "픙",
-    symbol: "ผ",
-    thaiName: "ผ ผึ้ง",
-    nameProper: "Pho Phueng",
-    rtgsName: "pho phueng",
-    meaning: "bee",
-    korean: "포 픙",
-    image: "assets/28.png",
-  },
-  {
-    index: 29,
-    collation: 29,
-    koreanName: "포",
-    koreanExample: "파",
-    symbol: "ฝ",
-    thaiName: "ฝ ฝา",
-    nameProper: "Fo Fa",
-    rtgsName: "fo fa",
-    meaning: "lid",
-    korean: "포 파",
-    image: "assets/29.png",
-  },
-  {
-    index: 30,
-    collation: 30,
-    koreanName: "포",
-    koreanExample: "판",
-    symbol: "พ",
-    thaiName: "พ พาน",
-    nameProper: "Pho Phan",
-    rtgsName: "pho phan",
-    meaning: "phan",
-    korean: "포 판",
-    image: "assets/30.png",
-  },
-  {
-    index: 31,
-    collation: 31,
-    koreanName: "포",
-    koreanExample: "판",
-    symbol: "ฟ",
-    thaiName: "ฟ ฟัน",
-    nameProper: "Fo Fan",
-    rtgsName: "fo fan",
-    meaning: "teeth",
-    korean: "포 판",
-    image: "assets/31.png",
-  },
-  {
-    index: 32,
-    collation: 32,
-    koreanName: "포",
-    koreanExample: "쌈파우",
-    symbol: "ภ",
-    thaiName: "ภ สำเภา",
-    nameProper: "Pho Samphao",
-    rtgsName: "pho samphao",
-    meaning: "Junk",
-    korean: "포 쌈파우",
-    image: "assets/32.png",
-  },
-  {
-    index: 33,
-    collation: 33,
-    koreanName: "모",
-    koreanExample: "마",
-    symbol: "ม",
-    thaiName: "ม ม้า",
-    nameProper: "Mo Ma",
-    rtgsName: "mo ma",
-    meaning: "horse",
-    korean: "모 마",
-    image: "assets/33.png",
-  },
-  {
-    index: 34,
-    collation: 34,
-    koreanName: "요",
-    koreanExample: "약",
-    symbol: "ย",
-    thaiName: "ย ยักษ์",
-    nameProper: "Yo Yak",
-    rtgsName: "yo yak",
-    meaning: "giant, yaksha",
-    korean: "요 약",
-    image: "assets/34.png",
-  },
-  {
-    index: 35,
-    collation: 35,
-    koreanName: "로",
-    koreanExample: "르아",
-    symbol: "ร",
-    thaiName: "ร เรือ",
-    nameProper: "Ro Ruea",
-    rtgsName: "ro ruea",
-    meaning: "boat",
-    korean: "로 르아",
-    image: "assets/35.png",
-  },
-  {
-    index: 36,
-    collation: 36,
-    koreanName: "로",
-    koreanExample: "링",
-    symbol: "ล",
-    thaiName: "ล ลิง",
-    nameProper: "Lo Ling",
-    rtgsName: "lo ling",
-    meaning: "monkey",
-    korean: "로 링",
-    image: "assets/36.png",
-  },
-  {
-    index: 37,
-    collation: 37,
-    koreanName: "워",
-    koreanExample: "왠",
-    symbol: "ว",
-    thaiName: "ว แหวน",
-    nameProper: "Wo Waen",
-    rtgsName: "wo waen",
-    meaning: "ring",
-    korean: "워 왠",
-    image: "assets/37.png",
-  },
-  {
-    index: 38,
-    collation: 38,
-    koreanName: "쏘",
-    koreanExample: "쌀라",
-    symbol: "ศ",
-    thaiName: "ศ ศาลา",
-    nameProper: "So Sala",
-    rtgsName: "so sala",
-    meaning: "pavilion, sala",
-    korean: "쏘 쌀라",
-    image: "assets/38.png",
-  },
-  {
-    index: 39,
-    collation: 39,
-    koreanName: "쏘",
-    koreanExample: "르씨",
-    symbol: "ษ",
-    thaiName: "ษ ฤๅษี",
-    nameProper: "So Ruesi",
-    rtgsName: "so ruesi",
-    meaning: "hermit",
-    korean: "쏘 르씨",
-    image: "assets/39.png",
-  },
-  {
-    index: 40,
-    collation: 40,
-    koreanName: "쏘",
-    koreanExample: "쓰아",
-    symbol: "ส",
-    thaiName: "ส เสือ",
-    nameProper: "So Suea",
-    rtgsName: "so suea",
-    meaning: "tiger",
-    korean: "쏘 쓰아",
-    image: "assets/40.png",
-  },
-  {
-    index: 41,
-    collation: 41,
-    koreanName: "호",
-    koreanExample: "힙",
-    symbol: "ห",
-    thaiName: "ห หีบ",
-    nameProper: "Ho Hip",
-    rtgsName: "ho hip",
-    meaning: "chest, box",
-    korean: "호 힙",
-    image: "assets/41.png",
-  },
-  {
-    index: 42,
-    collation: 42,
-    koreanName: "로",
-    koreanExample: "쭐라",
-    symbol: "ฬ",
-    thaiName: "ฬ จุฬา",
-    nameProper: "Lo Chula",
-    rtgsName: "lo chula",
-    meaning: "kite",
-    korean: "로 쭐라",
-    image: "assets/42.png",
-  },
-  {
-    index: 43,
-    collation: 43,
-    koreanName: "오",
-    koreanExample: "앙",
-    symbol: "อ",
-    thaiName: "อ อ่าง",
-    nameProper: "O Ang",
-    rtgsName: "o ang",
-    meaning: "basin",
-    korean: "오 앙",
-    image: "assets/43.png",
-  },
-  {
-    index: 44,
-    collation: 44,
-    koreanName: "호",
-    koreanExample: "녹훅",
-    symbol: "ฮ",
-    thaiName: "ฮ นกฮูก",
-    nameProper: "Ho Nokhuk",
-    rtgsName: "ho nokhuk",
-    meaning: "owl",
-    korean: "호 녹훅",
-    image: "assets/44.png",
-  },
-];
-
-const NUMBER_ITEMS = [
-  {
-    index: 1,
-    collation: 1,
-    koreanName: "쑨",
-    koreanExample: "",
-    symbol: "๐",
-    thaiName: "ศูนย์",
-    nameProper: "Sun",
-    rtgsName: "sun",
-    meaning: "0",
-    korean: "쑨",
-    image: "",
-  },
-  {
-    index: 2,
-    collation: 2,
-    koreanName: "능",
-    koreanExample: "",
-    symbol: "๑",
-    thaiName: "หนึ่ง",
-    nameProper: "Nueng",
-    rtgsName: "nueng",
-    meaning: "1",
-    korean: "능",
-    image: "",
-  },
-  {
-    index: 3,
-    collation: 3,
-    koreanName: "쏭",
-    koreanExample: "",
-    symbol: "๒",
-    thaiName: "สอง",
-    nameProper: "Song",
-    rtgsName: "song",
-    meaning: "2",
-    korean: "쏭",
-    image: "",
-  },
-  {
-    index: 4,
-    collation: 4,
-    koreanName: "쌈",
-    koreanExample: "",
-    symbol: "๓",
-    thaiName: "สาม",
-    nameProper: "Sam",
-    rtgsName: "sam",
-    meaning: "3",
-    korean: "쌈",
-    image: "",
-  },
-  {
-    index: 5,
-    collation: 5,
-    koreanName: "씨",
-    koreanExample: "",
-    symbol: "๔",
-    thaiName: "สี่",
-    nameProper: "Si",
-    rtgsName: "si",
-    meaning: "4",
-    korean: "씨",
-    image: "",
-  },
-  {
-    index: 6,
-    collation: 6,
-    koreanName: "하",
-    koreanExample: "",
-    symbol: "๕",
-    thaiName: "ห้า",
-    nameProper: "Ha",
-    rtgsName: "ha",
-    meaning: "5",
-    korean: "하",
-    image: "",
-  },
-  {
-    index: 7,
-    collation: 7,
-    koreanName: "혹",
-    koreanExample: "",
-    symbol: "๖",
-    thaiName: "หก",
-    nameProper: "Hok",
-    rtgsName: "hok",
-    meaning: "6",
-    korean: "혹",
-    image: "",
-  },
-  {
-    index: 8,
-    collation: 8,
-    koreanName: "쩻",
-    koreanExample: "",
-    symbol: "๗",
-    thaiName: "เจ็ด",
-    nameProper: "Chet",
-    rtgsName: "chet",
-    meaning: "7",
-    korean: "쩻",
-    image: "",
-  },
-  {
-    index: 9,
-    collation: 9,
-    koreanName: "뺏",
-    koreanExample: "",
-    symbol: "๘",
-    thaiName: "แปด",
-    nameProper: "Paet",
-    rtgsName: "paet",
-    meaning: "8",
-    korean: "뺏",
-    image: "",
-  },
-  {
-    index: 10,
-    collation: 10,
-    koreanName: "까우",
-    koreanExample: "",
-    symbol: "๙",
-    thaiName: "เก้า",
-    nameProper: "Kao",
-    rtgsName: "kao",
-    meaning: "9",
-    korean: "까우",
-    image: "",
-  },
-
-  {
-    index: 11,
-    collation: 11,
-    koreanName: "씹",
-    koreanExample: "",
-    symbol: "๑๐",
-    thaiName: "สิบ",
-    nameProper: "Sip",
-    rtgsName: "sip",
-    meaning: "10",
-    korean: "씹",
-    image: "",
-  },
-  {
-    index: 12,
-    collation: 12,
-    koreanName: "씹엣",
-    koreanExample: "",
-    symbol: "๑๑",
-    thaiName: "สิบเอ็ด",
-    nameProper: "Sip Et",
-    rtgsName: "sip et",
-    meaning: "11",
-    korean: "씹엣",
-    image: "",
-  },
-  {
-    index: 13,
-    collation: 13,
-    koreanName: "씹쏭",
-    koreanExample: "",
-    symbol: "๑๒",
-    thaiName: "สิบสอง",
-    nameProper: "Sip Song",
-    rtgsName: "sip song",
-    meaning: "12",
-    korean: "씹쏭",
-    image: "",
-  },
-  {
-    index: 14,
-    collation: 14,
-    koreanName: "씹쌈",
-    koreanExample: "",
-    symbol: "๑๓",
-    thaiName: "สิบสาม",
-    nameProper: "Sip Sam",
-    rtgsName: "sip sam",
-    meaning: "13",
-    korean: "씹쌈",
-    image: "",
-  },
-  {
-    index: 15,
-    collation: 15,
-    koreanName: "씹씨",
-    koreanExample: "",
-    symbol: "๑๔",
-    thaiName: "สิบสี่",
-    nameProper: "Sip Si",
-    rtgsName: "sip si",
-    meaning: "14",
-    korean: "씹씨",
-    image: "",
-  },
-  {
-    index: 16,
-    collation: 16,
-    koreanName: "씹하",
-    koreanExample: "",
-    symbol: "๑๕",
-    thaiName: "สิบห้า",
-    nameProper: "Sip Ha",
-    rtgsName: "sip ha",
-    meaning: "15",
-    korean: "씹하",
-    image: "",
-  },
-  {
-    index: 17,
-    collation: 17,
-    koreanName: "씹혹",
-    koreanExample: "",
-    symbol: "๑๖",
-    thaiName: "สิบหก",
-    nameProper: "Sip Hok",
-    rtgsName: "sip hok",
-    meaning: "16",
-    korean: "씹혹",
-    image: "",
-  },
-  {
-    index: 18,
-    collation: 18,
-    koreanName: "씹쩻",
-    koreanExample: "",
-    symbol: "๑๗",
-    thaiName: "สิบเจ็ด",
-    nameProper: "Sip Chet",
-    rtgsName: "sip chet",
-    meaning: "17",
-    korean: "씹쩻",
-    image: "",
-  },
-  {
-    index: 19,
-    collation: 19,
-    koreanName: "씹뺏",
-    koreanExample: "",
-    symbol: "๑๘",
-    thaiName: "สิบแปด",
-    nameProper: "Sip Paet",
-    rtgsName: "sip paet",
-    meaning: "18",
-    korean: "씹뺏",
-    image: "",
-  },
-  {
-    index: 20,
-    collation: 20,
-    koreanName: "씹까우",
-    koreanExample: "",
-    symbol: "๑๙",
-    thaiName: "สิบเก้า",
-    nameProper: "Sip Kao",
-    rtgsName: "sip kao",
-    meaning: "19",
-    korean: "씹까우",
-    image: "",
-  },
-
-  {
-    index: 21,
-    collation: 21,
-    koreanName: "이씹",
-    koreanExample: "",
-    symbol: "๒๐",
-    thaiName: "ยี่สิบ",
-    nameProper: "Yi Sip",
-    rtgsName: "yi sip",
-    meaning: "20",
-    korean: "이씹",
-    image: "",
-  },
-  {
-    index: 22,
-    collation: 22,
-    koreanName: "이씹엣",
-    koreanExample: "",
-    symbol: "๒๑",
-    thaiName: "ยี่สิบเอ็ด",
-    nameProper: "Yi Sip Et",
-    rtgsName: "yi sip et",
-    meaning: "21",
-    korean: "이씹엣",
-    image: "",
-  },
-];
-
-const VOWEL_ITEMS = [
-  {
-    index: 1,
-    collation: 1,
-    koreanName: "뚜아 르",
-    koreanExample: "",
-    symbol: "ฤ",
-    thaiName: "ตัว ฤ",
-    nameProper: "Tua Rue",
-    rtgsName: "tua rue",
-    meaning: "",
-    korean: "뚜아 르",
-    image: "",
-  },
-  {
-    index: 2,
-    collation: 2,
-    koreanName: "락 캉 야우",
-    koreanExample: "",
-    symbol: "ๅ",
-    thaiName: "ลากข้าง ยาว",
-    nameProper: "Lak Khang Yao",
-    rtgsName: "lak khang yao",
-    meaning: "",
-    korean: "락 캉 야우",
-    image: "",
-  },
-  {
-    index: 3,
-    collation: 3,
-    koreanName: "뚜아 르",
-    koreanExample: "",
-    symbol: "ฦ",
-    thaiName: "ตัว ฦ",
-    nameProper: "Tua Lue",
-    rtgsName: "tua lue",
-    meaning: "",
-    korean: "뚜아 르",
-    image: "",
-  },
-  {
-    index: 4,
-    collation: 4,
-    koreanName: "파이얀 야이",
-    koreanExample: "",
-    symbol: "ฯลฯ",
-    thaiName: "ไปยาลใหญ่",
-    nameProper: "Paiyan Yai",
-    rtgsName: "paiyan yai",
-    meaning: "등등",
-    korean: "파이얀 야이",
-    image: "",
-  },
-  {
-    index: 5,
-    collation: 5,
-    koreanName: "닉카힛",
-    koreanExample: "",
-    symbol: "◌ํ",
-    thaiName: "นิคหิต",
-    nameProper: "Nikkhahit",
-    rtgsName: "nikkhahit",
-    meaning: "비음 부호; = anusvāra",
-    korean: "닉카힛",
-    image: "",
-  },
-  {
-    index: 6,
-    collation: 6,
-    koreanName: "마이 따이 쿠",
-    koreanExample: "",
-    symbol: "◌็",
-    thaiName: "ไม้ไต่คู้",
-    nameProper: "Mai Tai Khu",
-    rtgsName: "mai tai khu",
-    meaning: "단모음 부호",
-    korean: "마이 따이 쿠",
-    image: "",
-  },
-  {
-    index: 7,
-    collation: 7,
-    koreanName: "야막깐",
-    koreanExample: "",
-    symbol: "๎",
-    thaiName: "ยามักการ",
-    nameProper: "Yamakkan",
-    rtgsName: "yamakkan",
-    meaning: "자음군 시작 부호",
-    korean: "야막깐",
-    image: "",
-  },
-  {
-    index: 8,
-    collation: 8,
-    koreanName: "탄타캇, 까란",
-    koreanExample: "",
-    symbol: "◌์",
-    thaiName: "ทัณฑฆาต, การันต์",
-    nameProper: "Thanthakhat, Karan",
-    rtgsName: "thanthakhat, karan",
-    meaning: "묵음 부호",
-    korean: "탄타캇, 까란",
-    image: "",
-  },
-  {
-    index: 9,
-    collation: 9,
-    koreanName: "마이 엑",
-    koreanExample: "",
-    symbol: "◌่",
-    thaiName: "ไม้เอก",
-    nameProper: "Mai Ek",
-    rtgsName: "mai ek",
-    meaning: "성조 부호",
-    korean: "마이 엑",
-    image: "",
-  },
-  {
-    index: 10,
-    collation: 10,
-    koreanName: "마이 토",
-    koreanExample: "",
-    symbol: "◌้",
-    thaiName: "ไม้โท",
-    nameProper: "Mai Tho",
-    rtgsName: "mai tho",
-    meaning: "성조 부호",
-    korean: "마이 토",
-    image: "",
-  },
-  {
-    index: 11,
-    collation: 11,
-    koreanName: "마이 뜨리",
-    koreanExample: "",
-    symbol: "◌๊",
-    thaiName: "ไม้ตรี",
-    nameProper: "Mai Tri",
-    rtgsName: "mai tri",
-    meaning: "성조 부호",
-    korean: "마이 뜨리",
-    image: "",
-  },
-  {
-    index: 12,
-    collation: 12,
-    koreanName: "마이 짯따와",
-    koreanExample: "",
-    symbol: "◌๋",
-    thaiName: "ไม้จัตวา",
-    nameProper: "Mai Chattawa",
-    rtgsName: "mai chattawa",
-    meaning: "성조 부호",
-    korean: "마이 짯따와",
-    image: "",
-  },
-  {
-    index: 13,
-    collation: 13,
-    koreanName: "뚜아 요",
-    koreanExample: "",
-    symbol: "ย",
-    thaiName: "ตัว ย",
-    nameProper: "Tua Yo",
-    rtgsName: "tua yo",
-    meaning: "조합형 모음 부호",
-    korean: "뚜아 요",
-    image: "",
-  },
-  {
-    index: 14,
-    collation: 14,
-    koreanName: "락 캉",
-    koreanExample: "",
-    symbol: "า",
-    thaiName: "ลากข้าง",
-    nameProper: "Lak Khang",
-    rtgsName: "lak khang",
-    meaning: "장모음 '아'; 조합형 모음 부호",
-    korean: "락 캉",
-    image: "",
-  },
-  {
-    index: 15,
-    collation: 15,
-    koreanName: "로 한",
-    koreanExample: "",
-    symbol: "รร",
-    thaiName: "โร หัน",
-    nameProper: "Ro Han",
-    rtgsName: "ro han",
-    meaning: "단모음 '아'",
-    korean: "로 한",
-    image: "",
-  },
-  {
-    index: 16,
-    collation: 16,
-    koreanName: "마이 말라이",
-    koreanExample: "",
-    symbol: "ไ",
-    thaiName: "ไม้มลาย",
-    nameProper: "Mai Malai",
-    rtgsName: "mai malai",
-    meaning: "이중모음 '아이'",
-    korean: "마이 말라이",
-    image: "",
-  },
-  {
-    index: 17,
-    collation: 17,
-    koreanName: "마이 한 아깟",
-    koreanExample: "",
-    symbol: "◌ั",
-    thaiName: "ไม้หันอากาศ",
-    nameProper: "Mai Han Akat",
-    rtgsName: "mai han akat",
-    meaning: "단모음 '아'; 조합형 모음 부호",
-    korean: "마이 한 아깟",
-    image: "",
-  },
-  {
-    index: 18,
-    collation: 18,
-    koreanName: "마이 나",
-    koreanExample: "",
-    symbol: "เ",
-    thaiName: "ไม้หน้า",
-    nameProper: "Mai Na",
-    rtgsName: "mai na",
-    meaning: "장모음 '에'; 조합형 모음 부호",
-    korean: "마이 나",
-    image: "",
-  },
-  {
-    index: 19,
-    collation: 19,
-    koreanName: "마이 오",
-    koreanExample: "",
-    symbol: "โ",
-    thaiName: "ไม้โอ",
-    nameProper: "Mai O",
-    rtgsName: "mai o",
-    meaning: "장모음 '오'",
-    korean: "마이 오",
-    image: "",
-  },
-  {
-    index: 20,
-    collation: 20,
-    koreanName: "마이 무안",
-    koreanExample: "",
-    symbol: "ใ",
-    thaiName: "ไม้ม้วน",
-    nameProper: "Mai Muan",
-    rtgsName: "mai muan",
-    meaning: "이중모음 '아이'",
-    korean: "마이 무안",
-    image: "",
-  },
-  {
-    index: 21,
-    collation: 21,
-    koreanName: "위산차니",
-    koreanExample: "",
-    symbol: "ะ",
-    thaiName: "วิสรรชนีย์",
-    nameProper: "Wisanchani",
-    rtgsName: "wisanchani",
-    meaning: "단모음 '아'; 조합형 모음 부호",
-    korean: "위산차니",
-    image: "",
-  },
-  {
-    index: 22,
-    collation: 22,
-    koreanName: "틴 이앗",
-    koreanExample: "",
-    symbol: "◌ุ",
-    thaiName: "ตีนเหยียด",
-    nameProper: "Tin Yiat",
-    rtgsName: "tin yiat",
-    meaning: "단모음 '우'",
-    korean: "틴 이앗",
-    image: "",
-  },
-  {
-    index: 23,
-    collation: 23,
-    koreanName: "틴 쿠",
-    koreanExample: "",
-    symbol: "◌ู",
-    thaiName: "ตีนคู้",
-    nameProper: "Tin Khu",
-    rtgsName: "tin khu",
-    meaning: "장모음 '우'",
-    korean: "틴 쿠",
-    image: "",
-  },
-  {
-    index: 24,
-    collation: 24,
-    koreanName: "핀투",
-    koreanExample: "",
-    symbol: "◌ฺ",
-    thaiName: "พินทุ",
-    nameProper: "Phinthu",
-    rtgsName: "phinthu",
-    meaning: "내재모음 삭제 부호",
-    korean: "핀투",
-    image: "",
-  },
-  {
-    index: 25,
-    collation: 25,
-    koreanName: "핀투 이",
-    koreanExample: "",
-    symbol: "◌ิ",
-    thaiName: "พินทุอิ",
-    nameProper: "Phinthu I",
-    rtgsName: "phinthu i",
-    meaning: "단모음 '이'; 조합형 모음 부호",
-    korean: "핀투 이",
-    image: "",
-  },
-  {
-    index: 26,
-    collation: 26,
-    koreanName: "사라 이",
-    koreanExample: "",
-    symbol: "◌ี",
-    thaiName: "สระอี",
-    nameProper: "Sara I",
-    rtgsName: "sara i",
-    meaning: "장모음 '이'; 조합형 모음 부호",
-    korean: "사라 이",
-    image: "",
-  },
-  {
-    index: 27,
-    collation: 27,
-    koreanName: "사라 으",
-    koreanExample: "",
-    symbol: "◌ึ",
-    thaiName: "สระอึ",
-    nameProper: "Sara Ue",
-    rtgsName: "sara ue",
-    meaning: "단모음 '으'",
-    korean: "사라 으",
-    image: "",
-  },
-  {
-    index: 28,
-    collation: 28,
-    koreanName: "사라 으",
-    koreanExample: "",
-    symbol: "◌ื",
-    thaiName: "สระอือ",
-    nameProper: "Sara Ue",
-    rtgsName: "sara ue",
-    meaning: "장모음 '으'; 조합형 모음 부호",
-    korean: "사라 으",
-    image: "",
-  },
-  {
-    index: 29,
-    collation: 29,
-    koreanName: "마이 애",
-    koreanExample: "",
-    symbol: "แ",
-    thaiName: "ไม้แอ",
-    nameProper: "Mai Ae",
-    rtgsName: "mai ae",
-    meaning: "모음 '애'",
-    korean: "마이 애",
-    image: "",
-  },
-  {
-    index: 30,
-    collation: 30,
-    koreanName: "뚜아 워",
-    koreanExample: "",
-    symbol: "ว",
-    thaiName: "ตัว ว",
-    nameProper: "Tua Wo",
-    rtgsName: "tua wo",
-    meaning: "모음 '우아'; 조합형 모음 부호",
-    korean: "뚜아 워",
-    image: "",
-  },
-  {
-    index: 31,
-    collation: 31,
-    koreanName: "뚜아 오",
-    koreanExample: "",
-    symbol: "อ",
-    thaiName: "ตัว อ",
-    nameProper: "Tua O",
-    rtgsName: "tua o",
-    meaning: "모음 '오'; 조합형 모음 부호",
-    korean: "뚜아 '오'",
-    image: "",
-  },
-  {
-    index: 32,
-    collation: 32,
-    koreanName: "마이 야목",
-    koreanExample: "",
-    symbol: "ๆ",
-    thaiName: "ไม้ยมก",
-    nameProper: "Mai Yamok",
-    rtgsName: "mai yamok",
-    meaning: "단어 또는 구의 반복 부호",
-    korean: "마이 야목",
-    image: "",
-  },
-  {
-    index: 33,
-    collation: 33,
-    koreanName: "마합 팍, 쭛",
-    koreanExample: "",
-    symbol: ".",
-    thaiName: "มหัพภาค, จุด",
-    nameProper: "Mahap Phak, Chut",
-    rtgsName: "mahap phak, chut",
-    meaning: "종지부",
-    korean: "마합 팍, 쭛",
-    image: "",
-  },
-  {
-    index: 34,
-    collation: 34,
-    koreanName: "앙칸 디아우, 칸 디아우",
-    koreanExample: "",
-    symbol: "ฯ",
-    thaiName: "อังคั่นเดี่ยว, คั่นเดี่ยว",
-    nameProper: "Angkhan Diao, Khan Diao",
-    rtgsName: "angkhan diao, khan diao",
-    meaning: "문장 또는 연의 종지부",
-    korean: "앙칸 디아우, 칸 디아우",
-    image: "",
-  },
-  {
-    index: 35,
-    collation: 35,
-    koreanName: "앙칸 쿠, 칸 쿠",
-    koreanExample: "",
-    symbol: "๚",
-    thaiName: "อังคั่นคู่, คั่นคู่",
-    nameProper: "Angkhan Khu, Khan Khu",
-    rtgsName: "angkhan khu, khan khu",
-    meaning: "연, 장, 절의 종지부",
-    korean: "앙칸 쿠, 칸 쿠",
-    image: "",
-  },
-  {
-    index: 36,
-    collation: 36,
-    koreanName: "웡 렙, 나카 리킷",
-    koreanExample: "",
-    symbol: "( )",
-    thaiName: "วงเล็บ, นขลิขิต",
-    nameProper: "Wong Lep, Nakha Likhit",
-    rtgsName: "wong lep, nakha likhit",
-    meaning: "괄호",
-    korean: "웡 렙, 나카 리킷",
-    image: "",
-  },
-  {
-    index: 37,
-    collation: 37,
-    koreanName: "춘라팍, 룩 남",
-    koreanExample: "",
-    symbol: ",",
-    thaiName: "จุลภาค, ลูกน้ำ",
-    nameProper: "Chunlaphak, Luk Nam",
-    rtgsName: "chunlaphak, luk nam",
-    meaning: "쉼표",
-    korean: "춘라팍, 룩 남",
-    image: "",
-  },
-  {
-    index: 38,
-    collation: 38,
-    koreanName: "코뭇, 쑷나라이",
-    koreanExample: "",
-    symbol: "๛",
-    thaiName: "โคมูตร, สูตรนารายณ์",
-    nameProper: "Khomut, Sutnarai",
-    rtgsName: "khomut, sutnarai",
-    meaning: "장, 문서, 이야기의 종지부",
-    korean: "코뭇, 쑷나라이",
-    image: "",
-  },
-  {
-    index: 39,
-    collation: 39,
-    koreanName: "파이얀 노이",
-    koreanExample: "",
-    symbol: "ฯ",
-    thaiName: "ไปยาลน้อย",
-    nameProper: "Paiyan Noi",
-    rtgsName: "paiyan noi",
-    meaning: "이하 생략 부호",
-    korean: "파이얀 노이",
-    image: "",
-  },
-  {
-    index: 40,
-    collation: 40,
-    koreanName: "판 누",
-    koreanExample: "",
-    symbol: "◌̎",
-    thaiName: "ฟันหนู",
-    nameProper: "Fan Nu",
-    rtgsName: "fan nu",
-    meaning: "인용 부호",
-    korean: "판 누",
-    image: "",
-  },
-  {
-    index: 41,
-    collation: 41,
-    koreanName: "폰 통",
-    koreanExample: "",
-    symbol: "◌̍",
-    thaiName: "ฝนทอง",
-    nameProper: "Fon Thong",
-    rtgsName: "fon thong",
-    meaning: "문단 시작 부호",
-    korean: "폰 통",
-    image: "",
-  },
-  {
-    index: 42,
-    collation: 42,
-    koreanName: "퐁 만",
-    koreanExample: "",
-    symbol: "๏",
-    thaiName: "ฟองมัน, ตาไก่",
-    nameProper: "Fong Man, Ta Kai",
-    rtgsName: "fong man, ta kai",
-    meaning: "문장, 문단, 연의 시작 부호; 글머리표",
-    korean: "퐁 만",
-    image: "",
-  },
-];
-
-/////////////////////////////////////////////// 통제부 ///////////////////////////////////////////////
-let currentCategory = "consonant";
-
-function getCurrentItems() {
-  if (currentCategory === "number") return NUMBER_ITEMS;
-  if (currentCategory === "vowel") return VOWEL_ITEMS;
-  return ITEMS;
-}
-
+let APP_ITEMS = [];
+let currentCategory = "consonant1";
+let currentMode = "learn";
+let currentDifficulty = "advanced";
 let idx = 0;
-
-function setActiveMode(buttonId) {
-  document.querySelectorAll(".mode button").forEach((btn) => {
-    btn.classList.remove("active");
-  });
-
-  document.getElementById(buttonId).classList.add("active");
-}
-
-function getThaiVoice() {
-  const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
-  return voices.find((v) => v.lang === "th-TH") || voices.find((v) => v.lang.startsWith("th")) || null;
-}
-
-function speakThai(text) {
-  if (!("speechSynthesis" in window)) return;
-
-  const u = new SpeechSynthesisUtterance(text);
-
-  u.lang = "th-TH";
-  u.rate = 0.75;
-
-  const voices = speechSynthesis.getVoices();
-
-  const thaiVoice = voices.find((v) => v.lang === "th-TH") || voices.find((v) => v.lang.startsWith("th"));
-
-  if (thaiVoice) {
-    u.voice = thaiVoice;
-  }
-
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
-}
-
-function render() {
-  const items = getCurrentItems();
-  const x = items[idx];
-
-  const symbolEl = document.getElementById("symbol");
-  const img = document.getElementById("img");
-
-  let fallback = document.getElementById("imageFallback");
-  if (!fallback) {
-    fallback = document.createElement("div");
-    fallback.id = "imageFallback";
-    img.parentElement.appendChild(fallback);
-  }
-
-  if (currentCategory === "number") {
-    symbolEl.textContent = x.symbol;
-
-    img.style.display = "none";
-    fallback.style.display = "flex";
-
-    fallback.textContent = x.meaning || "";
-    fallback.style.fontSize = "240px";
-    fallback.style.lineHeight = "1";
-    fallback.style.fontWeight = "bold";
-    fallback.style.justifyContent = "center";
-    fallback.style.alignItems = "center";
-  } else if (currentCategory === "vowel") {
-    symbolEl.textContent = x.symbol;
-
-    img.style.display = "none";
-    fallback.style.display = "flex";
-
-    fallback.textContent = x.meaning || "";
-    fallback.style.fontSize = "32px";
-    fallback.style.lineHeight = "1.4";
-    fallback.style.whiteSpace = "pre-line";
-    fallback.style.textAlign = "center";
-    fallback.style.justifyContent = "center";
-    fallback.style.alignItems = "center";
-  } else {
-    symbolEl.textContent = x.symbol;
-
-    fallback.style.display = "none";
-    img.style.display = "block";
-    img.src = x.image || "";
-  }
-
-  document.getElementById("thaiName").textContent = "이름: " + x.thaiName;
-  document.getElementById("korean").textContent = "한글: " + x.korean;
-  document.getElementById("proper").textContent = "라틴: " + x.rtgsName;
-}
-
-document.getElementById("prev").onclick = () => {
-  idx = (idx - 1 + getCurrentItems().length) % getCurrentItems().length;
-  render();
-};
-
-document.getElementById("next").onclick = () => {
-  idx = (idx + 1) % getCurrentItems().length;
-  render();
-};
-
-/////////////////////////////////////////////// 퀴즈 모드 ///////////////////////////////////////////////
-function shuffle(a) {
-  return [...a].sort(() => Math.random() - 0.5);
-}
-
-function playCorrect() {
-  const ctx = new AudioContext();
-
-  const notes = [523, 659, 784, 1046]; // 도 미 솔 높은 도
-
-  notes.forEach((freq, i) => {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = "triangle";
-    osc.frequency.value = freq;
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    const t = ctx.currentTime + i * 0.18;
-
-    gain.gain.setValueAtTime(0, t);
-    gain.gain.linearRampToValueAtTime(0.25, t + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
-
-    osc.start(t);
-    osc.stop(t + 0.18);
-  });
-}
-
-function playWrong() {
-  const ctx = new AudioContext();
-
-  // C5(523Hz) ~ B5 반음 12개
-  const freqs = [523.25, 554.37, 587.33, 622.25, 659.25, 698.46, 739.99, 783.99, 830.61, 880.0, 932.33, 987.77];
-
-  const master = ctx.createGain();
-  master.gain.value = 0.04;
-  master.connect(ctx.destination);
-
-  freqs.forEach((freq) => {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = "sawtooth";
-    osc.frequency.value = freq;
-
-    osc.connect(gain);
-    gain.connect(master);
-
-    const t = ctx.currentTime;
-
-    gain.gain.setValueAtTime(0.001, t);
-    gain.gain.linearRampToValueAtTime(1, t + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.7);
-
-    osc.start(t);
-    osc.stop(t + 0.7);
-  });
-}
-
-function quiz() {
-  const items = getCurrentItems();
-  const correct = items[Math.floor(Math.random() * items.length)];
-
-  window.currentQuizItem = correct;
-
-  document.getElementById("quizTitle").textContent = "제시된 내용에 해당하는 글자를 키보드에서 마우스 클릭하세요.";
-
-  document.getElementById("quizSymbol").textContent = "";
-  document.getElementById("result").textContent = "";
-
-  const quizImg = document.getElementById("quizImg");
-
-  if (currentCategory === "number") {
-    quizImg.removeAttribute("src");
-    quizImg.style.display = "flex";
-    quizImg.style.alignItems = "center";
-    quizImg.style.justifyContent = "center";
-    quizImg.style.fontSize = "240px";
-    quizImg.style.fontWeight = "bold";
-    quizImg.style.objectFit = "contain";
-    quizImg.alt = "";
-    quizImg.outerHTML = `<div id="quizImg" class="img" style="display:flex;align-items:center;justify-content:center;font-size:240px;font-weight:bold;">${correct.meaning}</div>`;
-  } else if (currentCategory === "vowel") {
-    quizImg.removeAttribute("src");
-    quizImg.outerHTML = `
-      <div id="quizImg" class="img" style="display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:32px;line-height:1.6;font-weight:bold;text-align:center;">
-        <div>${correct.thaiName}</div>
-        <div>${correct.koreanName}</div>
-        <div>${correct.rtgsName}</div>
-      </div>
-    `;
-  } else {
-    quizImg.style.display = "block";
-    quizImg.src = correct.image;
-  }
-
-  const box = document.getElementById("choices");
-  box.innerHTML = "";
-
-  items.forEach((v) => {
-    const b = document.createElement("button");
-    b.textContent = v.symbol;
-
-    b.onclick = () => {
-      if (v.collation === correct.collation) {
-        playCorrect();
-
-        document.getElementById("result").innerHTML = `
-      <div>
-        <div>${correct.thaiName}</div>
-        <div>${correct.koreanName} ${correct.koreanExample}</div>
-        <div>${correct.rtgsName}</div>
-      </div>
-    `;
-      } else {
-        playWrong();
-
-        document.getElementById("result").innerHTML = `
-      <div>
-        <div>${v.thaiName}</div>
-        <div>${v.koreanName} ${v.koreanExample}</div>
-        <div>${v.rtgsName}</div>
-      </div>
-    `;
-      }
-    };
-
-    box.appendChild(b);
-  });
-}
-
-document.getElementById("newQuiz").onclick = quiz;
-
-if ("speechSynthesis" in window) {
-  speechSynthesis.onvoiceschanged = getThaiVoice;
-}
-
-/////////////////////////////////////////////// 게임 모드 ///////////////////////////////////////////////
-
+let quizItem = null;
+let quizHistory = [];
+let quizHistoryIndex = -1;
+let quizPage = 0;
 let gameQueue = [];
 let gameIndex = 0;
+let gamePage = 0;
 let gameResults = [];
-let participantName = "";
-let participantId = "";
+let trialStartTime = 0;
+let resultPage = "scatter";
 let resultSaved = false;
 let analysisGenerated = false;
 let reportSaved = false;
+let setupStep = "category";
+let selectedCategory = "consonant1";
+let selectedMode = "learn";
 
-let gameDifficulty = "advanced";
-
-const difficultySettings = {
-  beginner: 1,
-  intermediate: 2,
-  advanced: 3,
+const difficultySettings = { beginner: 1, intermediate: 2, advanced: 3 };
+const categoryLabels = {
+  consonant1: "자음1",
+  consonant2: "자음2",
+  consonantAll: "자음전체",
+  vowelPlus: "모음+",
+  number: "숫자",
+  punctuation: "문장부호",
 };
+const modeLabels = { learn: "학습", quiz: "퀴즈", game: "게임" };
+const difficultyLabels = { beginner: "초급", intermediate: "중급", advanced: "고급" };
 
-function makeGameQueue() {
-  const base = [];
-  const repetition = difficultySettings[gameDifficulty];
-
-  for (let r = 1; r <= repetition; r++) {
-    getCurrentItems().forEach((item) => {
-      base.push({
-        ...item,
-        repetition: r,
-      });
-    });
-  }
-
-  return shuffle(base);
+function normalizeAppItem(row) {
+  const symbol = row.Symbol === undefined || row.Symbol === null ? "" : String(row.Symbol);
+  const korean = row["Korean Name"] || "";
+  return {
+    Serial: row.Serial,
+    Unicode: row.Unicode,
+    Class: row.Class || "",
+    Property: row.Property || "",
+    Canonical: row.Canonical || "",
+    Notes: row.Notes || "",
+    index: Number(row.Serial) || 0,
+    collation: Number(row.Collation) || 0,
+    symbol,
+    thaiName: row["Thai Name"] || "",
+    koreanName: korean,
+    korean,
+    rtgsName: row["RTGS Name"] || "",
+    meaning: row.Meaning === undefined || row.Meaning === null ? "" : String(row.Meaning),
+    image: row.Image || "",
+  };
 }
 
-let gameStartTime = null;
-let gameEndTime = null;
-let trialStartTime = null;
-analysisGenerated = false;
-resultSaved = false;
+async function loadJson() {
+  for (const path of ["data/app_items.json", "../data/app_items.json"]) {
+    try {
+      const res = await fetch(path);
+      if (res.ok) return res.json();
+    } catch (_) {}
+  }
+  throw new Error("app_items.json load failed");
+}
 
-function startGame() {
-  gameStartTime = Date.now();
-  gameEndTime = null;
-  gameQueue = makeGameQueue();
-  gameIndex = 0;
-  gameResults = [];
+function getCurrentItems() {
+  if (currentCategory === "consonant1") return APP_ITEMS.filter((item) => item.Class === "자음" && item.Canonical === "O");
+  if (currentCategory === "consonant2") return APP_ITEMS.filter((item) => item.Class === "자음" && item.Canonical !== "O");
+  if (currentCategory === "consonantAll") return APP_ITEMS.filter((item) => item.Class === "자음");
+  if (currentCategory === "vowelPlus") return APP_ITEMS.filter((item) => item.Class === "모음" || item.Class === "부가" || item.Class === "성조");
+  if (currentCategory === "number") return APP_ITEMS.filter((item) => item.Class === "숫자");
+  if (currentCategory === "punctuation") return APP_ITEMS.filter((item) => item.Class === "문장");
+  return APP_ITEMS.filter((item) => item.Class === "자음" && item.Canonical === "O");
+}
+
+function imagePath(path) {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  if (path.startsWith("assets/")) return "../" + path;
+  return path;
+}
+
+function nameBlock(item) {
+  return `
+    <div>${item.thaiName || ""}</div>
+    <div>${item.koreanName || ""}</div>
+    <div>${item.rtgsName || ""}</div>
+  `;
+}
+
+function consonantHint(item) {
+  if (item.Class !== "자음") return "";
+
+  const meaningKoMap = {
+    chicken: "닭",
+    egg: "달걀",
+    bottle: "병",
+    buffalo: "물소",
+    person: "사람",
+    bell: "종",
+    snake: "뱀",
+    plate: "접시",
+    cymbals: "심벌즈",
+    elephant: "코끼리",
+    chain: "사슬",
+    tree: "나무",
+    woman: "여자",
+    headdress: "머리장식",
+    child: "아이",
+    pedestal: "받침대",
+    flag: "깃발",
+    mouse: "쥐",
+    elder: "어른",
+    samanera: "사미",
+    leaf: "잎",
+    fish: "물고기",
+    bee: "벌",
+    lid: "뚜껑",
+    basin: "대야",
+    tiger: "호랑이",
+    monkey: "원숭이",
+    teeth: "이",
+    turtle: "거북이",
+    horse: "말",
+    "giant, yaksha": "야차",
+    boat: "배",
+    ring: "반지",
+    "pavilion, sala": "정자",
+    hermit: "은자",
+    owl: "올빼미",
+    "chest, box": "상자",
+    kite: "연",
+    soldier: "군인",
+    sack: "자루",
+    "goad, javelin": "몰이막대",
+    Junk: "정크선",
+    Montho: "몬토",
+    phan: "파안",
+  };
+
+  const meaningKey = (item.meaning || "").replace(/\u00a0/g, " ");
+  const meaningKo = meaningKoMap[meaningKey] || meaningKey;
+  const thaiNameWord = (item.thaiName || "").replace(item.symbol || "", "").trim();
+
+  return `<div class="hint"><br>${item.symbol || ""}는 ${thaiNameWord}(${meaningKo})에 나오는 글자입니다.<br>어느 글자와 같은지 확인했나요?</div>`;
+}
+
+function meaningBlock(item) {
+  return `<div>${item.meaning || item.Notes || item.koreanName || ""}</div>`;
+}
+
+function extraBlock(item) {
+  if (item.Class === "자음" && item.image) {
+    return `
+      <img src="${imagePath(item.image)}" alt="${item.koreanName || item.thaiName || ""}"
+        onerror="this.remove(); this.parentElement.insertAdjacentHTML('afterbegin', '<div>그림 파일 없음</div>');" />
+    `;
+  }
+  return meaningBlock(item);
+}
+
+function renderSetup() {
+  const grid = document.getElementById("setupGrid");
+  const title = document.getElementById("setupTitle");
+  const back = document.getElementById("setupBack");
+  grid.innerHTML = "";
+  back.style.display = setupStep === "category" ? "none" : "inline-block";
+
+  if (setupStep === "category") {
+    title.textContent = "범주를 선택하세요";
+    Object.entries(categoryLabels).forEach(([key, label]) =>
+      addSetupButton(label, () => {
+        selectedCategory = key;
+        setupStep = "mode";
+        renderSetup();
+      }),
+    );
+    return;
+  }
+
+  if (setupStep === "mode") {
+    title.textContent = `${categoryLabels[selectedCategory]} · 모드를 선택하세요`;
+
+    addSetupButton("학습", () => {
+      selectedMode = "learn";
+      startSelected();
+    });
+
+    addSetupButton("퀴즈", () => {
+      selectedMode = "quiz";
+      startSelected();
+    });
+
+    addSetupButton("게임", () => {
+      selectedMode = selectedMode === "game" ? "learn" : "game";
+      renderSetup();
+    });
+
+    if (selectedMode === "game") {
+      Object.entries(difficultyLabels).forEach(([key, label]) =>
+        addSetupButton(
+          label,
+          () => {
+            currentDifficulty = key;
+            startSelected();
+          },
+          "difficultyBtn",
+        ),
+      );
+    }
+
+    return;
+  }
+}
+
+function addSetupButton(label, onClick, className = "") {
+  const btn = document.createElement("button");
+  btn.textContent = label;
+  btn.onclick = onClick;
+
+  if (className) {
+    btn.classList.add(className);
+  }
+
+  document.getElementById("setupGrid").appendChild(btn);
+}
+
+function startSelected() {
+  currentCategory = selectedCategory;
+  currentMode = selectedMode;
+  idx = 0;
+  quizHistory = [];
+  quizHistoryIndex = -1;
+  quizPage = 0;
+  gamePage = 0;
+  document.body.classList.add("running");
+  resetResultState();
+  document.body.classList.remove("learn", "quiz", "game", "result");
+  document.body.classList.add(currentMode);
+  document.getElementById("screenTitle").textContent =
+    `${categoryLabels[currentCategory]} · ${modeLabels[currentMode]}${currentMode === "game" ? " · " + difficultyLabels[currentDifficulty] : ""}`;
+  if (currentMode === "learn") renderLearn();
+  if (currentMode === "quiz") startQuiz();
+  if (currentMode === "game") startGame();
+}
+
+function resetResultState() {
+  resultPage = "scatter";
   resultSaved = false;
   analysisGenerated = false;
   reportSaved = false;
-  document.getElementById("showResult").style.display = "none";
+
+  const stimulusSymbol = document.getElementById("stimulusSymbol");
+  const responseSymbol = document.getElementById("responseSymbol");
+  const analysisText = document.getElementById("analysisText");
+  const saveReportBtn = document.getElementById("saveReportBtn");
+  const canvas = document.getElementById("resultCanvas");
+
+  if (stimulusSymbol) stimulusSymbol.textContent = "";
+  if (responseSymbol) responseSymbol.textContent = "";
+  if (analysisText) {
+    analysisText.textContent = "";
+    analysisText.style.display = "none";
+  }
+  if (saveReportBtn) saveReportBtn.style.display = "none";
+  if (canvas) canvas.style.display = "block";
+}
+
+function goSetup() {
+  if (document.body.classList.contains("result")) {
+    if (!confirmSaveIfNeeded()) return;
+  }
+
+  selectedCategory = currentCategory;
+  selectedMode = currentMode;
+  setupStep = "mode";
+
+  resetResultState();
+
+  document.body.classList.remove("running");
+  document.body.classList.remove("learn", "quiz", "game", "result");
+  renderSetup();
+}
+
+function confirmSaveIfNeeded() {
+  if (!document.body.classList.contains("result")) return true;
+
+  if (reportSaved) return true;
+
+  if (analysisGenerated && resultSaved && !reportSaved) {
+    const saveReport = confirm("결과분석보고서를 저장하시겠습니까?");
+    if (saveReport) return downloadResultImage(true);
+    return true;
+  }
+
+  if (resultSaved) return true;
+
+  const save = confirm(analysisGenerated ? "결과분석보고서를 저장하시겠습니까?" : "현재 결과를 저장하시겠습니까?");
+
+  if (save) return downloadResultImage(analysisGenerated);
+
+  return true;
+}
+
+function downloadResultImage(includeReport = false) {
+  const participantName = prompt("이름을 입력하세요 (선택)\n비워두면 자동 파일명으로 저장됩니다.");
+
+  if (participantName === null) {
+    return false;
+  }
+
+  const now = new Date();
+
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  const hh = String(now.getHours()).padStart(2, "0");
+  const mi = String(now.getMinutes()).padStart(2, "0");
+  const ss = String(now.getSeconds()).padStart(2, "0");
+
+  const safeName = (participantName || "").trim().replace(/[\\/:*?"<>|]/g, "_");
+
+  const fileBaseName = [
+    safeName || "anonymous",
+    categoryLabels[currentCategory],
+    currentMode,
+    currentDifficulty,
+    `${yyyy}${mm}${dd}`,
+    `${hh}${mi}${ss}`,
+    `${gameResults.length}`,
+  ].join("_");
+
+  const resultData = {
+    participantName: participantName || "",
+    category: currentCategory,
+    difficulty: currentDifficulty,
+    mode: currentMode,
+    savedAt: now.toISOString(),
+    totalTrials: gameResults.length,
+    results: gameResults,
+    analysis: includeReport
+      ? {
+          diagnosis: makeDiagnosisText(gameResults),
+          strategy: makeStrategyText(gameResults),
+        }
+      : null,
+  };
+
+  const blob = new Blob([JSON.stringify(resultData, null, 2)], { type: "application/json" });
+
+  const url = URL.createObjectURL(blob);
+
+  const jsonLink = document.createElement("a");
+  jsonLink.href = url;
+  jsonLink.download = fileBaseName + ".json";
+  jsonLink.click();
+
+  URL.revokeObjectURL(url);
+
+  const canvas = document.getElementById("resultCanvas");
+
+  const imageLink = document.createElement("a");
+  imageLink.download = fileBaseName + ".png";
+  imageLink.href = canvas.toDataURL("image/png");
+  imageLink.click();
+
+  if (includeReport) {
+    const reportText = makeAnalysisReport();
+
+    const reportBlob = new Blob([reportText], { type: "text/plain;charset=utf-8" });
+
+    const reportUrl = URL.createObjectURL(reportBlob);
+
+    const reportLink = document.createElement("a");
+    reportLink.href = reportUrl;
+    reportLink.download = fileBaseName + "_analysis.txt";
+    reportLink.click();
+
+    URL.revokeObjectURL(reportUrl);
+
+    reportSaved = true;
+  }
+
+  resultSaved = true;
+
+  return true;
+}
+
+function renderLearn() {
+  const items = getCurrentItems();
+  const item = items[idx];
+  if (!item) return;
+  document.getElementById("learnSymbol").textContent = item.symbol || "";
+  document.getElementById("learnInfo").innerHTML = nameBlock(item) + consonantHint(item);
+  document.getElementById("learnExtra").innerHTML = extraBlock(item);
+}
+
+function randomItem() {
+  const items = getCurrentItems();
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function startQuiz(direction = "next") {
+  if (direction === "prev" && quizHistoryIndex > 0) {
+    quizHistoryIndex -= 1;
+    quizItem = quizHistory[quizHistoryIndex];
+  } else {
+    quizItem = randomItem();
+    quizHistory = quizHistory.slice(0, quizHistoryIndex + 1);
+    quizHistory.push(quizItem);
+    quizHistoryIndex = quizHistory.length - 1;
+  }
+
+  quizPage = 0;
+  document.getElementById("quizPrompt").innerHTML = quizPromptBlock(quizItem);
+  document.getElementById("quizInfo").innerHTML = `<div>해당 글자를 선택하세요.</div>`;
+  renderKeyboard("quiz");
+}
+
+function makeGameQueue() {
+  const queue = [];
+  const repetition = difficultySettings[currentDifficulty] || 3;
+  for (let r = 0; r < repetition; r++) getCurrentItems().forEach((item) => queue.push(item));
+  return shuffle(queue);
+}
+
+function startGame() {
+  resetResultState();
+
+  currentMode = "game";
+
+  gameQueue = makeGameQueue();
+  gameIndex = 0;
+  gamePage = 0;
+  gameResults = [];
+  trialStartTime = Date.now();
+
+  document.body.classList.remove("learn", "quiz", "result");
+  document.body.classList.add("running", "game");
+
   renderGame();
 }
 
 function renderGame() {
   if (gameIndex >= gameQueue.length) {
-    gameEndTime = Date.now();
-    document.getElementById("progressBar").style.width = "100%";
-    document.getElementById("gameProgressText").textContent = "게임 종료!";
-    document.getElementById("showResult").style.display = "inline-block";
+    document.getElementById("gamePrompt").innerHTML = `<div>게임 종료</div>`;
+    document.getElementById("gameInfo").innerHTML = `
+  <div>${gameQueue.length}문항 완료</div>
+
+  <div style="height:18px;"></div>
+
+  <button id="showGameResultBtn">
+    결과 표시
+  </button>
+`;
+    document.getElementById("gameKeyboard").innerHTML = "";
+    document.getElementById("gamePageInfo").textContent = "";
+
+    document.getElementById("showGameResultBtn").onclick = showGameResult;
+
     return;
   }
-
-  const x = gameQueue[gameIndex];
-
+  const item = gameQueue[gameIndex];
   trialStartTime = Date.now();
+  document.getElementById("gamePrompt").innerHTML = quizPromptBlock(item);
 
-  document.getElementById("gameKorean").textContent = x.koreanName + " " + x.koreanExample;
-  document.getElementById("gameRtgs").textContent = x.rtgsName;
+  document.getElementById("gameInfo").innerHTML = `
+  <div class="progressText">
+    ${gameIndex + 1} / ${gameQueue.length}
+  </div>
+`;
 
-  const gameImageBox = document.querySelector(".gameImageBox");
-
-  if (currentCategory === "number") {
-    gameImageBox.innerHTML = `
-      <div style="font-size:240px;font-weight:bold;line-height:1;text-align:center;">
-        ${x.meaning}
-      </div>
-    `;
-  } else if (currentCategory === "vowel") {
-    gameImageBox.innerHTML = `
-      <div style="font-size:36px;font-weight:bold;line-height:1.6;text-align:center;">
-        <div>${x.koreanName}</div>
-        <div>${x.rtgsName}</div>
-      </div>
-    `;
-  } else {
-    gameImageBox.innerHTML = `<img id="gameImg" class="img" />`;
-    document.getElementById("gameImg").src = x.image;
-  }
-
-  document.getElementById("gameProgressText").textContent = gameIndex + 1 + " / " + gameQueue.length;
-
-  const progress = ((gameIndex + 1) / gameQueue.length) * 100;
-  document.getElementById("progressBar").style.width = progress + "%";
-
-  const box = document.getElementById("gameChoices");
-  box.innerHTML = "";
-
-  getCurrentItems().forEach((v) => {
-    const b = document.createElement("button");
-    b.textContent = v.symbol;
-
-    b.onclick = () => {
-      gameResults.push({
-        trial: gameIndex + 1,
-        repetition: x.repetition,
-        difficulty: gameDifficulty,
-        question: x.collation,
-        answer: v.collation,
-        correct: v.collation === x.collation,
-        rt: Date.now() - trialStartTime,
-      });
-
-      gameIndex += 1;
-      renderGame();
-    };
-
-    box.appendChild(b);
-  });
-}
-
-function getPointRadius(r) {
-  if (r.repetition === 1) return 5;
-  if (r.repetition === 2) return 7;
-  if (r.repetition === 3) return 9;
-  return 6;
+  renderKeyboard("game");
 }
 
 function showGameResult() {
-  document.getElementById("learn").style.display = "none";
-  document.getElementById("quiz").style.display = "none";
-  document.getElementById("game").style.display = "none";
-  document.getElementById("resultView").style.display = "block";
-  document.getElementById("speak").style.display = "none";
+  resetResultState();
 
+  document.body.classList.remove("learn", "quiz", "game", "result");
+
+  document.body.classList.add("result");
+
+  document.getElementById("screenTitle").textContent = `${categoryLabels[currentCategory]} · 결과`;
+
+  setupResultSwipe();
+  updateResultPage();
+
+  document.getElementById("restartGame").onclick = () => {
+    if (!confirmSaveIfNeeded()) return;
+
+    currentMode = "game";
+    selectedMode = "game";
+
+    resetResultState();
+
+    document.body.classList.remove("learn", "quiz", "result");
+    document.body.classList.add("running", "game");
+
+    document.getElementById("screenTitle").textContent = `${categoryLabels[currentCategory]} · 게임 · ${difficultyLabels[currentDifficulty]}`;
+
+    startGame();
+  };
+
+  document.getElementById("saveReportBtn").onclick = () => {
+    downloadResultImage(true);
+  };
+}
+
+function updateResultPage() {
+  const canvas = document.getElementById("resultCanvas");
+  const stimulus = document.querySelector(".stimulusWrap");
+  const response = document.querySelector(".responseWrap");
+  const analysisText = document.getElementById("analysisText");
+  const saveReportBtn = document.getElementById("saveReportBtn");
+  const topPanel = document.querySelector(".resultTopPanel");
+  const bottomPanel = document.querySelector(".resultBottomPanel");
+
+  if (resultPage === "scatter") {
+    topPanel.style.display = "flex";
+    bottomPanel.style.flex = "";
+    canvas.style.display = "block";
+    stimulus.style.display = "block";
+    response.style.display = "block";
+    analysisText.style.display = "none";
+    saveReportBtn.style.display = "none";
+    drawResultCanvas();
+    return;
+  }
+
+  topPanel.style.display = "none";
+  bottomPanel.style.flex = "1";
+  canvas.style.display = "none";
+  stimulus.style.display = "none";
+  response.style.display = "none";
+  analysisText.style.display = "block";
+  saveReportBtn.style.display = "inline-block";
+
+  analysisText.textContent = makeAnalysisReport();
+  analysisGenerated = true;
+}
+
+function makeAnalysisReport() {
+  return [makeDiagnosisText(gameResults), "", makeStrategyText(gameResults)].join("\n");
+}
+
+function setupResultSwipe() {
+  const screen = document.getElementById("resultScreen");
+
+  let startX = 0;
+  let deltaX = 0;
+
+  screen.ontouchstart = (e) => {
+    startX = e.touches[0].clientX;
+    deltaX = 0;
+  };
+
+  screen.ontouchmove = (e) => {
+    deltaX = e.touches[0].clientX - startX;
+  };
+
+  screen.ontouchend = () => {
+    if (Math.abs(deltaX) < 60) return;
+
+    if (deltaX < 0) {
+      resultPage = "analysis";
+    } else {
+      resultPage = "scatter";
+    }
+
+    updateResultPage();
+  };
+}
+
+function drawResultCanvas() {
   const canvas = document.getElementById("resultCanvas");
   const ctx = canvas.getContext("2d");
   const W = canvas.width;
   const H = canvas.height;
+  const items = getCurrentItems();
+
+  const indexMap = {};
+  items.forEach((item, i) => {
+    indexMap[item.collation] = i + 1;
+  });
 
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, W, H);
 
+  const total = gameResults.length;
+  const correctCount = gameResults.filter((r) => r.correct).length;
+  const accuracy = total === 0 ? 0 : Math.round((correctCount / total) * 10000) / 100;
+
+  ctx.fillStyle = "#111";
+  ctx.font = "32px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("정답률: " + accuracy.toFixed(2) + "%", W / 2, 40);
+
   const pad = 70;
   const min = 1;
-  const max = getCurrentItems().length;
+  const max = items.length;
 
   function sx(x) {
     return pad + ((x - min) / (max - min)) * (W - pad * 2);
@@ -1830,8 +624,6 @@ function showGameResult() {
   ctx.stroke();
 
   ctx.strokeStyle = "#e5e5e5";
-  ctx.lineWidth = 1;
-
   for (let i = 1; i <= max; i++) {
     ctx.beginPath();
     ctx.moveTo(sx(i), sy(1));
@@ -1846,7 +638,9 @@ function showGameResult() {
 
   ctx.fillStyle = "#111";
   ctx.font = "24px sans-serif";
+  ctx.textAlign = "center";
   ctx.fillText("Stimuli", W / 2, H - 8);
+
   ctx.save();
   ctx.translate(24, H / 2);
   ctx.rotate(-Math.PI / 2);
@@ -1863,503 +657,370 @@ function showGameResult() {
     ctx.fillText(String(i), pad - 9, sy(i) + 8);
   }
 
-  const total = gameResults.length;
-  const correctCount = gameResults.filter((r) => r.question === r.answer).length;
-  const accuracy = total === 0 ? 0 : Math.round((correctCount / total) * 10000) / 100;
-
-  ctx.fillStyle = "#111";
-  ctx.font = "32px sans-serif";
-  ctx.textAlign = "center";
-
-  ctx.fillText("정답률: " + accuracy.toFixed(2) + "%", W / 2, 40);
-
-  // =========================
-  // 범례 상대 위치 설정
-  // =========================
-  // =========================
-  // 범례 위치 설정
-  // 캔버스 오른쪽 눈금과 외곽선 사이
-  // =========================
   const legendX = W - pad + 18;
-
-  // 위쪽: 반복 범례
   const legendTopY = pad + 10;
-
-  // 아래쪽: 정오답 범례
   const legendBottomY = H - pad - 80;
 
-  // =========================
-  // 반복 범례 (우상단)
-  // =========================
   ctx.textAlign = "left";
   ctx.font = "18px sans-serif";
   ctx.fillStyle = "#111";
 
-  ctx.strokeStyle = "#111";
-  ctx.lineWidth = 2;
+  [1, 2, 3].forEach((rep, i) => {
+    const r = rep === 1 ? 5 : rep === 2 ? 7 : 9;
+    const y = legendTopY + i * 30;
+    ctx.beginPath();
+    ctx.arc(legendX, y, r, 0, Math.PI * 2);
+    ctx.strokeStyle = "#111";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillText(`${rep}회`, legendX + 18, y + 6);
+  });
 
-  // 1회
-  ctx.beginPath();
-  ctx.arc(legendX, legendTopY, 5, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.fillText("1회", legendX + 18, legendTopY + 6);
-
-  // 2회
-  ctx.beginPath();
-  ctx.arc(legendX, legendTopY + 30, 7, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.fillText("2회", legendX + 18, legendTopY + 36);
-
-  // 3회
-  ctx.beginPath();
-  ctx.arc(legendX, legendTopY + 60, 9, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.fillText("3회", legendX + 18, legendTopY + 66);
-
-  // =========================
-  // 정오답 범례 (우하단)
-  // =========================
-  ctx.textAlign = "left";
-  ctx.font = "18px sans-serif";
-
-  // 정답
   ctx.beginPath();
   ctx.arc(legendX, legendBottomY, 7, 0, Math.PI * 2);
-
   ctx.strokeStyle = "#111";
-  ctx.lineWidth = 2;
   ctx.stroke();
-
-  ctx.fillStyle = "#111";
-
   ctx.fillText("정답", legendX + 18, legendBottomY + 6);
 
-  // 오답
   ctx.beginPath();
   ctx.arc(legendX, legendBottomY + 30, 7, 0, Math.PI * 2);
-
   ctx.strokeStyle = "#d11";
   ctx.stroke();
-
   ctx.fillText("오답", legendX + 18, legendBottomY + 36);
-
-  // 확인
-  ctx.beginPath();
-  ctx.arc(legendX, legendBottomY + 60, 8, 0, Math.PI * 2);
-
-  ctx.strokeStyle = "blue";
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  ctx.fillText("확인", legendX + 18, legendBottomY + 66);
-
-  document.getElementById("r2Text").textContent = "";
 
   window.resultPoints = [];
 
   gameResults.forEach((r) => {
-    const x = sx(r.question);
-    const y = sy(r.answer);
-    const radius = getPointRadius(r);
+    const qIndex = indexMap[r.question];
+    const aIndex = indexMap[r.answer];
+    if (!qIndex || !aIndex) return;
+
+    const x = sx(qIndex);
+    const y = sy(aIndex);
+    const radius = r.repetition === 1 ? 5 : r.repetition === 2 ? 7 : 9;
 
     window.resultPoints.push({ x, y, r });
 
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
-
-    ctx.strokeStyle = r.question === r.answer ? "#111" : "#d11";
+    ctx.strokeStyle = r.correct ? "#111" : "#d11";
     ctx.lineWidth = 2;
     ctx.stroke();
   });
 
-  document.querySelectorAll(".sideTitle").forEach((x) => {
-    x.style.display = "none";
-  });
+  canvas.onclick = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = ((e.clientX - rect.left) / rect.width) * canvas.width;
+    const my = ((e.clientY - rect.top) / rect.height) * canvas.height;
 
-  document.getElementById("responseSymbol").textContent = "";
-  document.getElementById("stimulusSymbol").textContent = "";
+    const hit = window.resultPoints.find((p) => Math.hypot(mx - p.x, my - p.y) < 18);
+    if (!hit) return;
 
-  document.getElementById("analysisLeft").style.display = "block";
-  document.getElementById("analysisRight").style.display = "block";
-  document.getElementById("analysisLeft").style.visibility = "hidden";
-  document.getElementById("analysisRight").style.visibility = "hidden";
+    const q = getCurrentItems().find((item) => item.collation === hit.r.question);
+    const a = getCurrentItems().find((item) => item.collation === hit.r.answer);
 
-  document.getElementById("analysisLeft").textContent = "";
-  document.getElementById("analysisRight").textContent = "";
-
-  hoveredPoint = null;
-  selectedPoint = null;
-}
-
-document.getElementById("resultCanvas").onclick = (e) => {
-  const canvas = document.getElementById("resultCanvas");
-  const rect = canvas.getBoundingClientRect();
-
-  const x = ((e.clientX - rect.left) / rect.width) * canvas.width;
-  const y = ((e.clientY - rect.top) / rect.height) * canvas.height;
-  const hit = window.resultPoints.find((p) => Math.hypot(p.x - x, p.y - y) < 12);
-
-  if (!hit) return;
-
-  if (selectedPoint) {
-    drawPoint(selectedPoint, false);
-  }
-
-  selectedPoint = hit;
-  drawPoint(selectedPoint, true);
-
-  const q = getCurrentItems().find((v) => v.collation === hit.r.question);
-  const a = getCurrentItems().find((v) => v.collation === hit.r.answer);
-
-  // 왼쪽 = 자극
-  document.getElementById("stimulusSymbol").textContent = q.symbol;
-  // 오른쪽 = 반응
-  document.getElementById("responseSymbol").textContent = a.symbol;
-  document.querySelectorAll(".sideTitle").forEach((x) => {
-    x.style.display = "block";
-  });
-};
-
-let hoveredPoint = null;
-let selectedPoint = null;
-
-function drawPoint(point, isBlue = false) {
-  const canvas = document.getElementById("resultCanvas");
-  const ctx = canvas.getContext("2d");
-
-  const baseRadius = getPointRadius(point.r);
-  const drawRadius = isBlue ? baseRadius + 2 : baseRadius;
-
-  // 기존 hover/확인 흔적 지우기
-  ctx.beginPath();
-  ctx.arc(point.x, point.y, baseRadius + 4, 0, Math.PI * 2);
-  ctx.fillStyle = "white";
-  ctx.fill();
-
-  // 점 다시 그리기
-  ctx.beginPath();
-  ctx.arc(point.x, point.y, drawRadius, 0, Math.PI * 2);
-
-  ctx.strokeStyle = isBlue ? "blue" : point.r.question === point.r.answer ? "#111" : "#d11";
-
-  ctx.lineWidth = isBlue ? 3 : 2;
-  ctx.stroke();
-}
-
-document.getElementById("resultCanvas").onmousemove = (e) => {
-  const canvas = document.getElementById("resultCanvas");
-  const rect = canvas.getBoundingClientRect();
-
-  const x = ((e.clientX - rect.left) / rect.width) * canvas.width;
-  const y = ((e.clientY - rect.top) / rect.height) * canvas.height;
-
-  const hit = window.resultPoints.find((p) => Math.hypot(p.x - x, p.y - y) < 12);
-
-  canvas.style.cursor = hit ? "pointer" : "default";
-
-  if (hoveredPoint && hoveredPoint !== selectedPoint) {
-    drawPoint(hoveredPoint, false);
-  }
-
-  hoveredPoint = null;
-
-  if (hit) {
-    if (hit !== selectedPoint) {
-      drawPoint(hit, true);
-      hoveredPoint = hit;
-    }
-  }
-
-  if (selectedPoint) {
-    drawPoint(selectedPoint, true);
-  }
-};
-
-function downloadResultImage(includeReport = false) {
-  participantName = prompt("이름을 입력하세요 (선택)\n비워두면 자동 파일명으로 저장됩니다.");
-
-  if (participantName === null) return false;
-
-  participantName = participantName.trim();
-
-  const start = new Date(gameStartTime);
-
-  const yyyy = start.getFullYear();
-  const mm = String(start.getMonth() + 1).padStart(2, "0");
-  const dd = String(start.getDate()).padStart(2, "0");
-  const hh = String(start.getHours()).padStart(2, "0");
-  const mi = String(start.getMinutes()).padStart(2, "0");
-  const ss = String(start.getSeconds()).padStart(2, "0");
-
-  const durationSec = Math.round((gameEndTime - gameStartTime) / 1000);
-
-  const safeName = participantName || "thai_study";
-
-  const fileBaseName = `${safeName}_${yyyy}${mm}${dd}_${hh}${mi}${ss}_${durationSec}s_${gameQueue.length}`;
-
-  const resultData = {
-    participantName: participantName || "",
-    difficulty: gameDifficulty,
-    gameStartTime: new Date(gameStartTime).toISOString(),
-    gameEndTime: new Date(gameEndTime).toISOString(),
-    durationMs: gameEndTime - gameStartTime,
-    totalTrials: gameQueue.length,
-    results: gameResults,
-    analysis: includeReport
-      ? {
-          diagnosis: makeDiagnosisText(gameResults),
-          strategy: makeStrategyText(gameResults),
-        }
-      : null,
+    document.getElementById("stimulusSymbol").textContent = q?.symbol || "";
+    document.getElementById("responseSymbol").textContent = a?.symbol || "";
   };
+}
 
-  const blob = new Blob([JSON.stringify(resultData, null, 2)], {
-    type: "application/json",
+function renderKeyboard(target) {
+  const items = getCurrentItems();
+  const pageSize = 12;
+  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+  let page = target === "quiz" ? quizPage : gamePage;
+  page = Math.max(0, Math.min(totalPages - 1, page));
+  if (target === "quiz") quizPage = page;
+  else gamePage = page;
+
+  const keyboard = document.getElementById(target + "Keyboard");
+  keyboard.innerHTML = "";
+  items.slice(page * pageSize, page * pageSize + pageSize).forEach((item) => {
+    const btn = document.createElement("button");
+    btn.textContent = item.symbol || "";
+    btn.onclick = () => chooseKey(target, item);
+    keyboard.appendChild(btn);
+  });
+  for (let i = keyboard.children.length; i < pageSize; i++) {
+    const btn = document.createElement("button");
+    btn.className = "empty";
+    keyboard.appendChild(btn);
+  }
+  document.getElementById(target + "PageInfo").textContent = `${page + 1} / ${totalPages}`;
+}
+
+function chooseKey(target, chosen) {
+  if (target === "game") playTap();
+
+  if (target === "quiz") {
+    if (quizItem && chosen.collation === quizItem.collation) playCorrect();
+    else playWrong();
+
+    showQuizAnswer(chosen);
+    return;
+  }
+
+  const answer = gameQueue[gameIndex];
+
+  gameResults.push({
+    trial: gameIndex + 1,
+    repetition: answer.repetition || 1,
+    difficulty: currentDifficulty,
+    question: answer.collation,
+    answer: chosen.collation,
+    correct: chosen.collation === answer.collation,
+    rt: Date.now() - trialStartTime,
   });
 
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-
-  a.href = url;
-  a.download = fileBaseName + ".json";
-  a.click();
-
-  URL.revokeObjectURL(url);
-
-  const canvas = document.getElementById("resultCanvas");
-  const link = document.createElement("a");
-
-  link.download = fileBaseName + ".png";
-  link.href = canvas.toDataURL("image/png");
-  link.click();
-
-  if (includeReport) {
-    makeReport();
-  }
-
-  resultSaved = true;
-
-  if (includeReport) {
-    reportSaved = true;
-  }
-
-  return true;
+  gameIndex += 1;
+  renderGame();
 }
 
-function makeReport() {
-  document.getElementById("reportMeta").textContent =
-    `이름: ${participantName}\n` +
-    `ID: ${participantId}\n` +
-    `난이도: ${gameDifficulty}\n` +
-    `문항 수: ${gameQueue.length}\n` +
-    `소요 시간: ${Math.round((gameEndTime - gameStartTime) / 1000)}초`;
-
-  const sourceCanvas = document.getElementById("resultCanvas");
-  const reportCanvas = document.getElementById("reportCanvas");
-  const ctx = reportCanvas.getContext("2d");
-
-  ctx.clearRect(0, 0, reportCanvas.width, reportCanvas.height);
-  ctx.drawImage(sourceCanvas, 0, 0);
-
-  document.getElementById("reportDiagnosis").textContent = makeDiagnosisText(gameResults);
-
-  document.getElementById("reportStrategy").textContent = makeStrategyText(gameResults);
-
-  window.print();
-}
-
-document.getElementById("gameTab").onclick = () => {
-  confirmSaveIfNeeded();
-  setActiveMode("gameTab");
-  document.getElementById("learn").style.display = "none";
-  document.getElementById("quiz").style.display = "none";
-  document.getElementById("game").style.display = "block";
-  document.getElementById("resultView").style.display = "none";
-  document.getElementById("speak").style.display = "none";
-  if (gameResults.length > 0) {
-    renderGame();
+function changeKeyboardPage(target, delta) {
+  const totalPages = Math.max(1, Math.ceil(getCurrentItems().length / 12));
+  if (target === "quiz") {
+    quizPage = (quizPage + delta + totalPages) % totalPages;
+    renderKeyboard("quiz");
   } else {
-    startGame();
+    gamePage = (gamePage + delta + totalPages) % totalPages;
+    renderKeyboard("game");
   }
-};
-
-document.getElementById("showResult").onclick = showGameResult;
-document.getElementById("downloadResult").onclick = () => {
-  const save = confirm(analysisGenerated ? "결과 분석 보고서를 저장하시겠습니까?" : "현재 결과를 저장하시겠습니까?");
-
-  if (!save) return;
-
-  downloadResultImage(analysisGenerated);
-};
-
-function confirmSaveIfNeeded() {
-  if (document.getElementById("resultView").style.display !== "block") return true;
-
-  if (reportSaved) return true;
-
-  if (analysisGenerated && resultSaved && !reportSaved) {
-    const saveReport = confirm("결과분석보고서를 저장하시겠습니까?");
-    if (saveReport) downloadResultImage(true);
-    return true;
-  }
-
-  if (resultSaved) return true;
-
-  const save = confirm(analysisGenerated ? "결과분석보고서를 저장하시겠습니까?" : "현재 결과를 저장하시겠습니까?");
-
-  if (save) {
-    downloadResultImage(analysisGenerated);
-  }
-
-  return true;
 }
 
-document.getElementById("analyzeResult").onclick = () => {
-  analysisGenerated = true;
-
-  document.getElementById("analysisLeft").style.display = "block";
-  document.getElementById("analysisRight").style.display = "block";
-
-  document.getElementById("analysisLeft").style.visibility = "visible";
-  document.getElementById("analysisRight").style.visibility = "visible";
-
-  document.getElementById("analysisLeft").textContent = makeDiagnosisText(gameResults);
-  document.getElementById("analysisRight").textContent = makeStrategyText(gameResults);
-};
-
-document.getElementById("restartGame").onclick = () => {
-  if (!resultSaved) {
-    const save = confirm("이번 게임의 결과를 저장할까요?");
-
-    if (save) {
-      downloadResultImage(analysisGenerated);
-    }
+function quizPromptBlock(item) {
+  if (item.Class === "자음" && item.image) {
+    return `
+      <div style="
+        width:100%;
+        height:100%;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        font-weight:900;
+        line-height:1.45;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.68), rgba(255,255,255,0.68)),
+          url('${imagePath(item.image)}');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      ">
+        <div>${item.koreanName || ""}</div>
+        <div>${item.rtgsName || ""}</div>
+      </div>
+    `;
   }
 
-  document.getElementById("resultView").style.display = "none";
-
-  document.getElementById("game").style.display = "block";
-
-  gameResults = [];
-  resultSaved = false;
-
-  startGame();
-};
-
-document.getElementById("speak").onclick = () => {
-  let item;
-
-  // 게임 모드
-  if (document.getElementById("game").style.display === "block") {
-    item = gameQueue[gameIndex];
-  }
-  // 퀴즈 모드
-  else if (document.getElementById("quiz").style.display === "block") {
-    item = currentQuizItem;
-  }
-  // 학습 모드
-  else {
-    item = getCurrentItems()[idx];
+  if (item.Class === "숫자") {
+    return `<div>${item.meaning || ""}</div>`;
   }
 
-  const wordOnly = item.thaiName.trim().split(/\s+/).slice(1).join(" ");
+  return `
+    <div>${item.koreanName || ""}</div>
+    <div>${item.rtgsName || ""}</div>
+  `;
+}
 
-  speakThai(wordOnly);
-};
+function showQuizAnswer(chosen) {
+  document.getElementById("quizInfo").innerHTML = `
+    <div>${chosen.thaiName || ""}</div>
+    <div>${chosen.koreanName || ""}</div>
+    <div>${chosen.rtgsName || ""}</div>
 
-document.getElementById("learnTab").onclick = () => {
-  confirmSaveIfNeeded();
-  setActiveMode("learnTab");
-  document.getElementById("learn").style.display = "block";
-  document.getElementById("quiz").style.display = "none";
-  document.getElementById("game").style.display = "none";
-  document.getElementById("resultView").style.display = "none";
-  document.getElementById("speak").style.display = "inline-block";
-};
+    <div style="
+      width:100%;
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:8px;
+      margin-top:18px;
+      align-items:center;
+    ">
+      <button id="prevQuizBtn">이전</button>
+      <div></div>
+      <button id="nextQuizBtn">다음</button>
+    </div>
+  `;
 
-document.getElementById("quizTab").onclick = () => {
-  confirmSaveIfNeeded();
-  setActiveMode("quizTab");
-  document.getElementById("learn").style.display = "none";
-  document.getElementById("quiz").style.display = "block";
-  document.getElementById("game").style.display = "none";
-  document.getElementById("resultView").style.display = "none";
-  document.getElementById("speak").style.display = "inline-block";
-  quiz();
-};
+  document.getElementById("prevQuizBtn").onclick = () => startQuiz("prev");
+  document.getElementById("nextQuizBtn").onclick = () => startQuiz("next");
+}
 
-function changeCategory(category, buttonId) {
-  confirmSaveIfNeeded();
+function playCorrect() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
 
-  currentCategory = category;
-  idx = 0;
+  const ctx = new AudioContextClass();
+  const notes = [523, 659, 784, 1046];
 
-  gameQueue = [];
-  gameIndex = 0;
-  gameResults = [];
-  window.resultPoints = [];
-  resultSaved = false;
-  analysisGenerated = false;
-  reportSaved = false;
+  notes.forEach((freq, i) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
 
-  document.querySelectorAll(".category button").forEach((btn) => {
-    btn.classList.remove("active");
+    osc.type = "triangle";
+    osc.frequency.value = freq;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    const t = ctx.currentTime + i * 0.18;
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.25, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+
+    osc.start(t);
+    osc.stop(t + 0.18);
   });
-
-  document.getElementById(buttonId).classList.add("active");
-
-  document.getElementById("learn").style.display = "block";
-  document.getElementById("quiz").style.display = "none";
-  document.getElementById("game").style.display = "none";
-  document.getElementById("resultView").style.display = "none";
-  document.getElementById("speak").style.display = "inline-block";
-
-  setActiveMode("learnTab");
-  render();
 }
 
-function setDifficulty(level) {
-  gameDifficulty = level;
+function playWrong() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
 
-  document.querySelectorAll(".difficultyBox button").forEach((btn) => {
-    btn.classList.remove("active");
+  const ctx = new AudioContextClass();
+  const freqs = [523.25, 554.37, 587.33, 622.25, 659.25, 698.46, 739.99, 783.99, 830.61, 880.0, 932.33, 987.77];
+
+  const master = ctx.createGain();
+  master.gain.value = 0.04;
+  master.connect(ctx.destination);
+
+  freqs.forEach((freq) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "sawtooth";
+    osc.frequency.value = freq;
+    osc.connect(gain);
+    gain.connect(master);
+
+    const t = ctx.currentTime;
+    gain.gain.setValueAtTime(0.001, t);
+    gain.gain.linearRampToValueAtTime(1, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.7);
+
+    osc.start(t);
+    osc.stop(t + 0.7);
   });
+}
+function playTap() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
 
-  document.getElementById(level + "Btn").classList.add("active");
+  if (!AudioContextClass) return;
+
+  const ctx = new AudioContextClass();
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = "triangle";
+  osc.frequency.value = 880;
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  const t = ctx.currentTime;
+
+  gain.gain.setValueAtTime(0.0001, t);
+  gain.gain.linearRampToValueAtTime(0.08, t + 0.008);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+
+  osc.start(t);
+  osc.stop(t + 0.05);
 }
 
-document.getElementById("beginnerBtn").onclick = () => {
-  setDifficulty("beginner");
-  startGame();
-};
+function shuffle(a) {
+  return [...a].sort(() => Math.random() - 0.5);
+}
 
-document.getElementById("intermediateBtn").onclick = () => {
-  setDifficulty("intermediate");
-  startGame();
-};
+function getThaiVoice() {
+  const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+  return voices.find((v) => v.lang === "th-TH") || voices.find((v) => v.lang.startsWith("th")) || null;
+}
 
-document.getElementById("advancedBtn").onclick = () => {
-  setDifficulty("advanced");
-  startGame();
-};
+function speakThai(text) {
+  if (!text || !("speechSynthesis" in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "th-TH";
+  u.rate = 0.75;
+  const voice = getThaiVoice();
+  if (voice) u.voice = voice;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
 
-setDifficulty("advanced");
+function currentSpeakItem() {
+  if (currentMode === "quiz") return quizItem;
+  if (currentMode === "game") return gameQueue[gameIndex];
+  return getCurrentItems()[idx];
+}
 
-setActiveMode("learnTab");
+function setupSwipe(el, onLeft, onRight) {
+  let sx = 0;
+  let sy = 0;
+  el.addEventListener(
+    "touchstart",
+    (e) => {
+      sx = e.touches[0].clientX;
+      sy = e.touches[0].clientY;
+    },
+    { passive: true },
+  );
+  el.addEventListener(
+    "touchend",
+    (e) => {
+      const dx = e.changedTouches[0].clientX - sx;
+      const dy = e.changedTouches[0].clientY - sy;
+      if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy)) return;
+      if (dx < 0) onLeft();
+      else onRight();
+    },
+    { passive: true },
+  );
+}
 
-document.getElementById("consonantBtn").onclick = () => {
-  changeCategory("consonant", "consonantBtn");
-};
+function bind() {
+  document.getElementById("setupBack").onclick = () => {
+    selectedMode = "learn";
+    setupStep = "category";
+    renderSetup();
+  };
+  document.getElementById("backBtn").onclick = goSetup;
+  document.getElementById("speakBtn").onclick = () => {
+    const item = currentSpeakItem();
+    if (!item) return;
+    const wordOnly = (item.thaiName || "").trim().split(/\s+/).slice(1).join(" ") || item.thaiName || item.symbol;
+    speakThai(wordOnly);
+  };
+  setupSwipe(
+    document.getElementById("learnScreen"),
+    () => {
+      idx = (idx + 1) % getCurrentItems().length;
+      renderLearn();
+    },
+    () => {
+      idx = (idx - 1 + getCurrentItems().length) % getCurrentItems().length;
+      renderLearn();
+    },
+  );
+  setupSwipe(
+    document.getElementById("quizKeyboard"),
+    () => changeKeyboardPage("quiz", 1),
+    () => changeKeyboardPage("quiz", -1),
+  );
+  setupSwipe(
+    document.getElementById("gameKeyboard"),
+    () => changeKeyboardPage("game", 1),
+    () => changeKeyboardPage("game", -1),
+  );
+}
 
-document.getElementById("vowelBtn").onclick = () => {
-  changeCategory("vowel", "vowelBtn");
-};
+async function init() {
+  bind();
+  renderSetup();
+  APP_ITEMS = (await loadJson()).map(normalizeAppItem);
+}
 
-document.getElementById("numberBtn").onclick = () => {
-  changeCategory("number", "numberBtn");
-};
-
-render();
+if ("speechSynthesis" in window) speechSynthesis.onvoiceschanged = getThaiVoice;
+init().catch((err) => {
+  console.error(err);
+  alert("data/app_items.json을 불러오지 못했습니다.");
+});
