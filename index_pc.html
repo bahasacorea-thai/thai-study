@@ -1,0 +1,801 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RR3ZQXWTWK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-RR3ZQXWTWK");
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Thai Study</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #f5f5f5;
+        padding: 20px;
+      }
+
+      .wrap {
+        max-width: 1000px;
+        margin: auto;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .category,
+      .mode,
+      #speak {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .mode button,
+      .category button,
+      #speak {
+        min-width: 62px;
+        padding: 7px 10px;
+      }
+
+      .mode button.active {
+        background: red;
+        color: white;
+      }
+
+      .category button.active {
+        background: royalblue;
+        color: white;
+      }
+
+      .card {
+        height: 520px;
+        display: grid;
+        grid-template-columns: 22% 33% 45%;
+        gap: 20px;
+        align-items: center;
+        background: white;
+        padding: 20px;
+        border-radius: 20px;
+        overflow: hidden;
+      }
+
+      .symbol {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 180px;
+        text-align: center;
+        font-family: "Noto Sans Thai", "Tahoma", "Leelawadee UI", sans-serif;
+      }
+
+      .img,
+      .card img {
+        width: 80%;
+        height: 80%;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        object-position: center;
+        justify-self: center;
+        align-self: center;
+        background: white;
+      }
+
+      .info {
+        height: 100%;
+        display: flex;
+        font-size: 24px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        text-align: left;
+        padding-right: 20px;
+        padding-left: 20px;
+      }
+
+      .bottombar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+      }
+
+      .bottombar button {
+        min-width: 180px;
+      }
+
+      .bottombar button:hover {
+        background: blue;
+        color: white;
+      }
+
+      button {
+        padding: 10px 18px;
+        margin: 5px;
+        border-radius: 10px;
+      }
+
+      #newQuiz {
+        width: 120px;
+        justify-self: center;
+      }
+
+      #speak:hover {
+        background: mediumpurple;
+        color: white;
+      }
+
+      #quizTitle {
+        text-align: center;
+        margin-bottom: 0px;
+      }
+
+      .quizTop {
+        display: grid;
+        grid-template-columns: 60% 40%;
+
+        align-items: center;
+
+        gap: 0px;
+        margin-top: 20px;
+
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+
+        min-height: 350px;
+      }
+
+      .quizSide {
+        display: grid;
+        grid-template-rows: 1fr 60px;
+
+        justify-items: center;
+        align-items: center;
+        height: 100%;
+        transform: translateX(-60px);
+      }
+
+      #quizImg {
+        width: 100%;
+        height: 100%;
+
+        max-width: 360px;
+        max-height: 350px;
+
+        object-fit: contain;
+
+        justify-self: center;
+        align-self: center;
+      }
+
+      #choices {
+        display: grid;
+        grid-template-columns: repeat(11, 1fr);
+        margin-top: 20px;
+        gap: 8px;
+      }
+
+      #choices button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        line-height: 46px;
+        background: white;
+        color: black;
+        transition: 0.15s;
+        font-size: 36px;
+        white-space: nowrap;
+      }
+
+      #choices button:hover {
+        background: black;
+        color: white;
+      }
+
+      #result {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        min-height: 180px;
+
+        font-size: 32px;
+        line-height: 1.5;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .gameCard {
+        height: 350px;
+        display: grid;
+        grid-template-columns: 33% 34% 33%;
+        gap: 20px;
+        align-items: center;
+        background: white;
+        padding: 20px;
+        border-radius: 20px;
+        overflow: hidden;
+      }
+
+      .gameProgress {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* 상하 가운데 */
+        align-items: center; /* 좌우 가운데 */
+
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .gameInfo {
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+
+        text-align: left;
+
+        justify-content: center; /* 상하 가운데 */
+        align-items: center; /* 좌우 가운데 */
+        /* padding-left: 20px;
+        padding-right: 20px; */
+
+        font-size: 32px;
+        line-height: 1.5;
+        font-weight: bold;
+
+        gap: 6px;
+      }
+
+      .gameInfo p {
+        margin: 0;
+      }
+
+      .gameImageBox {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #gameImg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      #gameChoices {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 8px;
+        margin-top: 20px;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      #gameChoices button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        line-height: 46px;
+        background: white;
+        color: black;
+        transition: 0.15s;
+        font-size: 36px;
+        white-space: nowrap;
+      }
+
+      #gameChoices button:hover {
+        background: black;
+        color: white;
+      }
+
+      #r2Text {
+        font-size: 32px;
+        font-weight: bold;
+      }
+
+      #learn,
+      #quiz,
+      #game,
+      #downloadResult,
+      #restartGame {
+        margin-top: 20px;
+      }
+
+      #gameTitle {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .gameCard {
+        margin-top: 20px;
+      }
+
+      #gameChoices {
+        margin-top: 20px;
+      }
+
+      .card {
+        margin-top: 20px;
+      }
+
+      .bottombar {
+        margin-top: 20px;
+      }
+
+      h1,
+      h2,
+      p {
+        margin-top: 0;
+      }
+
+      #resultView {
+        margin-top: 20px;
+        background: white;
+        padding: 16px;
+        border-radius: 20px;
+        text-align: center;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #resultView h2 {
+        margin-bottom: 20px;
+      }
+
+      .resultPlotWrap {
+        display: grid;
+        grid-template-columns: 260px 100px 500px 100px 260px;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      #resultCanvas {
+        width: 100vw;
+        height: 100vw;
+        max-width: 500px;
+        max-height: 500px;
+        background: white;
+        border: 1px solid #ccc;
+      }
+
+      #downloadResult,
+      #restartGame {
+        margin-top: 20px;
+      }
+
+      .sideSymbol {
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+        align-items: center;
+      }
+
+      .sideTitle {
+        font-size: 20px;
+        line-height: 1;
+        margin-bottom: 8px;
+        display: none;
+      }
+
+      #responseSymbol,
+      #stimulusSymbol {
+        font-size: 96px;
+        line-height: 1;
+      }
+
+      .progressBox {
+        width: 70%;
+        height: 14px;
+        border: 1px solid #999;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #eee;
+        margin: 0 0 10px 0;
+      }
+
+      #progressBar {
+        width: 0%;
+        height: 100%;
+        background: royalblue;
+        transition: width 0.25s ease;
+      }
+
+      #gameProgressText {
+        margin: 0 0 12px 0;
+      }
+
+      .gameHeader {
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      #gameTitle {
+        text-align: center;
+        margin: 0;
+      }
+
+      .difficultyBox {
+        position: absolute;
+        left: calc(50% + 120px);
+        top: 50%;
+        transform: translateY(-50%);
+
+        display: flex;
+        gap: 8px;
+      }
+
+      #beginnerBtn {
+        background: #b87333;
+        color: white;
+      }
+
+      #intermediateBtn {
+        background: silver;
+        color: black;
+      }
+
+      #advancedBtn {
+        background: gold;
+        color: black;
+      }
+
+      .difficultyBox button.active {
+        outline: 4px solid red;
+        transform: scale(1.05);
+      }
+
+      .analysisSide {
+        width: 260px;
+        height: 500px;
+
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        border: 1px solid #ccc;
+        border-radius: 12px;
+        background: #fafafa;
+
+        padding: 16px;
+
+        white-space: pre-line;
+        text-align: left;
+
+        font-size: 14px;
+
+        box-sizing: border-box;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          overflow-x: hidden;
+        }
+
+        .wrap {
+          width: 100%;
+          max-width: 100%;
+          padding: 8px;
+          box-sizing: border-box;
+        }
+
+        .topbar {
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+
+        .topbar button {
+          flex: 1 1 calc(50% - 6px);
+          min-width: 120px;
+          font-size: 16px;
+        }
+
+        .learnCard,
+        .quizWrap,
+        .gameWrap,
+        .resultWrap {
+          display: flex !important;
+          flex-direction: column !important;
+          width: 100%;
+        }
+
+        .leftPanel,
+        .rightPanel,
+        .centerPanel {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+
+        .keyboard {
+          grid-template-columns: repeat(auto-fit, minmax(52px, 1fr));
+          gap: 6px;
+        }
+
+        canvas {
+          width: 100% !important;
+          height: auto !important;
+        }
+
+        #resultCanvas {
+          max-width: 100%;
+        }
+      }
+
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+
+        #reportView,
+        #reportView * {
+          visibility: visible;
+        }
+
+        #reportView {
+          display: block !important;
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          background: white;
+        }
+
+        #reportView h2,
+        #reportMeta,
+        #reportCanvas {
+          page-break-after: avoid;
+        }
+
+        #reportDiagnosis {
+          page-break-before: always;
+          white-space: pre-wrap;
+          font-size: 14pt;
+        }
+
+        #reportStrategy {
+          page-break-before: always;
+          white-space: pre-wrap;
+          font-size: 14pt;
+        }
+      }
+
+      @page {
+        size: A4 portrait;
+        margin: 12mm;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          overflow-x: hidden;
+        }
+
+        .card {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center;
+          height: auto !important;
+          padding: 16px;
+          gap: 20px;
+        }
+
+        .card > div {
+          width: 100% !important;
+          max-width: 100% !important;
+          text-align: center;
+        }
+
+        .symbolBox {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 72px !important;
+        }
+
+        .infoBox {
+          font-size: 20px !important;
+          line-height: 1.8;
+          text-align: center;
+        }
+
+        .modeButtons,
+        .typeButtons {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 8px;
+        }
+
+        button {
+          min-width: 90px;
+          font-size: 16px;
+        }
+
+        .bottomButtons {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .card {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          height: auto !important;
+          min-height: 0 !important;
+          padding: 20px 12px !important;
+          gap: 18px !important;
+        }
+
+        .pronInfo,
+        .ruleInfo {
+          width: 100% !important;
+          padding-left: 0 !important;
+          align-items: center !important;
+          text-align: center !important;
+          font-size: 20px !important;
+          line-height: 1.6 !important;
+        }
+
+        .symbolBox,
+        .symbolArea,
+        .patternBox {
+          width: 100% !important;
+          font-size: 72px !important;
+          text-align: center !important;
+        }
+
+        .topbar {
+          flex-wrap: wrap !important;
+          gap: 8px !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <h1>태국어 문자 학습</h1>
+      <div class="topbar">
+        <div class="category">
+          <button id="consonant1Btn" class="active">자음1</button>
+          <button id="consonant2Btn">자음2</button>
+          <button id="consonantAllBtn">자음전체</button>
+          <button id="vowelPlusBtn">모음+</button>
+          <button id="numberBtn">숫자</button>
+          <button id="punctuationBtn">문장부호</button>
+        </div>
+        <div class="mode">
+          <button id="learnTab">학습 모드</button>
+          <button id="quizTab">퀴즈 모드</button>
+          <button id="gameTab">게임 모드</button>
+        </div>
+        <div>
+          <button id="speak">글자 이름 듣기</button>
+        </div>
+      </div>
+      <div id="learn">
+        <div class="card">
+          <div id="symbol" class="symbol"></div>
+          <div class="info">
+            <p id="thaiName"></p>
+            <p id="korean"></p>
+            <p id="proper"></p>
+            <!-- <p id="meaning"></p> -->
+          </div>
+          <div class="imageBox">
+            <img id="img" class="img" />
+          </div>
+        </div>
+        <div class="bottombar"><button id="prev">이전</button><button id="next">다음</button></div>
+      </div>
+      <div id="quiz" style="display: none">
+        <h2 id="quizTitle"></h2>
+        <div id="quizSymbol" class="symbol"></div>
+        <div class="quizTop">
+          <img id="quizImg" class="img" />
+
+          <div class="quizSide">
+            <p id="result"></p>
+            <button id="newQuiz">다음</button>
+          </div>
+        </div>
+        <div id="choices"></div>
+      </div>
+
+      <div id="game" style="display: none">
+        <div class="gameHeader">
+          <h2 id="gameTitle">실전 게임</h2>
+          <div class="difficultyBox">
+            <button id="beginnerBtn">초급</button>
+            <button id="intermediateBtn">중급</button>
+            <button id="advancedBtn">고급</button>
+          </div>
+        </div>
+        <div class="gameCard">
+          <div class="gameInfo">
+            <p id="gameThaiName"></p>
+            <p id="gameKorean"></p>
+            <p id="gameRtgs"></p>
+          </div>
+          <div class="gameImageBox">
+            <img id="gameImg" class="img" />
+          </div>
+          <div class="gameProgress">
+            <div class="progressBox">
+              <div id="progressBar"></div>
+            </div>
+
+            <p id="gameProgressText"></p>
+            <button id="showResult">결과 보기</button>
+          </div>
+        </div>
+        <div id="gameChoices"></div>
+      </div>
+
+      <div id="resultView" style="display: none">
+        <h2>게임 결과</h2>
+
+        <div class="resultPlotWrap">
+          <div id="analysisLeft" class="analysisSide" style="display: none"></div>
+
+          <div class="sideSymbol">
+            <div class="sideTitle">자극:</div>
+            <div id="stimulusSymbol"></div>
+          </div>
+
+          <canvas id="resultCanvas" width="700" height="700"></canvas>
+
+          <div class="sideSymbol">
+            <div class="sideTitle">반응:</div>
+            <div id="responseSymbol"></div>
+          </div>
+
+          <div id="analysisRight" class="analysisSide" style="display: none"></div>
+        </div>
+
+        <p id="r2Text"></p>
+
+        <button id="downloadResult">결과 저장</button>
+        <button id="analyzeResult">결과 분석</button>
+        <button id="restartGame">게임 다시</button>
+
+        <div id="reportView" style="display: none">
+          <h2>분석 보고서</h2>
+          <div id="reportMeta"></div>
+          <canvas id="reportCanvas" width="700" height="700"></canvas>
+          <pre id="reportDiagnosis"></pre>
+          <pre id="reportStrategy"></pre>
+        </div>
+      </div>
+    </div>
+    <script src="gameAnalysis_pc.js"></script>
+    <script src="app_pc.js"></script>
+  </body>
+</html>
