@@ -626,7 +626,7 @@
     "Thai Name": "วิสรรชนีย์",
     "Korean Name": "위싼차니",
     "RTGS Name": "wisanchani",
-    "Meaning": "",
+    "Meaning": "단모음; 조합 부호",
     "Image": ""
   },
   {
@@ -640,7 +640,7 @@
     "Thai Name": "ลากข้าง",
     "Korean Name": "락 캉",
     "RTGS Name": "lak khang",
-    "Meaning": "",
+    "Meaning": "장모음; 조합 부호",
     "Image": ""
   },
   {
@@ -654,7 +654,7 @@
     "Thai Name": "พินทุอิ",
     "Korean Name": "핀투 이",
     "RTGS Name": "phinthu i",
-    "Meaning": "",
+    "Meaning": "단모음; 조합 부호",
     "Image": ""
   },
   {
@@ -668,7 +668,7 @@
     "Thai Name": "พินทุอี",
     "Korean Name": "핀투 이",
     "RTGS Name": "phinthu i",
-    "Meaning": "",
+    "Meaning": "장모음; 조합 부호",
     "Image": ""
   },
   {
@@ -682,7 +682,7 @@
     "Thai Name": "ตีนเหยียด",
     "Korean Name": "틴 이앗",
     "RTGS Name": "tin yiat",
-    "Meaning": "",
+    "Meaning": "단모음",
     "Image": ""
   },
   {
@@ -696,7 +696,7 @@
     "Thai Name": "ตีนคู้",
     "Korean Name": "틴 쿠",
     "RTGS Name": "tin khu",
-    "Meaning": "",
+    "Meaning": "장모음",
     "Image": ""
   },
   {
@@ -710,7 +710,7 @@
     "Thai Name": "ไม้หน้า",
     "Korean Name": "마이 나",
     "RTGS Name": "mai na",
-    "Meaning": "",
+    "Meaning": "장모음; 조합 부호",
     "Image": ""
   },
   {
@@ -724,7 +724,7 @@
     "Thai Name": "ไม้แอ",
     "Korean Name": "마이 애",
     "RTGS Name": "mai ae",
-    "Meaning": "",
+    "Meaning": "장모음",
     "Image": ""
   },
   {
@@ -738,7 +738,7 @@
     "Thai Name": "ไม้โอ",
     "Korean Name": "마이 오",
     "RTGS Name": "mai o",
-    "Meaning": "",
+    "Meaning": "장모음",
     "Image": ""
   },
   {
@@ -752,7 +752,7 @@
     "Thai Name": "ไม้ม้วน",
     "Korean Name": "마이 무안",
     "RTGS Name": "mai muan",
-    "Meaning": "",
+    "Meaning": "이중모음",
     "Image": ""
   },
   {
@@ -766,7 +766,7 @@
     "Thai Name": "ไม้มลาย",
     "Korean Name": "마이 말라이",
     "RTGS Name": "mai malai",
-    "Meaning": "",
+    "Meaning": "이중모음",
     "Image": ""
   },
   {
@@ -780,7 +780,7 @@
     "Thai Name": "ไม้หันอากาศ",
     "Korean Name": "마이 한 아깟",
     "RTGS Name": "mai han akat",
-    "Meaning": "",
+    "Meaning": "조합 부호",
     "Image": ""
   },
   {
@@ -794,7 +794,7 @@
     "Thai Name": "ไม้ไต่คู้",
     "Korean Name": "마이 따이 쿠",
     "RTGS Name": "mai tai khu",
-    "Meaning": "",
+    "Meaning": "조합 부호",
     "Image": ""
   },
   {
@@ -808,7 +808,7 @@
     "Thai Name": "นิคหิต",
     "Korean Name": "닉카힛",
     "RTGS Name": "nikkhahit",
-    "Meaning": "",
+    "Meaning": "비음 부호",
     "Image": ""
   },
   {
@@ -822,7 +822,7 @@
     "Thai Name": "ตัว ย",
     "Korean Name": "뚜아 요",
     "RTGS Name": "tua yo",
-    "Meaning": "",
+    "Meaning": "조합 부호",
     "Image": ""
   },
   {
@@ -836,7 +836,7 @@
     "Thai Name": "ตัว ว",
     "Korean Name": "뚜아 워",
     "RTGS Name": "tua wo",
-    "Meaning": "",
+    "Meaning": "조합 부호",
     "Image": ""
   },
   {
@@ -850,7 +850,7 @@
     "Thai Name": "ตัว อ",
     "Korean Name": "뚜아 오",
     "RTGS Name": "tua o",
-    "Meaning": "",
+    "Meaning": "조합 부호",
     "Image": ""
   },
   {
@@ -864,7 +864,7 @@
     "Thai Name": "ตัว ฤ",
     "Korean Name": "뚜아 르",
     "RTGS Name": "tua rue",
-    "Meaning": "",
+    "Meaning": "독립 모음 부호",
     "Image": ""
   },
   {
@@ -878,7 +878,7 @@
     "Thai Name": "ตัว ฦ",
     "Korean Name": "뚜아 르",
     "RTGS Name": "tua lue",
-    "Meaning": "",
+    "Meaning": "독립 모음 부호",
     "Image": ""
   },
   {
@@ -892,7 +892,7 @@
     "Thai Name": "ลากข้างยาว",
     "Korean Name": "락 캉 야우",
     "RTGS Name": "lak khang yao",
-    "Meaning": "",
+    "Meaning": "장모음 부호",
     "Image": ""
   },
   {
@@ -906,7 +906,7 @@
     "Thai Name": "ทัณฑฆาต",
     "Korean Name": "탄타캇, 까란",
     "RTGS Name": "thanthakhat, karan",
-    "Meaning": "",
+    "Meaning": "묵음 부호",
     "Image": ""
   },
   {
@@ -920,7 +920,7 @@
     "Thai Name": "ยามักการ",
     "Korean Name": "야막깐",
     "RTGS Name": "yamakkan",
-    "Meaning": "",
+    "Meaning": "자음군 시작 부호",
     "Image": ""
   },
   {
@@ -934,7 +934,7 @@
     "Thai Name": "พินทุ",
     "Korean Name": "핀투",
     "RTGS Name": "pinthu",
-    "Meaning": "",
+    "Meaning": "내재모음 묵음 부호",
     "Image": ""
   },
   {
@@ -948,7 +948,7 @@
     "Thai Name": "ไม้เอก",
     "Korean Name": "마이 엑",
     "RTGS Name": "mai ek",
-    "Meaning": "",
+    "Meaning": "성조 부호",
     "Image": ""
   },
   {
@@ -962,7 +962,7 @@
     "Thai Name": "ไม้โท",
     "Korean Name": "마이 토",
     "RTGS Name": "mai tho",
-    "Meaning": "",
+    "Meaning": "성조 부호",
     "Image": ""
   },
   {
@@ -976,7 +976,7 @@
     "Thai Name": "ไม้ตรี",
     "Korean Name": "마이 뜨리",
     "RTGS Name": "mai tri",
-    "Meaning": "",
+    "Meaning": "성조 부호",
     "Image": ""
   },
   {
@@ -990,7 +990,7 @@
     "Thai Name": "ไม้จัตวา",
     "Korean Name": "마이 짯따와",
     "RTGS Name": "mai chattawa",
-    "Meaning": "",
+    "Meaning": "성조 부호",
     "Image": ""
   },
   {

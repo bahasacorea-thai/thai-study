@@ -237,7 +237,7 @@
     "codaRule.note": "",
     "onsetRule.cluster": "allowed",
     "onsetRule.note": "",
-    "note": ""
+    "note": "mai muan"
   },
   {
     "index": 17,
@@ -252,7 +252,7 @@
     "codaRule.note": "",
     "onsetRule.cluster": "allowed",
     "onsetRule.note": "",
-    "note": ""
+    "note": "mai malai"
   },
   {
     "index": 18,
@@ -355,9 +355,9 @@
     "formationType": "wrap",
     "codaRule": "forbidden",
     "codaRule.note": "",
-    "onsetRule.cluster": "forbidden",
-    "onsetRule.note": "only one C allowed",
-    "note": ""
+    "onsetRule.cluster": "only singleton allowed",
+    "onsetRule.note": "",
+    "note": "e.g. ไทย"
   },
   {
     "index": 25,
@@ -670,8 +670,8 @@
     "formationType": "flank",
     "codaRule": "allowed",
     "codaRule.note": "",
-    "onsetRule.cluster": "forbidden",
-    "onsetRule.note": "only one C allowed",
+    "onsetRule.cluster": "only singleton allowed",
+    "onsetRule.note": "",
     "note": ""
   },
   {
@@ -685,8 +685,8 @@
     "formationType": "flank",
     "codaRule": "required",
     "codaRule.note": "",
-    "onsetRule.cluster": "forbidden",
-    "onsetRule.note": "only one C allowed",
+    "onsetRule.cluster": "only singleton allowed",
+    "onsetRule.note": "",
     "note": ""
   },
   {
@@ -700,8 +700,8 @@
     "formationType": "special",
     "codaRule": "allowed",
     "codaRule.note": "",
-    "onsetRule.cluster": "forbidden",
-    "onsetRule.note": "only one C allowed",
+    "onsetRule.cluster": "only singleton allowed",
+    "onsetRule.note": "",
     "note": ""
   },
   {
@@ -715,8 +715,8 @@
     "formationType": "special",
     "codaRule": "forbidden",
     "codaRule.note": "",
-    "onsetRule.cluster": "forbidden",
-    "onsetRule.note": "no C allowed",
+    "onsetRule.cluster": "no C allowed",
+    "onsetRule.note": "",
     "note": ""
   },
   {
@@ -730,8 +730,8 @@
     "formationType": "special",
     "codaRule": "allowed",
     "codaRule.note": "",
-    "onsetRule.cluster": "forbidden",
-    "onsetRule.note": "no C allowed",
+    "onsetRule.cluster": "no C allowed",
+    "onsetRule.note": "",
     "note": ""
   },
   {
@@ -745,8 +745,8 @@
     "formationType": "special",
     "codaRule": "forbidden",
     "codaRule.note": "",
-    "onsetRule.cluster": "forbidden",
-    "onsetRule.note": "no C allowed",
+    "onsetRule.cluster": "no C allowed",
+    "onsetRule.note": "",
     "note": ""
   },
   {
@@ -760,9 +760,9 @@
     "formationType": "above",
     "codaRule": "forbidden",
     "codaRule.note": "",
-    "onsetRule.cluster": "forbidden",
-    "onsetRule.note": "only one C allowed",
-    "note": "mai tai khu standalone; e.g. ก็"
+    "onsetRule.cluster": "only singleton allowed",
+    "onsetRule.note": "",
+    "note": "e.g. ก็"
   },
   {
     "index": 52,
