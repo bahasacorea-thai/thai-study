@@ -216,12 +216,11 @@ function getCodaText(rule) {
 function getOnsetText(rule) {
   if (!rule || !rule.cluster) return "";
 
-  if (rule.cluster === "forbidden") return "초성 자음군: 불가";
-  if (rule.cluster === "required") return "초성 자음군: 필수";
-  if (rule.cluster === "allowed") return "초성 자음군: 허용";
-  if (rule.cluster === "restricted") return "초성 자음군: 제한";
+  if (rule.cluster === "allowed") return "초성: 자음군 허용";
+  if (rule.cluster === "only singleton allowed") return "초성: 홑자음만 허용";
+  if (rule.cluster === "no C allowed") return "초성: 자음군 불가";
 
-  return "초성 자음군: " + rule.cluster;
+  return "초성: " + rule.cluster;
 }
 
 function getFormationText(value) {
@@ -244,10 +243,6 @@ function getFormationText(value) {
 
 function getRuleNote(item) {
   const lines = [];
-
-  if (item.codaRule && item.codaRule.note) {
-    lines.push("종성 참고: " + item.codaRule.note);
-  }
 
   if (item.note) {
     lines.push("기타: " + item.note);
@@ -405,12 +400,15 @@ function playWrong() {
   });
 }
 
-function renderPrompt(targetId, item) {
-  document.getElementById(targetId).innerHTML = `
-    <div>${getDisplayKorean(item)}</div>
-    <div>${getDisplayRtgs(item)}</div>
-    <div>${getDisplayIpa(item)}</div>
-  `;
+function renderPrompt(item) {
+  document.getElementById("quizKorean").textContent = getDisplayKorean(item);
+  document.getElementById("quizRtgs").textContent = getDisplayRtgs(item);
+  document.getElementById("quizIpa").textContent = getDisplayIpa(item);
+
+  document.getElementById("quizFormation").textContent = getFormationText(item.formationType);
+  document.getElementById("quizCoda").textContent = getCodaText(item.codaRule);
+  document.getElementById("quizOnset").textContent = getOnsetText(item.onsetRule);
+  document.getElementById("quizNote").textContent = getRuleNote(item);
 }
 
 function quiz() {
@@ -423,7 +421,7 @@ function quiz() {
   document.getElementById("quizSymbol").textContent = "";
   document.getElementById("result").textContent = "";
 
-  renderPrompt("quizPrompt", correct);
+  renderPrompt(correct);
 
   const box = document.getElementById("choices");
   box.innerHTML = "";
@@ -520,11 +518,13 @@ function renderGame() {
   const x = gameQueue[gameIndex];
   trialStartTime = Date.now();
 
-  document.getElementById("gameKorean").textContent = x.korean;
-  document.getElementById("gameRtgs").textContent = x.rtgs;
-  document.getElementById("gameIpa").textContent = x.ipa;
-  // document.getElementById("gamePrompt").textContent = getDisplaySyllable(x);
-  document.getElementById("gamePrompt").textContent = "";
+  document.getElementById("gameKorean").textContent = getDisplayKorean(x);
+  document.getElementById("gameRtgs").textContent = getDisplayRtgs(x);
+  document.getElementById("gameIpa").textContent = getDisplayIpa(x);
+
+  const gamePromptLines = [getFormationText(x.formationType), getCodaText(x.codaRule), getOnsetText(x.onsetRule), getRuleNote(x)];
+
+  document.getElementById("gamePrompt").textContent = gamePromptLines.filter(Boolean).join("\n");
 
   document.getElementById("gameProgressText").textContent = gameIndex + 1 + " / " + gameQueue.length;
 
@@ -582,6 +582,13 @@ function showGameResult() {
   const ctx = canvas.getContext("2d");
   const W = canvas.width;
   const H = canvas.height;
+
+  const items = getCurrentItems();
+
+  const indexMap = {};
+  items.forEach((item, i) => {
+    indexMap[item.collation] = i + 1;
+  });
 
   ctx.clearRect(0, 0, W, H);
 
@@ -656,7 +663,7 @@ function showGameResult() {
   }
 
   const total = gameResults.length;
-  const correctCount = gameResults.filter((r) => r.question === r.answer).length;
+  const correctCount = gameResults.filter((r) => r.correct).length;
   const accuracy = total === 0 ? 0 : Math.round((correctCount / total) * 10000) / 100;
 
   ctx.fillStyle = "#111";
@@ -667,15 +674,15 @@ function showGameResult() {
   window.resultPoints = [];
 
   gameResults.forEach((r) => {
-    const x = sx(r.question);
-    const y = sy(r.answer);
+    const x = sx(indexMap[r.question]);
+    const y = sy(indexMap[r.answer]);
     const radius = getPointRadius(r);
 
     window.resultPoints.push({ x, y, r });
 
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = r.question === r.answer ? "#111" : "#d11";
+    ctx.strokeStyle = r.correct ? "#111" : "#d11";
     ctx.lineWidth = 2;
     ctx.stroke();
   });
@@ -715,7 +722,7 @@ function drawPoint(point, isBlue = false) {
 
   ctx.beginPath();
   ctx.arc(point.x, point.y, drawRadius, 0, Math.PI * 2);
-  ctx.strokeStyle = isBlue ? "blue" : point.r.question === point.r.answer ? "#111" : "#d11";
+  ctx.strokeStyle = isBlue ? "blue" : point.r.correct ? "#111" : "#d11";
   ctx.lineWidth = isBlue ? 3 : 2;
   ctx.stroke();
 }

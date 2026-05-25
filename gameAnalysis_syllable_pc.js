@@ -21,7 +21,7 @@ function getItemByCollation(collation) {
 
 function getAccuracyInfo(results) {
   const total = results.length;
-  const correct = results.filter((r) => r.question === r.answer).length;
+  const correct = results.filter((r) => r.correct).length;
   const wrong = total - correct;
   const accuracy = total === 0 ? 0 : Math.round((correct / total) * 10000) / 100;
 
@@ -37,7 +37,7 @@ function getWrongPairs(results) {
   const pairMap = {};
 
   results.forEach((r) => {
-    if (r.question === r.answer) return;
+    if (r.correct) return;
 
     const key = r.question + "->" + r.answer;
 
@@ -56,23 +56,27 @@ function getWrongPairs(results) {
 }
 
 function makeLevelComment(accuracy) {
-  if (accuracy >= 95) {
-    return "거의 숙달 단계입니다. 전체 반복보다 틀린 문자쌍만 집중 복습하는 것이 효율적입니다.";
+  if (accuracy === 100) {
+    return "완벽합니다. 2차례 더 100%가 나오면 다음 단계로 넘어가세요.";
   }
 
-  if (accuracy >= 85) {
-    return "안정적인 구별 능력이 형성되고 있습니다. 반복 중 나타나는 특정 혼동 문자쌍을 따로 묶어 복습하면 좋습니다.";
+  if (accuracy >= 95 && accuracy < 100) {
+    return "거의 숙달 단계입니다. 전체 반복보다 틀린 음절쌍만 집중 복습하는 것이 효율적입니다.";
   }
 
-  if (accuracy >= 70) {
-    return "기본 구별은 가능하지만 아직 혼동이 남아 있습니다. 그림보다 문자 모양과 이름을 함께 확인하는 연습이 필요합니다.";
+  if (accuracy >= 85 && accuracy < 95) {
+    return "안정적인 구별 능력이 형성되고 있습니다. 반복 중 나타나는 특정 혼동 음절쌍을 따로 묶어 복습하면 좋습니다.";
   }
 
-  if (accuracy >= 50) {
-    return "아직 문자 구별이 충분히 안정되지 않았습니다. 학습 모드로 돌아가 글자 이름과 대표 단어를 먼저 반복하는 것이 좋습니다.";
+  if (accuracy >= 70 && accuracy < 85) {
+    return "기본 구별은 가능하지만 아직 혼동이 남아 있습니다. 음절 모양과 표기를 함께 확인하는 연습이 필요합니다.";
   }
 
-  return "처음 학습 단계입니다. 퀴즈나 게임보다 학습 모드에서 문자와 그림을 천천히 연결하는 연습이 먼저 필요합니다.";
+  if (accuracy >= 50 && accuracy < 70) {
+    return "아직 음절 구별이 충분히 안정되지 않았습니다. 먼저 학습 모드로 돌아가 음절 모양과 표기를 반복하는 것이 좋습니다.";
+  }
+
+  return "처음 학습 단계입니다. 먼저 퀴즈나 게임보다 학습 모드에서 음절 형태와 표기를 연결하는 연습이 필요합니다.";
 }
 
 function makeWrongPairText(pair) {
@@ -81,7 +85,7 @@ function makeWrongPairText(pair) {
 
   if (!q || !a) return "";
 
-  return `${getDisplaySyllable(q)} (${q.korean}, ${q.rtgs}, ${q.ipa}) → ${getDisplaySyllable(a)} (${a.korean}, ${a.rtgs}, ${a.ipa}) : ${pair.count}회`;
+  return `${getDisplaySyllable(q)} (${getDisplayKorean(q)}, ${getDisplayRtgs(q)}, ${getDisplayIpa(q)}) → ${getDisplaySyllable(a)} (${getDisplayKorean(a)}, ${getDisplayRtgs(a)}, ${getDisplayIpa(a)}) : ${pair.count}회`;
 }
 
 function makeStudyStrategy(accuracyInfo, wrongPairs) {
@@ -90,20 +94,20 @@ function makeStudyStrategy(accuracyInfo, wrongPairs) {
   }
 
   if (wrongPairs.length === 0) {
-    return ["오답이 없습니다.", "현재 단계에서는 다음 문자 범주나 모음 기호 학습으로 넘어가도 좋습니다."];
+    return ["오답이 없습니다.", "현재 단계에서는 다음 음절 범주나 다음 단계로 넘어가도 좋습니다."];
   }
 
   const strategies = [];
 
   if (wrongPairs.length <= 3) {
-    strategies.push("오답이 특정 문자쌍에 제한되어 있습니다.");
-    strategies.push("전체 44자를 다시 반복하기보다 아래 혼동 문자쌍만 집중 복습하십시오.");
+    strategies.push("오답이 특정 음절쌍에 제한되어 있습니다.");
+    strategies.push("전체 음절 유형을 다시 반복하기보다 아래 혼동 음절쌍만 집중 복습하십시오.");
   } else {
-    strategies.push("오답이 여러 문자에 분산되어 있습니다.");
-    strategies.push("학습 모드에서 전체 문자를 한 번 훑은 뒤 다시 게임을 실행하는 것이 좋습니다.");
+    strategies.push("오답이 여러 음절에 분산되어 있습니다.");
+    strategies.push("학습 모드에서 전체 음절을 공부한 뒤 다시 게임을 실행하는 것이 좋습니다.");
   }
 
-  strategies.push("틀린 문자는 태국 문자 모양, 한글 이름, 로마자 표기를 함께 비교하십시오.");
+  strategies.push("틀린 음절은 모양, 한글 표기, 로마자 표기를 함께 비교하십시오.");
 
   return strategies;
 }
@@ -126,7 +130,7 @@ function makeGameAnalysis(results) {
   lines.push("");
 
   if (topWrongPairs.length > 0) {
-    lines.push("주요 혼동 문자");
+    lines.push("주요 혼동 음절");
     topWrongPairs.forEach((pair) => {
       lines.push("- " + makeWrongPairText(pair));
     });
@@ -171,7 +175,7 @@ function makeDiagnosisText(results) {
 
   if (topWrongPairs.length > 0) {
     lines.push("");
-    lines.push("주요 혼동 문자");
+    lines.push("주요 혼동 음절");
     topWrongPairs.forEach((pair) => {
       lines.push("- " + makeWrongPairText(pair));
     });
@@ -198,15 +202,15 @@ function makeDiagnosisText(results) {
 
   if (hardItems.length > 0) {
     lines.push("");
-    lines.push("반복 오답 문자");
+    lines.push("반복 오답 음절");
 
     hardItems.forEach(({ item, count }) => {
       let label = "";
 
       if (count === 2) {
-        label = "취약 문자";
+        label = "취약 음절";
       } else if (count >= 3) {
-        label = "핵심 복습 문자";
+        label = "핵심 복습 음절";
       } else {
         label = "일시적 혼동";
       }
@@ -233,7 +237,7 @@ function makeStrategyText(results) {
   if (wrongPairs.length === 0) {
     lines.push("- 오답이 없습니다.");
 
-    lines.push("- 현재 단계에서는 다음 문자 범주나 모음 학습으로 넘어가도 좋습니다.");
+    lines.push("- 현재 단계에서는 다음 음절 범주나 다음 단계로 넘어가도 좋습니다.");
 
     return lines.join("\n");
   }
@@ -270,13 +274,13 @@ function makeStrategyText(results) {
 
   // 권고 생성
   if (coreItems.length > 0) {
-    lines.push(`- 핵심 복습 문자: ${coreItems.join(", ")}`);
+    lines.push(`- 핵심 복습 음절: ${coreItems.join(", ")}`);
 
-    lines.push("- 이 문자는 학습 모드에서 이름과 모양을 함께 반복 확인하십시오.");
+    lines.push("- 이 음절은 학습 모드에서 표기와 모양을 함께 반복 확인하십시오.");
   }
 
   if (weakItems.length > 0) {
-    lines.push(`- 취약 문자: ${weakItems.join(", ")}`);
+    lines.push(`- 취약 음절: ${weakItems.join(", ")}`);
 
     lines.push("- 퀴즈 모드에서 추가 노출을 권장합니다.");
   }

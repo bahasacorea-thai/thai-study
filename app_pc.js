@@ -6,7 +6,6 @@ let VOWEL_ITEMS = [];
 
 function normalizeAppItem(row) {
   const symbol = row.Symbol === undefined || row.Symbol === null ? "" : String(row.Symbol);
-  const korean = row["Korean Name"] || "";
 
   return {
     Serial: row.Serial,
@@ -14,19 +13,20 @@ function normalizeAppItem(row) {
     Class: row.Class || "",
     Property: row.Property || "",
     Canonical: row.Canonical || "",
-    Notes: row.Notes || "",
 
     index: Number(row.Serial) || 0,
     collation: Number(row.Collation) || 0,
     symbol,
     thaiName: row["Thai Name"] || "",
-    koreanName: korean,
-    koreanExample: "",
-    korean,
+    koreanName: row["Korean Name"] || "",
     rtgsName: row["RTGS Name"] || "",
     meaning: row.Meaning === undefined || row.Meaning === null ? "" : String(row.Meaning),
     image: row.Image || "",
   };
+}
+
+function isSameAnswer(a, b) {
+  return (a?.symbol || "").trim() === (b?.symbol || "").trim();
 }
 
 async function loadAppItems() {
@@ -154,9 +154,9 @@ function render() {
     img.style.display = "none";
     fallback.style.display = "flex";
     fallback.textContent = x.meaning || "";
-    fallback.style.fontSize = "240px";
+    fallback.style.fontSize = "160px";
     fallback.style.lineHeight = "1";
-    fallback.style.fontWeight = "bold";
+    fallback.style.fontWeight = "500";
     fallback.style.justifyContent = "center";
     fallback.style.alignItems = "center";
   } else if (currentCategory === "vowelPlus") {
@@ -179,7 +179,7 @@ function render() {
     infoEl.style.paddingLeft = "48px";
     infoEl.style.paddingRight = "48px";
 
-    symbolEl.style.fontSize = "84px";
+    symbolEl.style.fontSize = "140px";
     symbolEl.style.fontWeight = "normal";
     symbolEl.style.lineHeight = "1";
 
@@ -208,8 +208,8 @@ function render() {
   }
 
   document.getElementById("thaiName").textContent = "이름: " + x.thaiName;
-  document.getElementById("korean").textContent = "한글: " + x.korean;
-  document.getElementById("proper").textContent = "라틴: " + x.rtgsName;
+  document.getElementById("koreanName").textContent = "한글: " + x.koreanName;
+  document.getElementById("rtgsName").textContent = "라틴: " + x.rtgsName;
 }
 
 document.getElementById("prev").onclick = () => {
@@ -298,14 +298,14 @@ function quiz() {
   const quizImg = document.getElementById("quizImg");
 
   if (currentCategory === "number") {
-    quizImg.outerHTML = `<div id="quizImg" class="img" style="display:flex;align-items:center;justify-content:center;font-size:240px;font-weight:bold;">${correct.meaning || ""}</div>`;
+    quizImg.outerHTML = `<div id="quizImg" class="img" style="display:flex;align-items:center;justify-content:center;font-size:160px;font-weight:500;">${correct.meaning || ""}</div>`;
   } else if (currentCategory === "vowelPlus") {
     quizImg.outerHTML = `
     <div id="quizImg" class="img" style="display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.6;font-weight:bold;text-align:center;">
       <div style="font-size:32px;">${correct.thaiName || ""}</div>
       <div style="font-size:28px;">${correct.koreanName || ""}</div>
       <div style="font-size:28px;">${correct.rtgsName || ""}</div>
-      <div style="font-size:22px;color:#555;">${correct.meaning || ""}</div>
+      <div style="font-size:28px;color:#555;">${correct.meaning || ""}</div>
     </div>
   `;
   } else if (currentCategory === "punctuation") {
@@ -331,6 +331,10 @@ function quiz() {
 
       <div style="font-size:33px;">
         ${correct.rtgsName || ""}
+      </div>
+
+      <div style="font-size:33px;color:#555;">
+        ${correct.meaning || ""}
       </div>
     </div>
   `;
@@ -369,7 +373,7 @@ function quiz() {
         document.getElementById("result").innerHTML = `
       <div>
         <div>${correct.thaiName}</div>
-        <div>${correct.koreanName} ${correct.koreanExample}</div>
+        <div>${correct.koreanName}</div>
         <div>${correct.rtgsName}</div>
       </div>
     `;
@@ -379,7 +383,7 @@ function quiz() {
         document.getElementById("result").innerHTML = `
       <div>
         <div>${v.thaiName}</div>
-        <div>${v.koreanName} ${v.koreanExample}</div>
+        <div>${v.koreanName}</div>
         <div>${v.rtgsName}</div>
       </div>
     `;
@@ -485,30 +489,35 @@ function renderGame() {
   if (currentCategory === "punctuation") {
     document.getElementById("gameKorean").innerHTML = makeNameBlock(x, 28);
     document.getElementById("gameRtgs").textContent = "";
-    gameImageBox.innerHTML = "";
+    gameImageBox.innerHTML = `
+      <div style="font-size:32px;font-weight:500;line-height:1.5;text-align:center;color:#555;">
+        ${x.meaning || ""}
+      </div>
+    `;
+  } else if (currentCategory === "number") {
+    document.getElementById("gameKorean").innerHTML = makeNameBlock(x, 28);
+    document.getElementById("gameRtgs").textContent = "";
+    gameImageBox.innerHTML = `
+      <div style="font-size:160px;font-weight:500;line-height:1;text-align:center;">
+        ${x.meaning || ""}
+      </div>
+    `;
+  } else if (currentCategory === "vowelPlus") {
+    document.getElementById("gameKorean").innerHTML = `
+      <div>${x.thaiName || ""}</div>
+      <div>${x.koreanName || ""}</div>
+    `;
+    document.getElementById("gameRtgs").textContent = x.rtgsName || "";
+    gameImageBox.innerHTML = `
+      <div style="font-size:32px;font-weight:500;line-height:1.5;text-align:center;color:#555;">
+        ${x.meaning || ""}
+      </div>
+    `;
   } else {
     document.getElementById("gameKorean").textContent = x.koreanName || "";
     document.getElementById("gameRtgs").textContent = x.rtgsName || "";
-
-    if (currentCategory === "number") {
-      gameImageBox.innerHTML = `
-        <div style="font-size:240px;font-weight:bold;line-height:1;text-align:center;">
-          ${x.meaning || ""}
-        </div>
-      `;
-    } else if (currentCategory === "vowelPlus") {
-      gameImageBox.innerHTML = `
-        <div style="font-size:32px;font-weight:bold;line-height:1.6;text-align:center;">
-          <div>${x.thaiName || ""}</div>
-          <div>${x.koreanName || ""}</div>
-          <div>${x.rtgsName || ""}</div>
-          <div style="font-size:22px;color:#555;">${x.meaning || ""}</div>
-        </div>
-      `;
-    } else {
-      gameImageBox.innerHTML = `<img id="gameImg" class="img" />`;
-      document.getElementById("gameImg").src = x.image || "";
-    }
+    gameImageBox.innerHTML = `<img id="gameImg" class="img" />`;
+    document.getElementById("gameImg").src = x.image || "";
   }
 
   document.getElementById("gameProgressText").textContent = gameIndex + 1 + " / " + gameQueue.length;
@@ -538,7 +547,7 @@ function renderGame() {
         difficulty: gameDifficulty,
         question: x.collation,
         answer: v.collation,
-        correct: v.collation === x.collation,
+        correct: isSameAnswer(v, x),
         rt: Date.now() - trialStartTime,
       });
 
@@ -569,12 +578,19 @@ function showGameResult() {
   const W = canvas.width;
   const H = canvas.height;
 
+  const items = getCurrentItems();
+
+  const indexMap = {};
+  items.forEach((item, i) => {
+    indexMap[item.collation] = i + 1;
+  });
+
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, W, H);
 
   const pad = 70;
   const min = 1;
-  const max = getCurrentItems().length;
+  const max = items.length;
 
   function sx(x) {
     return pad + ((x - min) / (max - min)) * (W - pad * 2);
@@ -634,7 +650,7 @@ function showGameResult() {
   }
 
   const total = gameResults.length;
-  const correctCount = gameResults.filter((r) => r.question === r.answer).length;
+  const correctCount = gameResults.filter((r) => r.correct).length;
   const accuracy = total === 0 ? 0 : Math.round((correctCount / total) * 10000) / 100;
 
   ctx.fillStyle = "#111";
@@ -731,8 +747,12 @@ function showGameResult() {
   window.resultPoints = [];
 
   gameResults.forEach((r) => {
-    const x = sx(r.question);
-    const y = sy(r.answer);
+    const qIndex = indexMap[r.question];
+    const aIndex = indexMap[r.answer];
+    if (!qIndex || !aIndex) return;
+
+    const x = sx(qIndex);
+    const y = sy(aIndex);
     const radius = getPointRadius(r);
 
     window.resultPoints.push({ x, y, r });
@@ -740,7 +760,7 @@ function showGameResult() {
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
 
-    ctx.strokeStyle = r.question === r.answer ? "#111" : "#d11";
+    ctx.strokeStyle = r.correct ? "#111" : "#d11";
     ctx.lineWidth = 2;
     ctx.stroke();
   });
@@ -813,7 +833,7 @@ function drawPoint(point, isBlue = false) {
   ctx.beginPath();
   ctx.arc(point.x, point.y, drawRadius, 0, Math.PI * 2);
 
-  ctx.strokeStyle = isBlue ? "blue" : point.r.question === point.r.answer ? "#111" : "#d11";
+  ctx.strokeStyle = isBlue ? "blue" : point.r.correct ? "#111" : "#d11";
 
   ctx.lineWidth = isBlue ? 3 : 2;
   ctx.stroke();

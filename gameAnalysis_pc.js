@@ -21,23 +21,18 @@ function getItemByCollation(collation) {
 
 function getAccuracyInfo(results) {
   const total = results.length;
-  const correct = results.filter((r) => r.question === r.answer).length;
+  const correct = results.filter((r) => r.correct).length;
   const wrong = total - correct;
   const accuracy = total === 0 ? 0 : Math.round((correct / total) * 10000) / 100;
 
-  return {
-    total,
-    correct,
-    wrong,
-    accuracy,
-  };
+  return { total, correct, wrong, accuracy };
 }
 
 function getWrongPairs(results) {
   const pairMap = {};
 
   results.forEach((r) => {
-    if (r.question === r.answer) return;
+    if (r.correct) return;
 
     const key = r.question + "->" + r.answer;
 
@@ -56,19 +51,23 @@ function getWrongPairs(results) {
 }
 
 function makeLevelComment(accuracy) {
-  if (accuracy >= 95) {
+  if (accuracy === 100) {
+    return "완벽합니다. 2차례 더 100%가 나오면 다음 단계로 넘어가십시오.";
+  }
+
+  if (accuracy >= 95 && accuracy < 100) {
     return "거의 숙달 단계입니다. 전체 반복보다 틀린 문자쌍만 집중 복습하는 것이 효율적입니다.";
   }
 
-  if (accuracy >= 85) {
+  if (accuracy >= 85 && accuracy < 95) {
     return "안정적인 구별 능력이 형성되고 있습니다. 반복 중 나타나는 특정 혼동 문자쌍을 따로 묶어 복습하면 좋습니다.";
   }
 
-  if (accuracy >= 70) {
+  if (accuracy >= 70 && accuracy < 85) {
     return "기본 구별은 가능하지만 아직 혼동이 남아 있습니다. 그림보다 문자 모양과 이름을 함께 확인하는 연습이 필요합니다.";
   }
 
-  if (accuracy >= 50) {
+  if (accuracy >= 50 && accuracy < 70) {
     return "아직 문자 구별이 충분히 안정되지 않았습니다. 학습 모드로 돌아가 글자 이름과 대표 단어를 먼저 반복하는 것이 좋습니다.";
   }
 
@@ -81,7 +80,7 @@ function makeWrongPairText(pair) {
 
   if (!q || !a) return "";
 
-  return `${q.symbol} (${q.koreanName} ${q.koreanExample}, ${q.rtgsName}) → ${a.symbol} (${a.koreanName} ${a.koreanExample}, ${a.rtgsName}) : ${pair.count}회`;
+  return `${q.symbol} (${q.koreanName}, ${q.rtgsName}) → ${a.symbol} (${a.koreanName}, ${a.rtgsName}) : ${pair.count}회`;
 }
 
 function makeStudyStrategy(accuracyInfo, wrongPairs) {
