@@ -14,11 +14,16 @@ let gameResults = [];
 let trialStartTime = 0;
 let resultPage = "scatter";
 let resultSaved = false;
+let hoveredPoint = null;
+let selectedPoint = null;
 let analysisGenerated = false;
 let reportSaved = false;
 let setupStep = "category";
 let selectedCategory = "consonant1";
 let selectedMode = "learn";
+let currentQuizDifficulty = "beginner";
+let quizQueue = [];
+let quizIndex = 0;
 
 const difficultySettings = { beginner: 1, intermediate: 2, advanced: 3 };
 const categoryLabels = {
@@ -54,6 +59,10 @@ function normalizeAppItem(row) {
   };
 }
 
+function isSameAnswer(a, b) {
+  return (a?.symbol || "").trim() === (b?.symbol || "").trim();
+}
+
 async function loadJson() {
   for (const path of ["data/app_items.json", "../data/app_items.json"]) {
     try {
@@ -83,9 +92,11 @@ function imagePath(path) {
 
 function nameBlock(item) {
   return `
-    <div>${item.thaiName || ""}</div>
-    <div>${item.koreanName || ""}</div>
-    <div>${item.rtgsName || ""}</div>
+    <div class="nameBlock ${item.Class === "숫자" ? "numberNameBlock" : ""}">
+      <div>${item.thaiName || ""}</div>
+      <div>${item.koreanName || ""}</div>
+      <div>${item.rtgsName || ""}</div>
+    </div>
   `;
 }
 
@@ -147,7 +158,11 @@ function consonantHint(item) {
 }
 
 function meaningBlock(item) {
-  return `<div>${item.meaning || item.Notes || item.koreanName || ""}</div>`;
+  return `
+    <div class="${item.Class === "숫자" ? "numberMeaningBlock" : ""}">
+      ${item.meaning || item.Notes || item.koreanName || ""}
+    </div>
+  `;
 }
 
 function extraBlock(item) {
@@ -188,9 +203,29 @@ function renderSetup() {
     });
 
     addSetupButton("퀴즈", () => {
-      selectedMode = "quiz";
-      startSelected();
+      selectedMode = selectedMode === "quiz" ? "learn" : "quiz";
+      renderSetup();
     });
+
+    if (selectedMode === "quiz") {
+      const row = document.createElement("div");
+      row.className = "difficultyRow";
+
+      Object.entries(difficultyLabels).forEach(([key, label]) => {
+        const btn = document.createElement("button");
+        btn.textContent = label;
+        btn.className = `difficultyBtn ${key}`;
+
+        btn.onclick = () => {
+          currentQuizDifficulty = key;
+          startSelected();
+        };
+
+        row.appendChild(btn);
+      });
+
+      grid.appendChild(row);
+    }
 
     addSetupButton("게임", () => {
       selectedMode = selectedMode === "game" ? "learn" : "game";
@@ -198,16 +233,23 @@ function renderSetup() {
     });
 
     if (selectedMode === "game") {
-      Object.entries(difficultyLabels).forEach(([key, label]) =>
-        addSetupButton(
-          label,
-          () => {
-            currentDifficulty = key;
-            startSelected();
-          },
-          "difficultyBtn",
-        ),
-      );
+      const row = document.createElement("div");
+      row.className = "difficultyRow";
+
+      Object.entries(difficultyLabels).forEach(([key, label]) => {
+        const btn = document.createElement("button");
+        btn.textContent = label;
+        btn.className = `difficultyBtn ${key}`;
+
+        btn.onclick = () => {
+          currentDifficulty = key;
+          startSelected();
+        };
+
+        row.appendChild(btn);
+      });
+
+      grid.appendChild(row);
     }
 
     return;
@@ -233,6 +275,8 @@ function startSelected() {
   quizHistory = [];
   quizHistoryIndex = -1;
   quizPage = 0;
+  quizQueue = [];
+  quizIndex = 0;
   gamePage = 0;
   document.body.classList.add("running");
   resetResultState();
@@ -391,7 +435,11 @@ function renderLearn() {
   const items = getCurrentItems();
   const item = items[idx];
   if (!item) return;
-  document.getElementById("learnSymbol").textContent = item.symbol || "";
+
+  const symbol = document.getElementById("learnSymbol");
+  symbol.textContent = item.symbol || "";
+  symbol.classList.toggle("punctuationSymbolPanel", item.Class === "문장");
+
   document.getElementById("learnInfo").innerHTML = nameBlock(item) + consonantHint(item);
   document.getElementById("learnExtra").innerHTML = extraBlock(item);
 }
@@ -401,27 +449,73 @@ function randomItem() {
   return items[Math.floor(Math.random() * items.length)];
 }
 
+function makeQuizQueue() {
+  const items = getCurrentItems();
+
+  if (currentQuizDifficulty === "beginner") {
+    return shuffle([...items]);
+  }
+
+  if (currentQuizDifficulty === "intermediate") {
+    const queue = [];
+
+    for (let i = 0; i < 3; i++) {
+      queue.push(...shuffle([...items]));
+    }
+
+    return shuffle(queue);
+  }
+
+  return null;
+}
+
 function startQuiz(direction = "next") {
-  if (direction === "prev" && quizHistoryIndex > 0) {
-    quizHistoryIndex -= 1;
-    quizItem = quizHistory[quizHistoryIndex];
+  if (currentQuizDifficulty === "advanced") {
+    if (direction === "prev" && quizHistoryIndex > 0) {
+      quizHistoryIndex -= 1;
+      quizItem = quizHistory[quizHistoryIndex];
+    } else {
+      quizItem = randomItem();
+      quizHistory = quizHistory.slice(0, quizHistoryIndex + 1);
+      quizHistory.push(quizItem);
+      quizHistoryIndex = quizHistory.length - 1;
+    }
   } else {
-    quizItem = randomItem();
-    quizHistory = quizHistory.slice(0, quizHistoryIndex + 1);
-    quizHistory.push(quizItem);
-    quizHistoryIndex = quizHistory.length - 1;
+    if (quizQueue.length === 0 || quizIndex >= quizQueue.length) {
+      quizQueue = makeQuizQueue();
+      quizIndex = 0;
+    }
+
+    quizItem = quizQueue[quizIndex];
+    quizIndex += 1;
   }
 
   quizPage = 0;
   document.getElementById("quizPrompt").innerHTML = quizPromptBlock(quizItem);
-  document.getElementById("quizInfo").innerHTML = `<div>해당 글자를 선택하세요.</div>`;
+
+  document.getElementById("quizInfo").innerHTML = `
+    <div class="quizInfoWrap">
+      <div>해당 글자를 선택하세요.</div>
+      ${currentQuizDifficulty === "beginner" ? `<div class="quizProgress">${quizIndex} / ${quizQueue.length}</div>` : ""}
+    </div>
+  `;
+
   renderKeyboard("quiz");
 }
 
 function makeGameQueue() {
   const queue = [];
   const repetition = difficultySettings[currentDifficulty] || 3;
-  for (let r = 0; r < repetition; r++) getCurrentItems().forEach((item) => queue.push(item));
+
+  for (let r = 1; r <= repetition; r++) {
+    getCurrentItems().forEach((item) => {
+      queue.push({
+        ...item,
+        repetition: r,
+      });
+    });
+  }
+
   return shuffle(queue);
 }
 
@@ -688,6 +782,12 @@ function drawResultCanvas() {
   ctx.stroke();
   ctx.fillText("오답", legendX + 18, legendBottomY + 36);
 
+  ctx.beginPath();
+  ctx.arc(legendX, legendBottomY + 60, 8, 0, Math.PI * 2);
+  ctx.strokeStyle = "blue";
+  ctx.stroke();
+  ctx.fillText("확인", legendX + 18, legendBottomY + 66);
+
   window.resultPoints = [];
 
   gameResults.forEach((r) => {
@@ -707,21 +807,28 @@ function drawResultCanvas() {
     ctx.lineWidth = 2;
     ctx.stroke();
   });
+}
 
-  canvas.onclick = (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mx = ((e.clientX - rect.left) / rect.width) * canvas.width;
-    const my = ((e.clientY - rect.top) / rect.height) * canvas.height;
+function drawPoint(point, isBlue = false) {
+  const canvas = document.getElementById("resultCanvas");
+  const ctx = canvas.getContext("2d");
 
-    const hit = window.resultPoints.find((p) => Math.hypot(mx - p.x, my - p.y) < 18);
-    if (!hit) return;
+  const baseRadius = point.r.repetition === 1 ? 5 : point.r.repetition === 2 ? 7 : 9;
 
-    const q = getCurrentItems().find((item) => item.collation === hit.r.question);
-    const a = getCurrentItems().find((item) => item.collation === hit.r.answer);
+  const drawRadius = isBlue ? baseRadius + 2 : baseRadius;
 
-    document.getElementById("stimulusSymbol").textContent = q?.symbol || "";
-    document.getElementById("responseSymbol").textContent = a?.symbol || "";
-  };
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, baseRadius + 4, 0, Math.PI * 2);
+  ctx.fillStyle = "white";
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, drawRadius, 0, Math.PI * 2);
+
+  ctx.strokeStyle = isBlue ? "blue" : point.r.correct ? "#111" : "#d11";
+
+  ctx.lineWidth = isBlue ? 3 : 2;
+  ctx.stroke();
 }
 
 function renderKeyboard(target) {
@@ -753,7 +860,7 @@ function chooseKey(target, chosen) {
   if (target === "game") playTap();
 
   if (target === "quiz") {
-    if (quizItem && chosen.collation === quizItem.collation) playCorrect();
+    if (quizItem && isSameAnswer(chosen, quizItem)) playCorrect();
     else playWrong();
 
     showQuizAnswer(chosen);
@@ -768,7 +875,7 @@ function chooseKey(target, chosen) {
     difficulty: currentDifficulty,
     question: answer.collation,
     answer: chosen.collation,
-    correct: chosen.collation === answer.collation,
+    correct: isSameAnswer(chosen, answer),
     rt: Date.now() - trialStartTime,
   });
 
@@ -813,7 +920,7 @@ function quizPromptBlock(item) {
   }
 
   if (item.Class === "숫자") {
-    return `<div>${item.meaning || ""}</div>`;
+    return `<div class="numberQuizPrompt">${item.meaning || ""}</div>`;
   }
 
   return `
@@ -823,11 +930,15 @@ function quizPromptBlock(item) {
 }
 
 function showQuizAnswer(chosen) {
+  const progressText = currentQuizDifficulty === "beginner" ? `<div class="quizProgress">${quizIndex} / ${quizQueue.length}</div>` : "";
+
   document.getElementById("quizInfo").innerHTML = `
     <div class="quizAnswerWrap">
       <div>${chosen.thaiName || ""}</div>
       <div>${chosen.koreanName || ""}</div>
       <div>${chosen.rtgsName || ""}</div>
+
+      ${progressText}
 
       <button id="prevQuizBtn" class="quizNavBtn">
         이전
@@ -1008,6 +1119,61 @@ function bind() {
     () => changeKeyboardPage("game", 1),
     () => changeKeyboardPage("game", -1),
   );
+
+  const resultCanvas = document.getElementById("resultCanvas");
+
+  resultCanvas.onclick = (e) => {
+    const rect = resultCanvas.getBoundingClientRect();
+
+    const x = ((e.clientX - rect.left) / rect.width) * resultCanvas.width;
+    const y = ((e.clientY - rect.top) / rect.height) * resultCanvas.height;
+
+    const hit = (window.resultPoints || []).find((p) => Math.hypot(p.x - x, p.y - y) < 12);
+
+    if (!hit) return;
+
+    if (selectedPoint) {
+      drawPoint(selectedPoint, false);
+    }
+
+    selectedPoint = hit;
+    drawPoint(selectedPoint, true);
+
+    const q = getCurrentItems().find((v) => v.collation === hit.r.question);
+    const a = getCurrentItems().find((v) => v.collation === hit.r.answer);
+
+    document.getElementById("stimulusSymbol").textContent = q?.symbol || "";
+    document.getElementById("responseSymbol").textContent = a?.symbol || "";
+  };
+
+  resultCanvas.onmousemove = (e) => {
+    const canvas = document.getElementById("resultCanvas");
+    const rect = canvas.getBoundingClientRect();
+
+    const x = ((e.clientX - rect.left) / rect.width) * canvas.width;
+    const y = ((e.clientY - rect.top) / rect.height) * canvas.height;
+
+    const hit = (window.resultPoints || []).find((p) => Math.hypot(p.x - x, p.y - y) < 12);
+
+    canvas.style.cursor = hit ? "pointer" : "default";
+
+    if (hoveredPoint && hoveredPoint !== selectedPoint) {
+      drawPoint(hoveredPoint, false);
+    }
+
+    hoveredPoint = null;
+
+    if (hit) {
+      if (hit !== selectedPoint) {
+        drawPoint(hit, true);
+        hoveredPoint = hit;
+      }
+    }
+
+    if (selectedPoint) {
+      drawPoint(selectedPoint, true);
+    }
+  };
 }
 
 async function init() {

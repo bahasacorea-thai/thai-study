@@ -27,7 +27,7 @@
         border-radius: 12px;
         background: #fff;
         padding: 10px 12px;
-        font-weight: 800;
+        font-weight: 500;
         font-size: 16px;
       }
       button.active {
@@ -78,7 +78,7 @@
         justify-self: center;
 
         font-size: 24px;
-        font-weight: 800;
+        font-weight: 500;
 
         padding: 14px 16px;
       }
@@ -147,29 +147,103 @@
         min-height: 0;
         background: white;
         border-radius: 18px;
-        padding: 12px;
+        padding: 14px 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
         overflow: hidden;
       }
+
       .symbolPanel {
         font-family: "Noto Sans Thai", Tahoma, "Leelawadee UI", sans-serif;
-        font-size: clamp(128px, 44vw, 272px);
-        font-weight: 800;
-        line-height: 1;
+        font-size: clamp(108px, 34svh, 220px);
+        font-weight: 500;
+        line-height: 1.08;
         white-space: pre-wrap;
         overflow-wrap: anywhere;
       }
+
+      .punctuationSymbolPanel {
+        font-size: clamp(64px, 20vw, 120px);
+        line-height: 1.05;
+      }
+
       .infoPanel {
+        position: relative;
         flex-direction: column;
-        gap: 6px;
-        font-size: clamp(20px, 6vw, 30px);
-        font-weight: 800;
-        line-height: 1.25;
+        gap: 8px;
+        font-size: clamp(20px, 5.5vw, 30px);
+        font-weight: 700;
+        line-height: 1.35;
         overflow-wrap: anywhere;
         word-break: keep-all;
+      }
+
+      .nameBlock {
+        position: relative;
+        width: 100%;
+
+        font-size: clamp(32px, 7.6vw, 46px);
+
+        line-height: 1.35;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .numberNameBlock {
+        font-size: 1.35em;
+      }
+
+      .numberMeaningBlock {
+        font-size: clamp(96px, 28vw, 180px);
+        line-height: 1;
+        font-weight: 700;
+      }
+
+      .numberQuizPrompt {
+        font-size: clamp(96px, 28vw, 180px);
+        line-height: 1;
+        font-weight: 700;
+      }
+
+      .nameBlock::before,
+      .nameBlock::after {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+
+        display: flex;
+        align-items: center;
+
+        font-size: 180px;
+        line-height: 1;
+        font-weight: 100;
+
+        transform: scaleX(0.25);
+
+        color: #111;
+        opacity: 0.1;
+        pointer-events: none;
+      }
+
+      .nameBlock::before {
+        content: "⟨";
+        left: -20px;
+      }
+
+      .nameBlock::after {
+        content: "⟩";
+        right: -20px;
+      }
+
+      .hint {
+        font-size: clamp(16px, 5vw, 24px);
+        font-weight: 700;
+        color: #444;
+        line-height: 1.35;
       }
 
       .extraPanel {
@@ -242,12 +316,12 @@
       }
       .pageInfo {
         font-size: 13px;
-        font-weight: 800;
+        font-weight: 700;
         color: #555;
       }
       .progressText {
         font-size: clamp(30px, 9vw, 48px);
-        font-weight: 900;
+        font-weight: 700;
       }
       body.result #resultScreen {
         display: grid;
@@ -263,10 +337,10 @@
 
       .resultTopPanel {
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 16px;
-        padding: 8px;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-content: center;
+        align-items: center;
       }
 
       .resultSideBox {
@@ -282,23 +356,20 @@
       .resultSymbol {
         font-family: "Noto Sans Thai", Tahoma, "Leelawadee UI", sans-serif;
         font-size: 52px;
-        font-weight: 900;
+        font-weight: 700;
         line-height: 1;
       }
 
       .axisLabel {
         font-size: inherit;
-        font-weight: 800;
+        font-weight: 700;
         color: #444;
       }
 
-      .stimulusWrap {
-        font-size: 24px;
-        margin-bottom: 0px;
-      }
+      .stimulusWrap,
       .responseWrap {
         font-size: 24px;
-        margin-top: 0px;
+        margin: 0 0 16px 0;
       }
 
       #resultCanvas {
@@ -308,6 +379,7 @@
         background: white;
         border-radius: 12px;
         touch-action: none;
+        flex-basis: 100%;
       }
 
       .resultBottomPanel {
@@ -337,16 +409,57 @@
         min-width: 120px;
       }
 
-      .difficultyBtn {
-        width: 28% !important;
+      .difficultyRow {
+        width: 75%;
         justify-self: center;
-        margin-left: 32%;
-        min-height: 58px !important;
-        font-size: 20px !important;
+
+        display: flex;
+        gap: 6px;
+      }
+
+      .difficultyBtn {
+        flex: 1 1 0;
+        min-width: 0;
+        width: auto !important;
+        min-height: 52px !important;
+
+        margin: 0 !important;
+        padding: 0 4px;
+
+        font-size: 18px !important;
+        white-space: nowrap;
+      }
+
+      .difficultyBtn.beginner {
+        background: linear-gradient(145deg, #f3c59c, #b66a38, #e1a170);
+        color: #2b1207;
+      }
+
+      .difficultyBtn.intermediate {
+        background: linear-gradient(145deg, #f5f5f5, #b5b5b5, #ededed);
+        color: #222;
+      }
+
+      .difficultyBtn.advanced {
+        background: linear-gradient(145deg, #fff5b8, #cfa126, #ffe27a);
+        color: #3d2a00;
+      }
+
+      .quizInfoWrap {
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding-bottom: 34px;
       }
 
       .quizAnswerWrap {
         width: 100%;
+        height: 100%;
         position: relative;
 
         display: flex;
@@ -355,11 +468,22 @@
         justify-content: center;
 
         gap: 10px;
-
         font-size: 1.2em;
         line-height: 1.15;
 
-        padding: 12px 72px;
+        padding: 12px 72px 34px;
+      }
+
+      .quizProgress {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 8px;
+
+        font-size: 18px;
+        font-weight: 700;
+        opacity: 0.75;
+        text-align: center;
       }
 
       .quizNavBtn {
@@ -433,12 +557,12 @@
               <span id="stimulusSymbol" class="resultSymbol"></span>
             </div>
 
-            <canvas id="resultCanvas" width="720" height="720"></canvas>
-
             <div class="responseWrap">
               <span class="axisLabel">반응:</span>
               <span id="responseSymbol" class="resultSymbol"></span>
             </div>
+
+            <canvas id="resultCanvas" width="720" height="720"></canvas>
           </div>
 
           <div class="panel resultBottomPanel">

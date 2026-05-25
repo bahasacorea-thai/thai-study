@@ -21,23 +21,18 @@ function getItemByCollation(collation) {
 
 function getAccuracyInfo(results) {
   const total = results.length;
-  const correct = results.filter((r) => r.question === r.answer).length;
+  const correct = results.filter((r) => r.correct).length;
   const wrong = total - correct;
   const accuracy = total === 0 ? 0 : Math.round((correct / total) * 10000) / 100;
 
-  return {
-    total,
-    correct,
-    wrong,
-    accuracy,
-  };
+  return { total, correct, wrong, accuracy };
 }
 
 function getWrongPairs(results) {
   const pairMap = {};
 
   results.forEach((r) => {
-    if (r.question === r.answer) return;
+    if (r.correct) return;
 
     const key = r.question + "->" + r.answer;
 
@@ -57,7 +52,7 @@ function getWrongPairs(results) {
 
 function makeLevelComment(accuracy) {
   if (accuracy === 100) {
-    return "축하합니다. 완벽합니다. 2차례 더 100%가 나오면 다음 단계로 넘어가십시오.";
+    return "완벽합니다. 2차례 더 100%가 나오면 다음 단계로 넘어가십시오.";
   }
 
   if (accuracy >= 95 && accuracy < 100) {
