@@ -90,18 +90,15 @@ function imagePath(path) {
   return path;
 }
 
-function nameBlock(item) {
-  return `
-    <div class="nameBlock ${item.Class === "숫자" ? "numberNameBlock" : ""}">
-      <div>${item.thaiName || ""}</div>
-      <div>${item.koreanName || ""}</div>
-      <div>${item.rtgsName || ""}</div>
-    </div>
-  `;
-}
-
 function consonantHint(item) {
-  if (item.Class !== "자음") return "";
+  const hint = document.getElementById("learnHint");
+
+  if (!hint) return;
+
+  if (item.Class !== "자음") {
+    hint.textContent = "";
+    return;
+  }
 
   const meaningKoMap = {
     chicken: "닭",
@@ -138,41 +135,55 @@ function consonantHint(item) {
     boat: "배",
     ring: "반지",
     "pavilion, sala": "정자",
-    hermit: "은자",
+    hermit: "은둔자",
     owl: "올빼미",
     "chest, box": "상자",
     kite: "연",
     soldier: "군인",
     sack: "자루",
     "goad, javelin": "몰이막대",
-    Junk: "정크선",
+    Junk: "범선",
     Montho: "몬토",
-    phan: "파안",
+    phan: "쟁반",
   };
 
   const meaningKey = (item.meaning || "").replace(/\u00a0/g, " ");
   const meaningKo = meaningKoMap[meaningKey] || meaningKey;
   const thaiNameWord = (item.thaiName || "").replace(item.symbol || "", "").trim();
 
-  return `<div class="hint"><br>${item.symbol || ""}는 ${thaiNameWord}(${meaningKo})에 나오는 글자입니다.<br>어느 글자와 같은지 확인했나요?</div>`;
+  hint.textContent = `${item.symbol || ""}가 ` + `${thaiNameWord}(${meaningKo})에 ` + `있나요?`;
+
+  fitSingleLineText(hint);
 }
 
-function meaningBlock(item) {
-  return `
-    <div class="${item.Class === "숫자" ? "numberMeaningBlock" : ""}">
-      ${item.meaning || item.Notes || item.koreanName || ""}
-    </div>
-  `;
+function updateMeaning(item) {
+  const meaning = document.getElementById("learnMeaning");
+  meaning.className = item.Class === "숫자" ? "numberMeaningBlock" : "";
+  meaning.textContent = item.meaning || item.Notes || item.koreanName || "";
+
+  fitSingleLineText(meaning.parentElement);
 }
 
 function extraBlock(item) {
+  const image = document.getElementById("learnImage");
+  const meaning = document.getElementById("learnMeaning");
+
+  image.style.display = "none";
+  image.src = "";
+
+  meaning.style.display = "none";
+
   if (item.Class === "자음" && item.image) {
-    return `
-      <img src="${imagePath(item.image)}" alt="${item.koreanName || item.thaiName || ""}"
-        onerror="this.remove(); this.parentElement.insertAdjacentHTML('afterbegin', '<div>그림 파일 없음</div>');" />
-    `;
+    image.src = imagePath(item.image);
+    image.alt = item.koreanName || item.thaiName || "";
+    image.style.display = "block";
+
+    return;
   }
-  return meaningBlock(item);
+
+  meaning.style.display = "block";
+
+  updateMeaning(item);
 }
 
 function renderSetup() {
@@ -391,42 +402,84 @@ function downloadResultImage(includeReport = false) {
       : null,
   };
 
-  const blob = new Blob([JSON.stringify(resultData, null, 2)], { type: "application/json" });
-
-  const url = URL.createObjectURL(blob);
+  const jsonBlob = new Blob([JSON.stringify(resultData, null, 2)], { type: "application/json" });
+  const jsonUrl = URL.createObjectURL(jsonBlob);
 
   const jsonLink = document.createElement("a");
-  jsonLink.href = url;
+  jsonLink.href = jsonUrl;
   jsonLink.download = fileBaseName + ".json";
   jsonLink.click();
 
-  URL.revokeObjectURL(url);
+  URL.revokeObjectURL(jsonUrl);
 
   const canvas = document.getElementById("resultCanvas");
 
-  const imageLink = document.createElement("a");
-  imageLink.download = fileBaseName + ".png";
-  imageLink.href = canvas.toDataURL("image/png");
-  imageLink.click();
+  if (!includeReport) {
+    const imageLink = document.createElement("a");
+    imageLink.download = fileBaseName + ".png";
+    imageLink.href = canvas.toDataURL("image/png");
+    imageLink.click();
 
-  if (includeReport) {
-    const reportText = makeAnalysisReport();
+    resultSaved = true;
 
-    const reportBlob = new Blob([reportText], { type: "text/plain;charset=utf-8" });
-
-    const reportUrl = URL.createObjectURL(reportBlob);
-
-    const reportLink = document.createElement("a");
-    reportLink.href = reportUrl;
-    reportLink.download = fileBaseName + "_analysis.txt";
-    reportLink.click();
-
-    URL.revokeObjectURL(reportUrl);
-
-    reportSaved = true;
+    return true;
   }
 
+  const { jsPDF } = window.jspdf;
+
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
+  });
+
+  pdf.addImage(canvas.toDataURL("image/png"), "PNG", 15, 15, 180, 180);
+
+  pdf.addPage();
+
+  const reportText = makeAnalysisReport();
+  const reportCanvas = document.createElement("canvas");
+  const ctx = reportCanvas.getContext("2d");
+
+  reportCanvas.width = 1200;
+  reportCanvas.height = 1600;
+
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, reportCanvas.width, reportCanvas.height);
+
+  ctx.fillStyle = "#222";
+  ctx.font = "32px Malgun Gothic, 맑은 고딕, sans-serif";
+  ctx.textBaseline = "top";
+
+  const maxWidth = 1080;
+  const lineHeight = 52;
+  let y = 50;
+
+  reportText.split("\n").forEach((paragraph) => {
+    let line = "";
+
+    Array.from(paragraph).forEach((char) => {
+      const testLine = line + char;
+
+      if (ctx.measureText(testLine).width > maxWidth) {
+        ctx.fillText(line, 60, y);
+        line = char;
+        y += lineHeight;
+      } else {
+        line = testLine;
+      }
+    });
+
+    ctx.fillText(line, 60, y);
+    y += lineHeight;
+  });
+
+  pdf.addImage(reportCanvas.toDataURL("image/png"), "PNG", 10, 10, 190, 253);
+
+  pdf.save(fileBaseName + ".pdf");
+
   resultSaved = true;
+  reportSaved = true;
 
   return true;
 }
@@ -440,8 +493,15 @@ function renderLearn() {
   symbol.textContent = item.symbol || "";
   symbol.classList.toggle("punctuationSymbolPanel", item.Class === "문장");
 
-  document.getElementById("learnInfo").innerHTML = nameBlock(item) + consonantHint(item);
-  document.getElementById("learnExtra").innerHTML = extraBlock(item);
+  document.getElementById("learnThaiName").textContent = item.thaiName || "";
+  document.getElementById("learnKoreanName").textContent = item.koreanName || "";
+  document.getElementById("learnRtgsName").textContent = item.rtgsName || "";
+  consonantHint(item);
+  document.getElementById("learnProgress").textContent = idx + 1 + "/" + items.length;
+
+  fitSingleLineText(document.getElementById("learnNameBlock"));
+
+  extraBlock(item);
 }
 
 function randomItem() {
@@ -470,16 +530,14 @@ function makeQuizQueue() {
 }
 
 function startQuiz(direction = "next") {
-  if (currentQuizDifficulty === "advanced") {
-    if (direction === "prev" && quizHistoryIndex > 0) {
-      quizHistoryIndex -= 1;
-      quizItem = quizHistory[quizHistoryIndex];
-    } else {
-      quizItem = randomItem();
-      quizHistory = quizHistory.slice(0, quizHistoryIndex + 1);
-      quizHistory.push(quizItem);
-      quizHistoryIndex = quizHistory.length - 1;
-    }
+  if (direction === "prev" && quizHistoryIndex > 0) {
+    quizHistoryIndex -= 1;
+    quizItem = quizHistory[quizHistoryIndex];
+  } else if (currentQuizDifficulty === "advanced") {
+    quizItem = randomItem();
+    quizHistory = quizHistory.slice(0, quizHistoryIndex + 1);
+    quizHistory.push(quizItem);
+    quizHistoryIndex = quizHistory.length - 1;
   } else {
     if (quizQueue.length === 0 || quizIndex >= quizQueue.length) {
       quizQueue = makeQuizQueue();
@@ -488,17 +546,19 @@ function startQuiz(direction = "next") {
 
     quizItem = quizQueue[quizIndex];
     quizIndex += 1;
+
+    quizHistory = quizHistory.slice(0, quizHistoryIndex + 1);
+    quizHistory.push(quizItem);
+    quizHistoryIndex = quizHistory.length - 1;
   }
 
   quizPage = 0;
-  document.getElementById("quizPrompt").innerHTML = quizPromptBlock(quizItem);
+  updateQuizPrompt(quizItem);
 
-  document.getElementById("quizInfo").innerHTML = `
-    <div class="quizInfoWrap">
-      <div>해당 글자를 선택하세요.</div>
-      ${currentQuizDifficulty === "beginner" ? `<div class="quizProgress">${quizIndex} / ${quizQueue.length}</div>` : ""}
-    </div>
-  `;
+  document.getElementById("quizInfoWrap").style.display = "flex";
+  document.getElementById("quizAnswerWrap").style.display = "none";
+  document.getElementById("quizInfoText").textContent = "해당 글자를 선택하세요.";
+  document.getElementById("quizProgress").textContent = currentQuizDifficulty === "beginner" ? `${quizIndex} / ${quizQueue.length}` : "";
 
   renderKeyboard("quiz");
 }
@@ -538,32 +598,30 @@ function startGame() {
 
 function renderGame() {
   if (gameIndex >= gameQueue.length) {
-    document.getElementById("gamePrompt").innerHTML = `<div>게임 종료</div>`;
-    document.getElementById("gameInfo").innerHTML = `
-  <div>${gameQueue.length}문항 완료</div>
+    document.getElementById("gamePromptImage").style.display = "none";
+    document.getElementById("gamePromptImage").src = "";
+    document.getElementById("gamePromptKorean").textContent = "게임 종료";
+    document.getElementById("gamePromptRtgs").textContent = "";
+    document.getElementById("gamePromptMeaning").textContent = "";
 
-  <div style="height:18px;"></div>
+    document.getElementById("gameInfoText").textContent = "";
+    document.getElementById("gameProgress").textContent = gameQueue.length + " 문항 완료";
 
-  <button id="showGameResultBtn">
-    결과 표시
-  </button>
-`;
+    document.getElementById("showGameResultBtn").textContent = "결과 확인";
+    document.getElementById("showGameResultBtn").style.display = "inline-block";
     document.getElementById("gameKeyboard").innerHTML = "";
     document.getElementById("gamePageInfo").textContent = "";
-
     document.getElementById("showGameResultBtn").onclick = showGameResult;
 
     return;
   }
+
   const item = gameQueue[gameIndex];
   trialStartTime = Date.now();
-  document.getElementById("gamePrompt").innerHTML = quizPromptBlock(item);
-
-  document.getElementById("gameInfo").innerHTML = `
-  <div class="progressText">
-    ${gameIndex + 1} / ${gameQueue.length}
-  </div>
-`;
+  updateQuizPrompt(item, "game");
+  document.getElementById("showGameResultBtn").style.display = "none";
+  document.getElementById("gameInfoText").textContent = "해당 글자를 선택하세요.";
+  document.getElementById("gameProgress").textContent = gameIndex + 1 + " / " + gameQueue.length;
 
   renderKeyboard("game");
 }
@@ -609,6 +667,7 @@ function updateResultPage() {
   const saveReportBtn = document.getElementById("saveReportBtn");
   const topPanel = document.querySelector(".resultTopPanel");
   const bottomPanel = document.querySelector(".resultBottomPanel");
+  const resultSwipeHint = document.getElementById("resultSwipeHint");
 
   if (resultPage === "scatter") {
     topPanel.style.display = "flex";
@@ -618,6 +677,9 @@ function updateResultPage() {
     response.style.display = "block";
     analysisText.style.display = "none";
     saveReportBtn.style.display = "none";
+    resultSwipeHint.textContent = "⟩";
+    resultSwipeHint.className = "resultSwipeHint right";
+    resultSwipeHint.style.display = "block";
     drawResultCanvas();
     return;
   }
@@ -629,6 +691,9 @@ function updateResultPage() {
   response.style.display = "none";
   analysisText.style.display = "block";
   saveReportBtn.style.display = "inline-block";
+  resultSwipeHint.textContent = "⟨";
+  resultSwipeHint.className = "resultSwipeHint left";
+  resultSwipeHint.style.display = "block";
 
   analysisText.textContent = makeAnalysisReport();
   analysisGenerated = true;
@@ -661,7 +726,6 @@ function setupResultSwipe() {
     } else {
       resultPage = "scatter";
     }
-
     updateResultPage();
   };
 }
@@ -894,71 +958,92 @@ function changeKeyboardPage(target, delta) {
   }
 }
 
-function quizPromptBlock(item) {
+function updateQuizPrompt(item, target = "quiz") {
+  const prefix = target === "game" ? "gamePrompt" : "quizPrompt";
+
+  const image = document.getElementById(prefix + "Image");
+  const korean = document.getElementById(prefix + "Korean");
+  const rtgs = document.getElementById(prefix + "Rtgs");
+  const meaning = document.getElementById(prefix + "Meaning");
+
+  if (!image || !korean || !rtgs || !meaning) {
+    return;
+  }
+
+  image.style.display = "none";
+  image.src = "";
+
+  korean.textContent = "";
+  rtgs.textContent = "";
+  meaning.textContent = "";
+  meaning.className = "";
+  meaning.style.color = "";
+
   if (item.Class === "자음" && item.image) {
-    return `
-      <div style="
-        width:100%;
-        height:100%;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        font-weight:900;
-        line-height:1.45;
-        background-image:
-          linear-gradient(rgba(255,255,255,0.68), rgba(255,255,255,0.68)),
-          url('${imagePath(item.image)}');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-      ">
-        <div>${item.koreanName || ""}</div>
-        <div>${item.rtgsName || ""}</div>
-      </div>
-    `;
+    image.src = imagePath(item.image);
+    image.style.display = "block";
+    korean.textContent = item.koreanName || "";
+    rtgs.textContent = item.rtgsName || "";
+    return;
   }
 
   if (item.Class === "숫자") {
-    return `<div class="numberQuizPrompt">${item.meaning || ""}</div>`;
+    meaning.textContent = item.meaning || "";
+    meaning.className = "numberQuizPrompt";
+    return;
   }
 
-  return `
-    <div>${item.koreanName || ""}</div>
-    <div>${item.rtgsName || ""}</div>
-  `;
+  korean.textContent = item.koreanName || "";
+  rtgs.textContent = item.rtgsName || "";
+
+  if (item.Class === "모음" || item.Class === "부가" || item.Class === "성조" || item.Class === "문장") {
+    meaning.textContent = item.meaning || item.Notes || "";
+    meaning.className = "quizPromptMeaningSub";
+  }
+  requestAnimationFrame(() => {
+    const wrap = document.getElementById(prefix + "Wrap");
+    if (!wrap) return;
+    fitSingleLineText(wrap);
+  });
 }
 
 function showQuizAnswer(chosen) {
   const progressText = currentQuizDifficulty === "beginner" ? `<div class="quizProgress">${quizIndex} / ${quizQueue.length}</div>` : "";
 
-  document.getElementById("quizInfo").innerHTML = `
-    <div class="quizAnswerWrap">
-      <div>${chosen.thaiName || ""}</div>
-      <div>${chosen.koreanName || ""}</div>
-      <div>${chosen.rtgsName || ""}</div>
+  document.getElementById("quizInfoWrap").style.display = "none";
+  document.getElementById("quizAnswerWrap").style.display = "flex";
+  document.getElementById("quizThaiName").textContent = chosen.thaiName || "";
+  document.getElementById("quizKoreanName").textContent = chosen.koreanName || "";
+  document.getElementById("quizRtgsName").textContent = chosen.rtgsName || "";
+  document.getElementById("quizAnswerProgress").textContent = currentQuizDifficulty === "beginner" ? `${quizIndex} / ${quizQueue.length}` : "";
 
-      ${progressText}
-
-      <button id="prevQuizBtn" class="quizNavBtn">
-        이전
-      </button>
-
-      <button id="nextQuizBtn" class="quizNavBtn">
-        다음
-      </button>
-    </div>
-  `;
+  fitSingleLineText(document.getElementById("quizAnswerWrap"));
 
   document.getElementById("prevQuizBtn").onclick = () => startQuiz("prev");
   document.getElementById("nextQuizBtn").onclick = () => startQuiz("next");
 }
 
-function playCorrect() {
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return;
+let sharedAudioContext = null;
 
-  const ctx = new AudioContextClass();
+function getAudioContext() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return null;
+
+  if (!sharedAudioContext) {
+    sharedAudioContext = new AudioContextClass();
+  }
+
+  if (sharedAudioContext.state === "suspended") {
+    sharedAudioContext.resume();
+  }
+
+  return sharedAudioContext;
+}
+
+function playCorrect() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
   const notes = [523, 659, 784, 1046];
 
   notes.forEach((freq, i) => {
@@ -981,10 +1066,9 @@ function playCorrect() {
 }
 
 function playWrong() {
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
 
-  const ctx = new AudioContextClass();
   const freqs = [523.25, 554.37, 587.33, 622.25, 659.25, 698.46, 739.99, 783.99, 830.61, 880.0, 932.33, 987.77];
 
   const master = ctx.createGain();
@@ -1009,12 +1093,10 @@ function playWrong() {
     osc.stop(t + 0.7);
   });
 }
+
 function playTap() {
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-
-  if (!AudioContextClass) return;
-
-  const ctx = new AudioContextClass();
+  const ctx = getAudioContext();
+  if (!ctx) return;
 
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
@@ -1033,6 +1115,33 @@ function playTap() {
 
   osc.start(t);
   osc.stop(t + 0.05);
+}
+
+function fitSingleLineText(container) {
+  if (!container) return;
+
+  const rows = container.querySelectorAll(":scope > div");
+
+  rows.forEach((row) => {
+    row.style.fontSize = "";
+    row.style.fontWeight = "";
+
+    const baseSize = parseFloat(getComputedStyle(row).fontSize);
+
+    let size = baseSize;
+
+    row.style.whiteSpace = "nowrap";
+    row.style.textAlign = "center";
+
+    while (row.scrollWidth > row.clientWidth && size > 8) {
+      size -= 1;
+      row.style.fontSize = size + "px";
+    }
+
+    if (size <= baseSize - 6) {
+      row.style.fontWeight = "400";
+    }
+  });
 }
 
 function shuffle(a) {

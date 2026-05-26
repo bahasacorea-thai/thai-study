@@ -191,17 +191,26 @@
         word-break: keep-all;
       }
 
+      #learnProgress {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 8px;
+      }
+
       .nameBlock {
         position: relative;
         width: 100%;
 
         font-size: clamp(32px, 7.6vw, 46px);
 
-        line-height: 1.35;
+        line-height: 1.2;
 
         display: flex;
         flex-direction: column;
         justify-content: center;
+        gap: 5px;
+        padding: 4px 56px 24px;
       }
 
       .numberNameBlock {
@@ -280,11 +289,12 @@
         flex-direction: column;
         gap: 4px;
         font-size: clamp(24px, 6vw, 36px);
-        font-weight: 800;
+        font-weight: 500;
         line-height: 1;
         overflow-wrap: anywhere;
         word-break: keep-all;
       }
+
       .extraPanel img {
         max-width: 100%;
         max-height: 100%;
@@ -334,12 +344,34 @@
         font-size: clamp(30px, 9vw, 48px);
         font-weight: 700;
       }
+
+      .gameEndWrap {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        gap: 18px;
+      }
+
+      #showGameResultBtn {
+        min-width: 96px;
+        height: 42px;
+        padding: 0 14px;
+        font-size: 15px;
+      }
+
       body.result #resultScreen {
         display: grid;
       }
 
       .resultScreen {
         display: none;
+        position: relative;
         height: 100%;
         min-height: 0;
         grid-template-rows: minmax(0, 1fr) auto;
@@ -383,6 +415,47 @@
         margin: 0 0 16px 0;
       }
 
+      .resultSwipeHint {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) scaleX(0.25);
+        font-size: 180px;
+        line-height: 1;
+        font-weight: 100;
+        color: #111;
+        opacity: 0.1;
+        pointer-events: none;
+      }
+
+      .resultSwipeHint.right {
+        right: -18px;
+      }
+
+      .resultSwipeHint.left {
+        left: -18px;
+      }
+
+      .resultSwipeHint {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) scaleX(0.25);
+        font-size: 180px;
+        line-height: 1;
+        font-weight: 100;
+        color: #111;
+        opacity: 0.1;
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      .resultSwipeHint.right {
+        right: -18px;
+      }
+
+      .resultSwipeHint.left {
+        left: -18px;
+      }
+
       #resultCanvas {
         align-self: center;
         width: 100%;
@@ -390,6 +463,9 @@
         background: white;
         border-radius: 12px;
         touch-action: none;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        -webkit-user-select: none;
         flex-basis: 100%;
       }
 
@@ -478,11 +554,61 @@
         align-items: center;
         justify-content: center;
 
-        gap: 10px;
+        gap: 5px;
         font-size: 1.2em;
-        line-height: 1.15;
+        line-height: 1.12;
 
-        padding: 12px 72px 34px;
+        padding: 4px 56px 24px;
+      }
+
+      .quizPromptWrap {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+        position: relative;
+
+        text-align: center;
+        font-weight: 900;
+        line-height: 1.35;
+      }
+
+      .quizPromptImage {
+        position: absolute;
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
+
+        object-fit: contain;
+        opacity: 0.32;
+        pointer-events: none;
+      }
+
+      .quizPromptMeaningSub {
+        color: #666;
+      }
+
+      .quizPromptWrap > div {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-align: center;
+        word-break: keep-all;
+      }
+
+      .nameBlock > div,
+      .quizAnswerWrap > div {
+        width: 100%;
+        white-space: nowrap;
+        text-align: center;
+        overflow: hidden;
+        font-weight: inherit;
       }
 
       .quizProgress {
@@ -499,23 +625,22 @@
 
       .quizNavBtn {
         position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
+        bottom: 6px;
 
-        width: 72px;
-        min-width: 72px;
+        width: 96px;
+        min-width: 96px;
         height: 44px;
 
-        font-size: 16px;
+        font-size: 14px;
         padding: 0;
       }
 
       #prevQuizBtn {
-        left: 8px;
+        left: 16px;
       }
 
       #nextQuizBtn {
-        right: 8px;
+        right: 16px;
       }
     </style>
   </head>
@@ -539,13 +664,50 @@
       <main class="main">
         <section id="learnScreen" class="screen triple">
           <div id="learnSymbol" class="panel symbolPanel"></div>
-          <div id="learnInfo" class="panel infoPanel"></div>
-          <div id="learnExtra" class="panel extraPanel"></div>
+          <div id="learnInfo" class="panel infoPanel">
+            <div id="learnNameBlock" class="nameBlock">
+              <div id="learnThaiName"></div>
+              <div id="learnKoreanName"></div>
+              <div id="learnRtgsName"></div>
+            </div>
+            <div id="learnHint" class="hint"></div>
+            <div id="learnProgress" class="quizProgress"></div>
+          </div>
+          <div id="learnExtra" class="panel extraPanel">
+            <img id="learnImage" style="display: none" />
+
+            <div id="learnMeaning"></div>
+          </div>
         </section>
 
         <section id="quizScreen" class="screen triple">
-          <div id="quizPrompt" class="panel promptPanel"></div>
-          <div id="quizInfo" class="panel feedbackPanel"></div>
+          <div id="quizPrompt" class="panel promptPanel">
+            <div id="quizPromptWrap" class="quizPromptWrap">
+              <img id="quizPromptImage" class="quizPromptImage" style="display: none" />
+
+              <div id="quizPromptKorean"></div>
+              <div id="quizPromptRtgs"></div>
+              <div id="quizPromptMeaning"></div>
+            </div>
+          </div>
+          <div id="quizInfo" class="panel feedbackPanel">
+            <div id="quizInfoWrap" class="quizInfoWrap" style="display: none">
+              <div id="quizInfoText"></div>
+              <div id="quizProgress" class="quizProgress"></div>
+            </div>
+
+            <div id="quizAnswerWrap" class="quizAnswerWrap" style="display: none">
+              <div id="quizThaiName"></div>
+              <div id="quizKoreanName"></div>
+              <div id="quizRtgsName"></div>
+
+              <div id="quizAnswerProgress" class="quizProgress"></div>
+
+              <button id="prevQuizBtn" class="quizNavBtn">이전</button>
+
+              <button id="nextQuizBtn" class="quizNavBtn">다음</button>
+            </div>
+          </div>
           <div class="panel keyboardPanel">
             <div id="quizKeyboard" class="keyboard"></div>
             <div id="quizPageInfo" class="pageInfo"></div>
@@ -553,8 +715,21 @@
         </section>
 
         <section id="gameScreen" class="screen triple">
-          <div id="gamePrompt" class="panel promptPanel"></div>
-          <div id="gameInfo" class="panel feedbackPanel"></div>
+          <div id="gamePrompt" class="panel promptPanel">
+            <div id="gamePromptWrap" class="quizPromptWrap">
+              <img id="gamePromptImage" class="quizPromptImage" style="display: none" />
+              <div id="gamePromptKorean"></div>
+              <div id="gamePromptRtgs"></div>
+              <div id="gamePromptMeaning"></div>
+            </div>
+          </div>
+          <div id="gameInfo" class="panel feedbackPanel">
+            <div id="gameEndWrap" class="gameEndWrap">
+              <div id="gameInfoText"></div>
+              <div id="gameProgress" class="quizProgress"></div>
+              <button id="showGameResultBtn" style="display: none">결과 확인</button>
+            </div>
+          </div>
           <div class="panel keyboardPanel">
             <div id="gameKeyboard" class="keyboard"></div>
             <div id="gamePageInfo" class="pageInfo"></div>
@@ -562,6 +737,8 @@
         </section>
 
         <section id="resultScreen" class="screen resultScreen">
+          <div id="resultSwipeHint" class="resultSwipeHint right">⟩</div>
+
           <div class="panel resultTopPanel">
             <div class="stimulusWrap">
               <span class="axisLabel">자극:</span>
@@ -574,6 +751,7 @@
             </div>
 
             <canvas id="resultCanvas" width="720" height="720"></canvas>
+            <div id="resultSwipeRight" class="resultSwipeHint right">⟩</div>
           </div>
 
           <div class="panel resultBottomPanel">
@@ -587,6 +765,7 @@
         </section>
       </main>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="gameAnalysis.js"></script>
     <script src="app.js"></script>
   </body>
