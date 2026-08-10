@@ -1,6 +1,11 @@
 let APP_ITEMS = [];
 let currentMode = "learn";
 let selectedMode = "learn";
+
+let currentCategory = "neutral";
+let selectedCategory = "neutral";
+let setupStep = "category";
+
 let currentDifficulty = "advanced";
 let idx = 0;
 
@@ -26,6 +31,15 @@ const modeLabels = {
   game: "게임",
 };
 
+const categoryLabels = {
+  neutral: "Neutral suffixes",
+  tonic: "Tonic endings",
+  heavy: "Heavy endings",
+  light: "Light endings",
+  posttonic: "Posttonic suffixes",
+  special: "Special suffixes",
+};
+
 const difficultySettings = {
   beginner: 1,
   intermediate: 2,
@@ -39,44 +53,39 @@ const difficultyLabels = {
 };
 
 const stressLabels = {
-  1: { en: "Oxytone", ko: "마지막 음절" },
-  2: { en: "Paroxytone", ko: "뒤에서 두번째 음절" },
-  3: { en: "Proparoxytone", ko: "뒤에서 세번째 음절" },
+  1: { en: "Oxytone", ko: "끝 음절 강세 단어" },
+  2: { en: "Paroxytone", ko: "끝에서 두번째 음절 강세 단어" },
+  3: { en: "Proparoxytone", ko: "끝에서 세번째 음절 강세 단어" },
   4: { en: "Alter", ko: "기타" },
 };
 
 function normalizeAppItem(row) {
   const word = String(row.word || row.Word || "");
-  const ipa = String(row.ipa || row.IPA_Wiki_GA_Syllabified || row.IPA_Wiki_RP_Syllabified || row.IPA_Wiki_GA || row.IPA_Wiki_RP || "");
-  const korean = String(row.korean || row.IPA_Wiki_GA_Korean || row.IPA_Wiki_RP_Korean || "");
+  const ipa = String(row.ipa || "");
+  const korean = String(row.korean || "");
   const stress = Number(row.stress || row.Stress) || 0;
   const stressInfo = stressLabels[stress] || { en: "", ko: "" };
 
   return {
-    id: Number(row.id || row.serial) || 0,
+    serial: row.serial || row.Serial || "",
+
     word,
     ipa,
     korean,
-    morpheme: String(
-      row.Morpheme_Boundary ||
-        row.Morph_Boundary ||
-        row.morpheme ||
-        row.Morpheme ||
-        row.morphology ||
-        row.Morphology ||
-        row.morphemeAnalysis ||
-        row["morphemeAnalysis"] ||
-        row["morpheme_analysis"] ||
-        row["Morpheme Analysis"] ||
-        row["형태소 분석"] ||
-        word ||
-        "",
-    ),
+
+    class: String(row.class || row.Class || ""),
+    ending: String(row.ending || row.Ending || ""),
+    morpheme: String(row.morpheme || row.Morph_Boundary || word || ""),
+
     stress,
     stressLabel: String(row.stressLabel || stressInfo.en || ""),
     stressKorean: String(row.stressKorean || stressInfo.ko || ""),
-    syllableCount: row.syllableCount || row.Syllable_Count || "",
-    stressPosition: row.stressPosition || row.Stress_Position || "",
+
+    syllableCount: row.syllableCount || "",
+    stressPosition: row.stressPosition || "",
+
+    stressNote: String(row.stressNote || ""),
+    wikiLink: String(row.wikiLink || ""),
   };
 }
 
@@ -87,7 +96,24 @@ async function loadJson() {
 }
 
 function getCurrentItems() {
-  return APP_ITEMS.filter((item) => item.word && item.ipa && item.korean && [1, 2, 3].includes(item.stress));
+  return APP_ITEMS.filter((item) => {
+    if (!item.word || !item.ipa || !item.korean) return false;
+    if (![1, 2, 3, 4].includes(item.stress)) return false;
+
+    const cls = String(item.class || "").trim();
+
+    // 테스트 단계: 어떤 범주 버튼을 눌러도 TEST 항목 전체를 보여준다.
+    if (cls === "TEST") return true;
+
+    if (currentCategory === "neutral") return cls.startsWith("1 ");
+    if (currentCategory === "tonic") return cls.startsWith("2 ");
+    if (currentCategory === "heavy") return cls.startsWith("3 ");
+    if (currentCategory === "light") return cls.startsWith("4 ");
+    if (currentCategory === "posttonic") return cls.startsWith("5 ");
+    if (currentCategory === "special") return cls.startsWith("6 ");
+
+    return true;
+  });
 }
 
 function shuffle(arr) {
@@ -100,11 +126,34 @@ function shuffle(arr) {
 }
 
 function renderSetup() {
-  document.getElementById("setupTitle").textContent = "모드를 선택하세요";
-  document.getElementById("setupBack").style.display = "none";
+  document.getElementById("quizDifficultyRow").classList.remove("show");
+  document.getElementById("gameDifficultyRow").classList.remove("show");
 
-  document.getElementById("quizDifficultyRow").classList.toggle("show", selectedMode === "quiz");
-  document.getElementById("gameDifficultyRow").classList.toggle("show", selectedMode === "game");
+  document.getElementById("setupBack").onclick = () => {
+    document.body.classList.remove("setup-mode");
+    selectedMode = "learn";
+    renderSetup();
+  };
+
+  [
+    ["setupCategoryNeutral", "neutral"],
+    ["setupCategoryTonic", "tonic"],
+    ["setupCategoryHeavy", "heavy"],
+    ["setupCategoryLight", "light"],
+    ["setupCategoryPosttonic", "posttonic"],
+    ["setupCategorySpecial", "special"],
+  ].forEach(([id, category]) => {
+    document.getElementById(id).onclick = () => {
+      selectedCategory = category;
+      currentCategory = category;
+      selectedMode = "learn";
+
+      document.getElementById("setupTitle").textContent = `${categoryLabels[category]} · 모드를 선택하세요`;
+
+      document.body.classList.add("setup-mode");
+      renderSetup();
+    };
+  });
 
   document.getElementById("setupModeLearn").onclick = () => {
     selectedMode = "learn";
@@ -115,6 +164,8 @@ function renderSetup() {
     selectedMode = selectedMode === "quiz" ? "learn" : "quiz";
     renderSetup();
   };
+
+  document.getElementById("quizDifficultyRow").classList.toggle("show", selectedMode === "quiz");
 
   document.getElementById("quizDifficultyBeginner").onclick = () => {
     currentQuizDifficulty = "beginner";
@@ -136,6 +187,8 @@ function renderSetup() {
     renderSetup();
   };
 
+  document.getElementById("gameDifficultyRow").classList.toggle("show", selectedMode === "game");
+
   document.getElementById("gameDifficultyBeginner").onclick = () => {
     currentDifficulty = "beginner";
     startSelected();
@@ -154,6 +207,7 @@ function renderSetup() {
 
 function startSelected() {
   currentMode = selectedMode;
+  currentCategory = selectedCategory;
   idx = 0;
   quizHistory = [];
   quizHistoryIndex = -1;
@@ -167,7 +221,7 @@ function startSelected() {
   document.body.classList.remove("learn", "quiz", "game", "result");
   document.body.classList.add(currentMode);
 
-  document.getElementById("screenTitle").textContent = `영어 강세 · ${modeLabels[currentMode]}`;
+  document.getElementById("screenTitle").textContent = `${categoryLabels[currentCategory]} · ${modeLabels[currentMode]}`;
   document.getElementById("nextBtn").style.visibility = "visible";
 
   if (currentMode === "learn") renderLearn();
@@ -213,6 +267,8 @@ function renderLearn() {
   document.getElementById("learnStressKo").textContent = stressLabels[item.stress].ko;
   document.getElementById("learnDetail").textContent = `음절 수: ${item.syllableCount || "-"} · 강세 위치: ${item.stressPosition || "-"}`;
   document.getElementById("learnProgress").textContent = `${idx + 1}/${items.length}`;
+
+  fitLearnWord();
 }
 
 function nextLearn() {
@@ -248,8 +304,15 @@ function speakCurrentItem() {
   window.speechSynthesis.speak(utterance);
 }
 
-function openWiktionary(word) {
-  if (!word) return;
+function openWiktionary(itemOrWord) {
+  if (!itemOrWord) return;
+
+  if (typeof itemOrWord === "object" && itemOrWord.wikiLink) {
+    window.open(itemOrWord.wikiLink, "_blank", "noopener");
+    return;
+  }
+
+  const word = String(itemOrWord || "");
   const url = `https://en.wiktionary.org/wiki/${encodeURIComponent(word)}`;
   window.open(url, "_blank", "noopener");
 }
@@ -359,6 +422,24 @@ function fitQuizWord() {
   }
 }
 
+function fitTextToWidth(el, minFont = 24) {
+  if (!el) return;
+
+  el.style.fontSize = "";
+
+  while (el.scrollWidth > el.clientWidth && parseFloat(getComputedStyle(el).fontSize) > minFont) {
+    el.style.fontSize = parseFloat(getComputedStyle(el).fontSize) - 2 + "px";
+  }
+}
+
+function fitLearnWord() {
+  fitTextToWidth(document.getElementById("learnWord"), 24);
+}
+
+function fitGameWord() {
+  fitTextToWidth(document.getElementById("gameWord"), 24);
+}
+
 function startGame() {
   gameQueue = makeGameQueue();
   gameIndex = 0;
@@ -386,6 +467,8 @@ function renderGame() {
   trialStartTime = Date.now();
 
   document.getElementById("gameWord").textContent = item.word;
+  fitGameWord();
+
   document.getElementById("gameInfoText").textContent = "강세 유형을 선택하세요.";
   document.getElementById("gameProgress").textContent = `${gameIndex + 1} / ${gameQueue.length}`;
 
@@ -430,16 +513,16 @@ function renderKeyboard(target) {
     </svg>
   `,
       4: `
-<svg viewBox="0 0 100 100" width="52" height="52" aria-hidden="true">
-  <circle cx="50" cy="50" r="36"
-    fill="none"
-    stroke="#111"
-    stroke-width="4"/>
-  <polygon
-    points="50,20 57,41 80,41 61,55 68,78 50,64 32,78 39,55 20,41 43,41"
-    fill="#111"/>
-</svg>
-`,
+    <svg viewBox="0 0 100 100" width="52" height="52" aria-hidden="true">
+      <circle cx="50" cy="50" r="36"
+        fill="none"
+        stroke="#111"
+        stroke-width="4"/>
+      <polygon
+        points="50,20 57,41 80,41 61,55 68,78 50,64 32,78 39,55 20,41 43,41"
+        fill="#111"/>
+    </svg>
+  `,
     };
     btn.className = `stress-${stress}`;
     btn.innerHTML =
@@ -677,16 +760,16 @@ function initEvents() {
 
   document.getElementById("learnWord").onclick = () => {
     const item = currentItem();
-    openWiktionary(item?.word);
+    openWiktionary(item);
   };
 
   document.getElementById("quizWord").onclick = () => {
-    openWiktionary(quizItem?.word);
+    openWiktionary(quizItem);
   };
 
   // document.getElementById("gameWord").onclick = () => {
   //   const item = gameQueue[gameIndex];
-  //   openWiktionary(item?.word);
+  //   openWiktionary(item);
   // };
 
   document.getElementById("learnScreen").addEventListener("touchstart", handleLearnSwipeStart, { passive: true });

@@ -72,6 +72,19 @@
         gap: 8px;
         overflow: hidden;
       }
+
+      #modeSetupPage {
+        display: none;
+      }
+
+      body.setup-mode #categorySetupPage {
+        display: none;
+      }
+
+      body.setup-mode #modeSetupPage {
+        display: flex;
+      }
+
       .setupPanel h2 {
         width: 56%;
         margin: 0 auto 1em;
@@ -192,7 +205,8 @@
       }
       .triple {
         gap: 6px;
-        grid-template-rows: 30% 30% 30%;
+        /* grid-template-rows: 30% 30% 30%; */
+        grid-template-rows: 1fr 1fr 1fr;
       }
       .panel {
         min-height: 0;
@@ -401,6 +415,11 @@
       }
       .keyboard button.stress-3 {
         background: pink;
+      }
+      .keyboard button.stress-4 {
+        /* background: linear-gradient(145deg, #f2f2f2, #cfcfcf, #ececec); */
+        background: #d9d9d9;
+        color: #111;
       }
 
       .keyShape {
@@ -648,6 +667,14 @@
         transform-origin: center;
       }
 
+      #learnWord,
+      #quizWord,
+      #gameWord {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+      }
+
       #gameResultBtn {
         display: none;
 
@@ -678,7 +705,20 @@
   <body>
     <section class="setup">
       <h1>English Stress Trainer</h1>
-      <div class="setupPanel">
+      <div id="categorySetupPage" class="setupPanel">
+        <h2 id="categorySetupTitle">범주를 선택하세요</h2>
+
+        <div id="categorySetupGrid" class="setupGrid">
+          <button id="setupCategoryNeutral">Neutral suffixes</button>
+          <button id="setupCategoryTonic">Tonic endings</button>
+          <button id="setupCategoryHeavy">Heavy endings</button>
+          <button id="setupCategoryLight">Light endings</button>
+          <button id="setupCategoryPosttonic">Posttonic suffixes</button>
+          <button id="setupCategorySpecial">Special suffixes</button>
+        </div>
+      </div>
+
+      <div id="modeSetupPage" class="setupPanel">
         <h2 id="setupTitle">모드를 선택하세요</h2>
         <div id="setupGrid" class="setupGrid">
           <button id="setupModeLearn">학습</button>
