@@ -734,6 +734,9 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: clip;
+        line-height: 1.18;
+        padding: 0.06em 0.06em 0.18em;
+        box-sizing: border-box;
       }
 
       #gameResultBtn {
@@ -960,10 +963,10 @@
       };
 
       const stressLabels = {
-        1: { en: "Oxytone", ko: "끝 음절 강세 단어" },
-        2: { en: "Paroxytone", ko: "끝에서 두번째 음절 강세 단어" },
-        3: { en: "Proparoxytone", ko: "끝에서 세번째 음절 강세 단어" },
-        4: { en: "Preproparoxytone", ko: "끝에서 네번째 음절 강세 단어" },
+        1: { en: "ULT", ko: "끝에서 1번째 음절 강세" },
+        2: { en: "PEN", ko: "끝에서 2번째 음절 강세" },
+        3: { en: "ANTE", ko: "끝에서 3번째 음절 강세" },
+        4: { en: "PRE", ko: "끝에서 4번째 음절 강세" },
       };
 
       function splitCandidateValues(value) {
