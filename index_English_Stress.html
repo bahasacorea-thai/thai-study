@@ -1614,10 +1614,7 @@
         }
 
         window.speechSynthesis.cancel();
-
-        setTimeout(() => {
-          window.speechSynthesis.speak(utterance);
-        }, 50);
+        window.speechSynthesis.speak(utterance);
       }
 
       function openWiktionary(itemOrWord) {
