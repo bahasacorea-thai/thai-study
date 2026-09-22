@@ -93,11 +93,82 @@
         line-height: 1.2;
       }
 
+      .categorySelectionNotice {
+        width: 100%;
+        margin: 0 auto 2em;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 800;
+        line-height: 1.2;
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      body.setup-mode .categorySelectionNotice {
+        animation: categorySelectionNoticeIn 1s ease-out forwards;
+      }
+
+      @keyframes categorySelectionNoticeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
       .setupGrid {
         display: grid;
         grid-template-columns: 1fr;
         gap: 16px;
         min-height: 0;
+      }
+
+      .variantSelector {
+        width: 100%;
+        margin: 6px auto 20px;
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 14px;
+      }
+
+      .variantSelector button {
+        width: 72%;
+        min-height: 44px;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 7px 12px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        gap: 8px;
+      }
+
+      .variantSelector button.active {
+        background: #dceeff;
+        color: #000;
+      }
+
+      .variantSelector button span {
+        display: inline-block;
+        white-space: nowrap;
+        text-align: left;
+      }
+
+      .variantFlag {
+        width: 40px !important;
+        height: 20px !important;
+        max-width: 40px;
+        max-height: 20px;
+        aspect-ratio: 2 / 1;
+        flex: 0 0 40px;
+        display: block;
       }
 
       .setupGrid button {
@@ -149,7 +220,8 @@
       .setupBack {
         align-self: center;
         min-width: 100px;
-        margin-top: 6px;
+        margin-top: 40px;
+        background: #eeeeee;
       }
 
       .app {
@@ -233,6 +305,16 @@
         font-weight: 700;
         line-height: 1.1;
       }
+
+      .primaryStressSyllable {
+        color: #d32f2f;
+      }
+
+      #learnKorean,
+      #quizKorean {
+        color: #999;
+      }
+
       .infoPanel {
         position: relative;
         flex-direction: column;
@@ -315,7 +397,7 @@
         opacity: 0.1;
         pointer-events: none;
       }
-      .learnInfoBlock #learnMorpheme,
+      /* .learnInfoBlock #learnMorpheme, */
       .learnInfoBlock #learnIPA,
       .learnInfoBlock #learnKorean,
       .learnInfoBlock #learnDetail {
@@ -783,7 +865,86 @@
       </div>
 
       <div id="modeSetupPage" class="setupPanel">
+        <div id="categorySelectionNotice" class="categorySelectionNotice"></div>
+
+        <h2>발음 유형을 선택하세요</h2>
+
+        <div id="variantSelector" class="variantSelector">
+          <button id="setupVariantRP">
+            <svg class="variantFlag" viewBox="0 0 60 30" aria-hidden="true">
+              <clipPath id="gbFlagClip">
+                <rect width="60" height="30" rx="2"></rect>
+              </clipPath>
+              <g clip-path="url(#gbFlagClip)">
+                <rect width="60" height="30" fill="#012169"></rect>
+                <path d="M0 0 L60 30 M60 0 L0 30" stroke="#FFFFFF" stroke-width="6"></path>
+                <path d="M0 0 L60 30 M60 0 L0 30" stroke="#C8102E" stroke-width="2"></path>
+                <path d="M30 0 V30 M0 15 H60" stroke="#FFFFFF" stroke-width="10"></path>
+                <path d="M30 0 V30 M0 15 H60" stroke="#C8102E" stroke-width="6"></path>
+              </g>
+            </svg>
+            <span>(Received Pronunciation)</span>
+          </button>
+
+          <button id="setupVariantGA">
+            <svg class="variantFlag" viewBox="0 0 60 30" aria-hidden="true">
+              <clipPath id="usFlagClip">
+                <rect width="60" height="30" rx="2"></rect>
+              </clipPath>
+              <g clip-path="url(#usFlagClip)">
+                <rect width="60" height="30" fill="#FFFFFF"></rect>
+
+                <g fill="#B22234">
+                  <rect y="0" width="60" height="2.31"></rect>
+                  <rect y="4.62" width="60" height="2.31"></rect>
+                  <rect y="9.23" width="60" height="2.31"></rect>
+                  <rect y="13.85" width="60" height="2.31"></rect>
+                  <rect y="18.46" width="60" height="2.31"></rect>
+                  <rect y="23.08" width="60" height="2.31"></rect>
+                  <rect y="27.69" width="60" height="2.31"></rect>
+                </g>
+
+                <rect width="24" height="16.15" fill="#3C3B6E"></rect>
+
+                <g fill="#FFFFFF">
+                  <circle cx="3" cy="2.3" r="0.65"></circle>
+                  <circle cx="7" cy="2.3" r="0.65"></circle>
+                  <circle cx="11" cy="2.3" r="0.65"></circle>
+                  <circle cx="15" cy="2.3" r="0.65"></circle>
+                  <circle cx="19" cy="2.3" r="0.65"></circle>
+
+                  <circle cx="5" cy="5.4" r="0.65"></circle>
+                  <circle cx="9" cy="5.4" r="0.65"></circle>
+                  <circle cx="13" cy="5.4" r="0.65"></circle>
+                  <circle cx="17" cy="5.4" r="0.65"></circle>
+                  <circle cx="21" cy="5.4" r="0.65"></circle>
+
+                  <circle cx="3" cy="8.5" r="0.65"></circle>
+                  <circle cx="7" cy="8.5" r="0.65"></circle>
+                  <circle cx="11" cy="8.5" r="0.65"></circle>
+                  <circle cx="15" cy="8.5" r="0.65"></circle>
+                  <circle cx="19" cy="8.5" r="0.65"></circle>
+
+                  <circle cx="5" cy="11.6" r="0.65"></circle>
+                  <circle cx="9" cy="11.6" r="0.65"></circle>
+                  <circle cx="13" cy="11.6" r="0.65"></circle>
+                  <circle cx="17" cy="11.6" r="0.65"></circle>
+                  <circle cx="21" cy="11.6" r="0.65"></circle>
+
+                  <circle cx="3" cy="14.7" r="0.65"></circle>
+                  <circle cx="7" cy="14.7" r="0.65"></circle>
+                  <circle cx="11" cy="14.7" r="0.65"></circle>
+                  <circle cx="15" cy="14.7" r="0.65"></circle>
+                  <circle cx="19" cy="14.7" r="0.65"></circle>
+                </g>
+              </g>
+            </svg>
+            <span>(General American)</span>
+          </button>
+        </div>
+
         <h2 id="setupTitle">모드를 선택하세요</h2>
+
         <div id="setupGrid" class="setupGrid">
           <button id="setupModeLearn">학습</button>
           <button id="setupModeQuiz">퀴즈</button>
@@ -817,7 +978,7 @@
           </div>
           <div class="panel infoPanel">
             <div class="learnInfoBlock">
-              <div id="learnMorpheme"></div>
+              <!-- <div id="learnMorpheme"></div> -->
               <div id="learnIpa" class="ipaText"></div>
               <div id="learnKorean"></div>
               <div id="learnDetail" class="hint"></div>
@@ -845,7 +1006,7 @@
             <div id="quizInfoWrap">
               <div id="quizInfoText">강세 유형을 선택하세요.</div>
               <div id="quizAnswerLine">
-                <div id="quizMorpheme"></div>
+                <!-- <div id="quizMorpheme"></div> -->
                 <div id="quizIpa" class="ipaText"></div>
                 <div id="quizKorean"></div>
                 <div id="quizDetail" class="hint"></div>
@@ -907,6 +1068,7 @@
       let APP_ITEMS = [];
       let currentMode = "learn";
       let selectedMode = "learn";
+      let selectedEnglishVariant = "GA";
 
       let currentCategory = "neutral";
       let selectedCategory = "neutral";
@@ -979,24 +1141,44 @@
       function normalizeAppItem(row) {
         const word = String(row.word || row.Word || "");
 
-        const syllabifiedValues = splitCandidateValues(row.final_syllabified || row.ipa);
+        function buildVariant(prefix) {
+          const syllabifiedValues = splitCandidateValues(row[`${prefix}_final`]);
+          const syllableCountValues = splitCandidateValues(row[`${prefix}_final_syllablecount`]);
+          const stressPositionValues = splitCandidateValues(row[`${prefix}_final_stressposition`]);
+          const stressPatternValues = splitCandidateValues(row[`${prefix}_final_stresspattern`]);
+          const hangulizedValues = splitCandidateValues(row[`${prefix}_final_hangulized`]);
 
-        const syllableCountValues = splitCandidateValues(row.final_syllablecount || row.syllableCount);
+          const pronunciations = syllabifiedValues.map((syllabified, candidateIndex) => ({
+            syllabified,
+            syllableCount: Number(syllableCountValues[candidateIndex]) || 0,
+            stressPosition: Number(stressPositionValues[candidateIndex]) || 0,
+            stressPattern: Number(stressPatternValues[candidateIndex]) || 0,
+            hangulized: hangulizedValues[candidateIndex] || "",
+          }));
 
-        const stressPositionValues = splitCandidateValues(row.final_stressposition || row.stressPosition);
+          return {
+            pronunciations,
+            wikiLink: String(row[`${prefix}_final_Source_Link`] || ""),
+          };
+        }
 
-        const stressPatternValues = splitCandidateValues(row.final_stresspattern || row.stress || row.Stress);
+        return {
+          serial: row.serial || row.Serial || "",
+          word,
+          class: String(row.class || row.Class || ""),
+          ending: String(row.ending || row.Ending || ""),
+          morpheme: String(row.English_Morpheme_Combination || row.morpheme || row.Morpheme_Boundary || word),
+          variants: {
+            RP: buildVariant("RP"),
+            GA: buildVariant("GA"),
+          },
+          stressNote: String(row.Stress_Note || row.stressNote || ""),
+        };
+      }
 
-        const hangulizedValues = splitCandidateValues(row.final_hangulized || row.korean);
-
-        const pronunciations = syllabifiedValues.map((syllabified, candidateIndex) => ({
-          syllabified,
-          syllableCount: Number(syllableCountValues[candidateIndex]) || 0,
-          stressPosition: Number(stressPositionValues[candidateIndex]) || 0,
-          stressPattern: Number(stressPatternValues[candidateIndex]) || 0,
-          hangulized: hangulizedValues[candidateIndex] || "",
-        }));
-
+      function getSelectedVariantItem(item) {
+        const variant = item.variants?.[selectedEnglishVariant];
+        const pronunciations = variant?.pronunciations || [];
         const primaryPronunciation = pronunciations[0] || {
           syllabified: "",
           syllableCount: 0,
@@ -1004,40 +1186,23 @@
           stressPattern: 0,
           hangulized: "",
         };
-
         const correctStresses = [
           ...new Set(pronunciations.map((pronunciation) => pronunciation.stressPattern).filter((stressPattern) => [1, 2, 3, 4].includes(stressPattern))),
         ];
-
         const stress = primaryPronunciation.stressPattern;
-        const stressInfo = stressLabels[stress] || {
-          en: "",
-          ko: "",
-        };
-
+        const stressInfo = stressLabels[stress] || { en: "", ko: "" };
         return {
-          serial: row.serial || row.Serial || "",
-
-          word,
+          ...item,
           ipa: primaryPronunciation.syllabified,
           korean: primaryPronunciation.hangulized,
-
-          class: String(row.class || row.Class || ""),
-          ending: String(row.ending || row.Ending || ""),
-          morpheme: String(row.English_Morpheme_Combination || row.morpheme || row.Morpheme_Boundary || word),
-
           stress,
-          stressLabel: String(row.stressLabel || stressInfo.en || ""),
-          stressKorean: String(row.stressKorean || stressInfo.ko || ""),
-
+          stressLabel: stressInfo.en,
+          stressKorean: stressInfo.ko,
           syllableCount: primaryPronunciation.syllableCount,
           stressPosition: primaryPronunciation.stressPosition,
-
           pronunciations,
           correctStresses,
-
-          stressNote: String(row.stressNote || ""),
-          wikiLink: String(row.final_Source_Link || row.wikiLink || ""),
+          wikiLink: variant?.wikiLink || "",
         };
       }
 
@@ -1052,22 +1217,18 @@
       }
 
       function getCurrentItems() {
-        return APP_ITEMS.filter((item) => {
+        return APP_ITEMS.map(getSelectedVariantItem).filter((item) => {
           if (!item.word || !item.ipa || !item.korean) return false;
           if (![1, 2, 3, 4].includes(item.stress)) return false;
 
           const cls = String(item.class || "").trim();
-
-          // 테스트 단계: 어떤 범주 버튼을 눌러도 TEST 항목 전체를 보여준다.
           if (cls === "TEST") return true;
-
           if (currentCategory === "neutral") return cls.startsWith("1 ");
           if (currentCategory === "tonic") return cls.startsWith("2 ");
           if (currentCategory === "heavy") return cls.startsWith("3 ");
           if (currentCategory === "light") return cls.startsWith("4 ");
           if (currentCategory === "posttonic") return cls.startsWith("5 ");
           if (currentCategory === "special") return cls.startsWith("6 ");
-
           return true;
         });
       }
@@ -1082,8 +1243,27 @@
       }
 
       function renderSetup() {
+        document.getElementById("categorySelectionNotice").textContent = `${categoryLabels[selectedCategory]}를 선택하셨습니다`;
+        document.getElementById("setupTitle").textContent = "모드를 선택하세요";
+
         document.getElementById("quizDifficultyRow").classList.remove("show");
         document.getElementById("gameDifficultyRow").classList.remove("show");
+
+        const rpButton = document.getElementById("setupVariantRP");
+        const gaButton = document.getElementById("setupVariantGA");
+
+        rpButton.classList.toggle("active", selectedEnglishVariant === "RP");
+        gaButton.classList.toggle("active", selectedEnglishVariant === "GA");
+
+        rpButton.onclick = () => {
+          selectedEnglishVariant = "RP";
+          renderSetup();
+        };
+
+        gaButton.onclick = () => {
+          selectedEnglishVariant = "GA";
+          renderSetup();
+        };
 
         document.getElementById("setupBack").onclick = () => {
           document.body.classList.remove("setup-mode");
@@ -1104,7 +1284,8 @@
             currentCategory = category;
             selectedMode = "learn";
 
-            document.getElementById("setupTitle").textContent = `${categoryLabels[category]} · 모드를 선택하세요`;
+            document.getElementById("categorySelectionNotice").textContent = `${categoryLabels[category]}를 선택하셨습니다`;
+            document.getElementById("setupTitle").textContent = "모드를 선택하세요";
 
             document.body.classList.add("setup-mode");
             renderSetup();
@@ -1212,6 +1393,58 @@
         return items[idx % items.length];
       }
 
+      function renderStressHighlightedIpa(element, syllabified, stressPosition) {
+        if (!element) return;
+
+        const value = String(syllabified || "").trim();
+        const position = Number(stressPosition) || 0;
+
+        element.textContent = "";
+
+        if (!value || position < 1) {
+          element.textContent = value;
+          return;
+        }
+
+        const match = value.match(/^([/[]?)(.*?)([/\]]?)$/u);
+        const open = match ? match[1] : "";
+        const body = match ? match[2] : value;
+        const close = match ? match[3] : "";
+
+        const syllables = body
+          .replace(/([ˈˌ])/gu, ".$1")
+          .split(".")
+          .filter(Boolean);
+
+        if (position > syllables.length) {
+          element.textContent = value;
+          return;
+        }
+
+        if (open) {
+          element.appendChild(document.createTextNode(open));
+        }
+
+        syllables.forEach((syllable, index) => {
+          if (index > 0 && !/^[ˈˌ]/u.test(syllable)) {
+            element.appendChild(document.createTextNode("."));
+          }
+
+          if (index === position - 1) {
+            const span = document.createElement("span");
+            span.className = "primaryStressSyllable";
+            span.textContent = syllable;
+            element.appendChild(span);
+          } else {
+            element.appendChild(document.createTextNode(syllable));
+          }
+        });
+
+        if (close) {
+          element.appendChild(document.createTextNode(close));
+        }
+      }
+
       function renderLearn() {
         const items = getCurrentItems();
         const item = currentItem();
@@ -1244,9 +1477,9 @@
 
         document.getElementById("learnWord").textContent = item.word;
 
-        document.getElementById("learnMorpheme").textContent = item.morpheme || item.word;
+        // document.getElementById("learnMorpheme").textContent = item.morpheme || item.word;
 
-        document.getElementById("learnIpa").textContent = pronunciation.syllabified;
+        renderStressHighlightedIpa(document.getElementById("learnIpa"), pronunciation.syllabified, pronunciation.stressPosition);
 
         document.getElementById("learnKorean").textContent = pronunciation.hangulized;
 
@@ -1324,6 +1557,23 @@
         renderLearn();
       }
 
+      let speechVoices = [];
+
+      function loadSpeechVoices() {
+        if (!("speechSynthesis" in window)) {
+          speechVoices = [];
+          return;
+        }
+
+        speechVoices = window.speechSynthesis.getVoices();
+      }
+
+      loadSpeechVoices();
+
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.addEventListener("voiceschanged", loadSpeechVoices);
+      }
+
       function speakCurrentItem() {
         let item = null;
 
@@ -1331,15 +1581,38 @@
         if (currentMode === "quiz") item = quizItem;
         if (currentMode === "game") item = gameQueue[gameIndex];
 
-        if (!item || !item.word || !window.speechSynthesis) return;
-        // 게임 모드에서 발음 듣기를 차단하려면 아래 줄의 주석을 해제하십시오.
+        if (!item || !item.word || !("speechSynthesis" in window)) return;
+
+        // 게임 모드에서는 발음 듣기를 차단한다.
         if (currentMode === "game") return;
 
         window.speechSynthesis.cancel();
 
+        if (!speechVoices.length) {
+          loadSpeechVoices();
+        }
+
         const utterance = new SpeechSynthesisUtterance(item.word);
-        utterance.lang = "en-US";
+
+        const targetLang = selectedEnglishVariant === "RP" ? "en-GB" : "en-US";
+
+        utterance.lang = targetLang;
         utterance.rate = 0.9;
+
+        const normalizedTargetLang = targetLang.toLowerCase();
+
+        const targetVoice =
+          speechVoices.find((voice) => String(voice.lang || "").toLowerCase() === normalizedTargetLang) ||
+          speechVoices.find((voice) =>
+            String(voice.lang || "")
+              .toLowerCase()
+              .startsWith("en"),
+          );
+
+        if (targetVoice) {
+          utterance.voice = targetVoice;
+        }
+
         window.speechSynthesis.speak(utterance);
       }
 
@@ -1455,7 +1728,7 @@
 
         document.getElementById("quizInfoWrap").classList.remove("answered");
 
-        document.getElementById("quizMorpheme").textContent = "";
+        // document.getElementById("quizMorpheme").textContent = "";
 
         document.getElementById("quizIpa").textContent = "";
 
@@ -1713,9 +1986,9 @@
           ko: "",
         };
 
-        document.getElementById("quizMorpheme").textContent = quizItem.morpheme || quizItem.word;
+        // document.getElementById("quizMorpheme").textContent = quizItem.morpheme || quizItem.word;
 
-        document.getElementById("quizIpa").textContent = pronunciation.syllabified;
+        renderStressHighlightedIpa(document.getElementById("quizIpa"), pronunciation.syllabified, pronunciation.stressPosition);
 
         document.getElementById("quizKorean").textContent = pronunciation.hangulized;
 
@@ -2154,7 +2427,7 @@
       window.addEventListener("DOMContentLoaded", async () => {
         try {
           const rows = await loadJson();
-          APP_ITEMS = rows.map(normalizeAppItem).filter((item) => item.word && item.ipa && item.korean && item.stress);
+          APP_ITEMS = rows.map(normalizeAppItem).filter((item) => item.word);
           initEvents();
           renderSetup();
         } catch (e) {
