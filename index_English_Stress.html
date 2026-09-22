@@ -70,7 +70,8 @@
         flex-direction: column;
         justify-content: center;
         gap: 8px;
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
 
       #modeSetupPage {
@@ -86,16 +87,17 @@
       }
 
       .setupPanel h2 {
-        width: 56%;
+        width: 100%;
         margin: 0 auto 1em;
         text-align: center;
         font-size: 19px;
         line-height: 1.2;
+        white-space: nowrap;
       }
 
       .categorySelectionNotice {
         width: 100%;
-        margin: 0 auto 2em;
+        margin: 0 auto 12px;
         text-align: center;
         font-size: 20px;
         font-weight: 800;
@@ -128,19 +130,19 @@
 
       .variantSelector {
         width: 100%;
-        margin: 6px auto 20px;
+        margin: 4px auto 10px;
         display: grid;
         grid-template-columns: 1fr;
         justify-items: center;
-        gap: 14px;
+        gap: 10px;
       }
 
       .variantSelector button {
-        width: 72%;
+        width: min(86%, 320px);
         min-height: 44px;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 700;
-        padding: 7px 12px;
+        padding: 7px 10px;
 
         display: flex;
         flex-direction: row;
@@ -220,7 +222,7 @@
       .setupBack {
         align-self: center;
         min-width: 100px;
-        margin-top: 40px;
+        margin-top: 16px;
         background: #eeeeee;
       }
 
@@ -1586,8 +1588,6 @@
         // 게임 모드에서는 발음 듣기를 차단한다.
         if (currentMode === "game") return;
 
-        window.speechSynthesis.cancel();
-
         if (!speechVoices.length) {
           loadSpeechVoices();
         }
@@ -1613,7 +1613,11 @@
           utterance.voice = targetVoice;
         }
 
-        window.speechSynthesis.speak(utterance);
+        window.speechSynthesis.cancel();
+
+        setTimeout(() => {
+          window.speechSynthesis.speak(utterance);
+        }, 50);
       }
 
       function openWiktionary(itemOrWord) {
