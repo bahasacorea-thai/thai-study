@@ -158,10 +158,10 @@ function consonantHint(item) {
 
 function updateMeaning(item) {
   const meaning = document.getElementById("learnMeaning");
-  meaning.className = item.Class === "숫자" ? "numberMeaningBlock" : "";
-  meaning.textContent = item.meaning || item.Notes || item.koreanName || "";
 
-  fitSingleLineText(meaning.parentElement);
+  meaning.className = item.Class === "숫자" ? "numberMeaningBlock" : item.Class === "문장" ? "punctuationMeaningBlock" : "";
+
+  meaning.textContent = item.meaning || item.Notes || item.koreanName || "";
 }
 
 function extraBlock(item) {
@@ -331,6 +331,8 @@ function addSetupButton(id, onClick) {
 function startSelected() {
   currentCategory = selectedCategory;
   currentMode = selectedMode;
+
+  document.body.classList.toggle("punctuation", currentCategory === "punctuation");
   idx = 0;
   quizHistory = [];
   quizHistoryIndex = -1;
@@ -542,13 +544,28 @@ function renderLearn() {
   symbol.textContent = item.symbol || "";
   symbol.classList.toggle("punctuationSymbolPanel", item.Class === "문장");
 
-  document.getElementById("learnThaiName").textContent = item.thaiName || "";
-  document.getElementById("learnKoreanName").textContent = item.koreanName || "";
+  const thaiName = document.getElementById("learnThaiName");
+
+  thaiName.textContent = item.thaiName || "";
+  thaiName.style.fontSize = "";
+  thaiName.style.whiteSpace = "";
+
+  const koreanName = document.getElementById("learnKoreanName");
+  koreanName.textContent = item.koreanName || "";
+  koreanName.style.fontSize = "";
+
   document.getElementById("learnRtgsName").textContent = item.rtgsName || "";
+
+  if (currentCategory === "punctuation") {
+    thaiName.style.fontSize = "37.5px";
+    koreanName.style.fontSize = "18.75px";
+  }
   consonantHint(item);
   document.getElementById("learnProgress").textContent = idx + 1 + "/" + items.length;
 
-  fitSingleLineText(document.getElementById("learnNameBlock"));
+  if (item.Class === "문장") {
+    fitSingleLineText(thaiName);
+  }
 
   extraBlock(item);
 }
@@ -604,7 +621,7 @@ function startQuiz(direction = "next") {
   quizPage = 0;
   updateQuizPrompt(quizItem);
 
-  document.getElementById("quizInfoWrap").style.display = "flex";
+  document.getElementById("quizInfoWrap").style.display = "grid";
   document.getElementById("quizAnswerWrap").style.display = "none";
   document.getElementById("quizInfoText").textContent = "해당 글자를 선택하세요.";
   document.getElementById("quizProgress").textContent = currentQuizDifficulty === "beginner" ? `${quizIndex} / ${quizQueue.length}` : "";
@@ -928,32 +945,35 @@ function drawPoint(point, isBlue = false) {
 }
 
 function isKeyboardWideKey(item, keyboard) {
-  const probe = document.createElement("button");
+  const text = String(item?.symbol || "");
+  if (!text) return false;
 
-  probe.textContent = item?.symbol || "";
-  probe.style.position = "absolute";
+  const probe = document.createElement("span");
+
+  probe.textContent = text;
+  probe.style.position = "fixed";
+  probe.style.left = "-10000px";
+  probe.style.top = "0";
   probe.style.visibility = "hidden";
   probe.style.pointerEvents = "none";
-  probe.style.width = "auto";
-  probe.style.maxWidth = "none";
   probe.style.whiteSpace = "nowrap";
+  probe.style.fontFamily = '"Noto Sans Thai", Tahoma, "Leelawadee UI", sans-serif';
+  probe.style.fontSize = "50px";
+  probe.style.fontWeight = "500";
+  probe.style.lineHeight = "1";
 
-  keyboard.appendChild(probe);
+  document.body.appendChild(probe);
 
-  const naturalWidth = probe.scrollWidth;
+  const textWidth = probe.getBoundingClientRect().width;
 
   probe.remove();
 
-  const keyboardWidth = keyboard.clientWidth;
-  const columnGap = parseFloat(getComputedStyle(keyboard).columnGap) || 0;
-  const singleCellWidth = (keyboardWidth - columnGap * 3) / 4;
-
-  return naturalWidth > singleCellWidth;
+  return textWidth > 75;
 }
 
 function buildKeyboardPages(items, keyboard) {
   const columnCount = 4;
-  const maxRows = 7;
+  const maxRows = 4;
   const capacity = columnCount * maxRows;
   const pages = [];
 
@@ -1001,7 +1021,7 @@ function getKeyboardRowCount(pageItems) {
     usedCells += wide ? 2 : 1;
   });
 
-  return Math.max(1, Math.min(7, Math.ceil(usedCells / columnCount)));
+  return Math.max(1, Math.min(4, Math.ceil(usedCells / columnCount)));
 }
 
 function renderKeyboard(target) {
@@ -1153,14 +1173,26 @@ function updateQuizPrompt(item, target = "quiz") {
 }
 
 function showQuizAnswer(chosen) {
+  const quizAnswerWrap = document.getElementById("quizAnswerWrap");
+  const quizThaiName = document.getElementById("quizThaiName");
+  const quizKoreanName = document.getElementById("quizKoreanName");
+
   document.getElementById("quizInfoWrap").style.display = "none";
-  document.getElementById("quizAnswerWrap").style.display = "flex";
-  document.getElementById("quizThaiName").textContent = chosen.thaiName || "";
-  document.getElementById("quizKoreanName").textContent = chosen.koreanName || "";
+  quizAnswerWrap.style.display = "grid";
+
+  quizThaiName.textContent = chosen.thaiName || "";
+  quizKoreanName.textContent = chosen.koreanName || "";
   document.getElementById("quizRtgsName").textContent = chosen.rtgsName || "";
   document.getElementById("quizAnswerProgress").textContent = currentQuizDifficulty === "beginner" ? `${quizIndex} / ${quizQueue.length}` : "";
 
-  fitSingleLineText(document.getElementById("quizAnswerWrap"));
+  fitSingleLineText(quizAnswerWrap);
+
+  if (currentCategory === "punctuation") {
+    quizThaiName.style.fontSize = "37.5px";
+    quizKoreanName.style.fontSize = "18.75px";
+
+    fitSingleLineText(quizThaiName);
+  }
 
   document.getElementById("prevQuizBtn").onclick = () => startQuiz("prev");
   document.getElementById("nextQuizBtn").onclick = () => startQuiz("next");
@@ -1263,13 +1295,44 @@ function playTap() {
 function fitSingleLineText(container) {
   if (!container) return;
 
-  const rows = container.querySelectorAll(":scope > div");
+  const rows = container.matches?.("#learnThaiName, #quizThaiName") ? [container] : [...container.querySelectorAll(":scope > div")];
 
   rows.forEach((row) => {
     row.style.fontSize = "";
-    row.style.fontWeight = "";
     row.style.whiteSpace = "nowrap";
     row.style.textAlign = "center";
+
+    const availableWidth = row.getBoundingClientRect().width;
+    if (!availableWidth || !row.textContent.trim()) return;
+
+    const computed = getComputedStyle(row);
+
+    const probe = document.createElement("span");
+    probe.textContent = row.textContent;
+    probe.style.position = "fixed";
+    probe.style.left = "-10000px";
+    probe.style.top = "0";
+    probe.style.visibility = "hidden";
+    probe.style.pointerEvents = "none";
+    probe.style.whiteSpace = "nowrap";
+    probe.style.fontFamily = computed.fontFamily;
+    probe.style.fontWeight = computed.fontWeight;
+    probe.style.fontStyle = computed.fontStyle;
+    probe.style.fontSize = computed.fontSize;
+    probe.style.letterSpacing = computed.letterSpacing;
+
+    document.body.appendChild(probe);
+
+    const textWidth = probe.getBoundingClientRect().width;
+    const baseSize = parseFloat(computed.fontSize);
+
+    probe.remove();
+
+    if (textWidth > availableWidth) {
+      const fittedSize = Math.floor(baseSize * (availableWidth / textWidth));
+
+      row.style.fontSize = `${fittedSize}px`;
+    }
   });
 }
 
@@ -1433,13 +1496,21 @@ function refitCurrentScreen() {
   if (!document.body.classList.contains("running")) return;
 
   if (currentMode === "learn") {
-    fitSingleLineText(document.getElementById("learnNameBlock"));
+    const thaiName = document.getElementById("learnThaiName");
+
+    if (currentCategory === "punctuation") {
+      fitSingleLineText(thaiName);
+    }
+
     fitSingleLineText(document.getElementById("learnMeaning")?.parentElement);
   }
 
   if (currentMode === "quiz") {
     fitSingleLineText(document.getElementById("quizPromptWrap"));
-    fitSingleLineText(document.getElementById("quizAnswerWrap"));
+
+    if (document.getElementById("quizAnswerWrap")?.style.display !== "none") {
+      fitSingleLineText(document.getElementById("quizAnswerWrap"));
+    }
   }
 
   if (currentMode === "game") {
