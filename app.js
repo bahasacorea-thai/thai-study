@@ -1520,3 +1520,6 @@ init().catch((err) => {
   console.error(err);
   alert("data/app_items.json을 불러오지 못했습니다.");
 });
+alert(
+  `inner: ${window.innerWidth} × ${window.innerHeight}\n` + `visual: ${visualViewport.width} × ${visualViewport.height}\n` + `DPR: ${window.devicePixelRatio}`,
+);
