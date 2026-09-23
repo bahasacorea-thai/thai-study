@@ -37,6 +37,31 @@ const categoryLabels = {
 const modeLabels = { learn: "학습", quiz: "퀴즈", game: "게임" };
 const difficultyLabels = { beginner: "초급", intermediate: "중급", advanced: "고급" };
 
+const BASE_VIEWPORT_WIDTH = 320;
+const BASE_PANEL_DISTRIBUTABLE_HEIGHT = 750;
+const FIXED_VERTICAL_SPACE = 50;
+
+function updateUiScale() {
+  const viewportWidth = window.innerWidth || BASE_VIEWPORT_WIDTH;
+  const viewportHeight = window.innerHeight || 800;
+  const widthScale = viewportWidth / BASE_VIEWPORT_WIDTH;
+  const heightScale = (viewportHeight - FIXED_VERTICAL_SPACE) / BASE_PANEL_DISTRIBUTABLE_HEIGHT;
+  const scale = Math.max(0.1, Math.min(1, widthScale, heightScale));
+
+  document.documentElement.style.setProperty("--ui-scale", String(scale));
+
+  return scale;
+}
+
+function getUiScale() {
+  const value = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--ui-scale"));
+  return Number.isFinite(value) && value > 0 ? value : 1;
+}
+
+function scaledPx(value) {
+  return `${value * getUiScale()}px`;
+}
+
 function normalizeAppItem(row) {
   const symbol = row.Symbol === undefined || row.Symbol === null ? "" : String(row.Symbol);
   const korean = row["Korean Name"] || "";
@@ -557,8 +582,8 @@ function renderLearn() {
   document.getElementById("learnRtgsName").textContent = item.rtgsName || "";
 
   if (currentCategory === "punctuation") {
-    thaiName.style.fontSize = "37.5px";
-    koreanName.style.fontSize = "18.75px";
+    thaiName.style.fontSize = scaledPx(37.5);
+    koreanName.style.fontSize = scaledPx(18.75);
   }
   consonantHint(item);
   document.getElementById("learnProgress").textContent = idx + 1 + "/" + items.length;
@@ -958,7 +983,7 @@ function isKeyboardWideKey(item, keyboard) {
   probe.style.pointerEvents = "none";
   probe.style.whiteSpace = "nowrap";
   probe.style.fontFamily = '"Noto Sans Thai", Tahoma, "Leelawadee UI", sans-serif';
-  probe.style.fontSize = "50px";
+  probe.style.fontSize = scaledPx(50);
   probe.style.fontWeight = "500";
   probe.style.lineHeight = "1";
 
@@ -968,7 +993,7 @@ function isKeyboardWideKey(item, keyboard) {
 
   probe.remove();
 
-  return textWidth > 75;
+  return textWidth > 75 * getUiScale();
 }
 
 function buildKeyboardPages(items, keyboard) {
@@ -1183,8 +1208,8 @@ function showQuizAnswer(chosen) {
   fitSingleLineText(quizAnswerWrap);
 
   if (currentCategory === "punctuation") {
-    quizThaiName.style.fontSize = "37.5px";
-    quizKoreanName.style.fontSize = "18.75px";
+    quizThaiName.style.fontSize = scaledPx(37.5);
+    quizKoreanName.style.fontSize = scaledPx(18.75);
 
     fitSingleLineText(quizThaiName);
   }
@@ -1480,6 +1505,7 @@ function bind() {
 }
 
 async function init() {
+  updateUiScale();
   bind();
   renderSetup();
   APP_ITEMS = (await loadJson()).map(normalizeAppItem);
@@ -1513,13 +1539,16 @@ function refitCurrentScreen() {
   }
 }
 
-window.addEventListener("resize", () => requestAnimationFrame(refitCurrentScreen));
-window.addEventListener("orientationchange", () => requestAnimationFrame(refitCurrentScreen));
+window.addEventListener("resize", () => {
+  updateUiScale();
+  requestAnimationFrame(refitCurrentScreen);
+});
+window.addEventListener("orientationchange", () => {
+  updateUiScale();
+  requestAnimationFrame(refitCurrentScreen);
+});
 
 init().catch((err) => {
   console.error(err);
   alert("data/app_items.json을 불러오지 못했습니다.");
 });
-alert(
-  `inner: ${window.innerWidth} × ${window.innerHeight}\n` + `visual: ${visualViewport.width} × ${visualViewport.height}\n` + `DPR: ${window.devicePixelRatio}`,
-);

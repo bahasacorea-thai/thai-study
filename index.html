@@ -500,8 +500,9 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
        glyph = 50px
        padding = 0
 
-8. Key 크기는 남는 공간에 맞추기 위해 축소하지 않는다.
-   남는 공간을 gap / pagination 공간으로 배분한다.
+8. 320×800 기준에서는 Key 75 × 75px을 유지한다.
+   실제 viewport 높이가 기준보다 작으면 750px 패널 배분 공간을 기준으로
+   내부 key / glyph / image / text를 동일 배율로 축소한다.
 
 9. 모든 텍스트와 버튼 내용은 자신에게 할당된 공간 안에서
    수직 중앙 정렬한다.
@@ -523,10 +524,16 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
        기준 문자 크기 = 112.5px
 
 14. 실제 구현에서는 고정 320×800만을 강제하지 않는다.
-    320×800은 최소 설계 기준이다.
+    320×800은 기준 설계값이다.
     실제 viewport의 사용 가능 공간에서 동일한 비율 원칙을 유지한다.
+    내부 UI scale = min(1, viewportWidth / 320, (viewportHeight - 50) / 750).
+    여기서 50px = App 상하 padding 8 + Header 30 + Header/Main gap 4 + panel gap 8.
 ===============================================================================
 */
+
+      :root {
+        --ui-scale: 1;
+      }
 
       * {
         box-sizing: border-box;
@@ -707,8 +714,8 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
       .panel {
         min-height: 0;
         background: white;
-        border-radius: 12px;
-        padding: 4px;
+        border-radius: calc(12px * var(--ui-scale));
+        padding: calc(4px * var(--ui-scale));
         display: flex;
         align-items: center;
         justify-content: center;
@@ -718,7 +725,7 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
 
       .symbolPanel {
         font-family: "Noto Sans Thai", Tahoma, "Leelawadee UI", sans-serif;
-        font-size: 112.5px;
+        font-size: calc(112.5px * var(--ui-scale));
         font-weight: 500;
         line-height: 1;
         white-space: pre-wrap;
@@ -766,34 +773,34 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
 
       #learnThaiName {
         grid-row: 2;
-        font-size: 50px;
+        font-size: calc(50px * var(--ui-scale));
       }
 
       #learnKoreanName {
         grid-row: 4;
-        font-size: 25px;
+        font-size: calc(25px * var(--ui-scale));
       }
 
       #learnRtgsName {
         grid-row: 6;
-        font-size: 25px;
+        font-size: calc(25px * var(--ui-scale));
       }
 
       #learnHint {
         grid-row: 8;
-        font-size: 25px;
+        font-size: calc(25px * var(--ui-scale));
         color: #444;
       }
 
       #learnProgress {
         grid-row: 10;
         position: static;
-        font-size: 16px;
+        font-size: calc(16px * var(--ui-scale));
       }
 
       .numberMeaningBlock,
       .numberQuizPrompt {
-        font-size: 112.5px;
+        font-size: calc(112.5px * var(--ui-scale));
         line-height: 1;
       }
 
@@ -806,7 +813,7 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
 
       .extraPanel img {
         max-width: 100%;
-        max-height: 225px;
+        max-height: calc(225px * var(--ui-scale));
         object-fit: contain;
       }
 
@@ -818,8 +825,8 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
 
       .promptPanel {
         flex-direction: column;
-        gap: 3px;
-        font-size: clamp(22px, 6.4vw, 34px);
+        gap: calc(3px * var(--ui-scale));
+        font-size: clamp(calc(22px * var(--ui-scale)), 6.4vw, calc(34px * var(--ui-scale)));
         font-weight: 800;
         line-height: 1.12;
         overflow-wrap: anywhere;
@@ -828,8 +835,8 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
 
       .feedbackPanel {
         flex-direction: column;
-        gap: 2px;
-        font-size: clamp(16px, 4.8vw, 24px);
+        gap: calc(2px * var(--ui-scale));
+        font-size: clamp(calc(16px * var(--ui-scale)), 4.8vw, calc(24px * var(--ui-scale)));
         font-weight: 500;
         line-height: 1;
         overflow-wrap: anywhere;
@@ -839,30 +846,30 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
       .keyboardPanel {
         padding: 0;
         display: grid;
-        grid-template-rows: 300px 75px;
+        grid-template-rows: calc(300px * var(--ui-scale)) calc(75px * var(--ui-scale));
         min-height: 0;
         overflow: hidden;
       }
 
       .keyboard {
         width: 100%;
-        height: 300px;
+        height: calc(300px * var(--ui-scale));
         min-height: 0;
         display: grid;
-        grid-template-columns: repeat(4, 75px);
-        grid-template-rows: repeat(4, 75px);
+        grid-template-columns: repeat(4, calc(75px * var(--ui-scale)));
+        grid-template-rows: repeat(4, calc(75px * var(--ui-scale)));
         justify-content: space-evenly;
         align-content: start;
         gap: 0;
       }
 
       .keyboard button {
-        width: 75px;
-        height: 75px;
+        width: calc(75px * var(--ui-scale));
+        height: calc(75px * var(--ui-scale));
         min-width: 0;
         min-height: 0;
         padding: 0;
-        font-size: 50px;
+        font-size: calc(50px * var(--ui-scale));
         line-height: 1;
         display: flex;
         align-items: center;
@@ -881,9 +888,9 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
 
       .pageInfo {
         width: 100%;
-        height: 75px;
+        height: calc(75px * var(--ui-scale));
         min-height: 0;
-        font-size: 15px;
+        font-size: calc(15px * var(--ui-scale));
         display: flex;
         align-items: center;
         justify-content: center;
@@ -900,7 +907,7 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
         height: 2em;
         padding: 0 1em;
 
-        font-size: clamp(22px, 6.4vw, 34px);
+        font-size: clamp(calc(22px * var(--ui-scale)), 6.4vw, calc(34px * var(--ui-scale)));
         line-height: 1;
 
         display: flex;
@@ -984,7 +991,7 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
 
       .stimulusWrap,
       .responseWrap {
-        font-size: 16px;
+        font-size: calc(16px * var(--ui-scale));
         margin: 0 0 6px 0;
       }
 
@@ -1119,7 +1126,7 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
         align-items: center;
         justify-content: center;
 
-        font-size: 16px;
+        font-size: calc(16px * var(--ui-scale));
         line-height: 1.3;
         font-weight: 700;
         color: #555;
@@ -1128,27 +1135,27 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
 
       #quizThaiName {
         grid-row: 2;
-        font-size: 50px;
+        font-size: calc(50px * var(--ui-scale));
         line-height: 1.3;
       }
 
       #quizKoreanName {
         grid-row: 4;
-        font-size: 25px;
+        font-size: calc(25px * var(--ui-scale));
         line-height: 1.3;
       }
 
       body.quiz.punctuation #quizThaiName {
-        font-size: 37.5px;
+        font-size: calc(37.5px * var(--ui-scale));
       }
 
       body.quiz.punctuation #quizKoreanName {
-        font-size: 18.75px;
+        font-size: calc(18.75px * var(--ui-scale));
       }
 
       #quizRtgsName {
         grid-row: 6;
-        font-size: 25px;
+        font-size: calc(25px * var(--ui-scale));
         line-height: 1.3;
       }
 
@@ -1161,7 +1168,7 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
         align-items: center;
         justify-content: center;
 
-        gap: 4px;
+        gap: calc(4px * var(--ui-scale));
         position: relative;
 
         text-align: center;
@@ -1214,11 +1221,11 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
         top: 50%;
         transform: translateY(-50%);
 
-        width: 84px;
-        min-width: 84px;
-        height: 35px;
+        width: calc(84px * var(--ui-scale));
+        min-width: calc(84px * var(--ui-scale));
+        height: calc(35px * var(--ui-scale));
 
-        font-size: 16px;
+        font-size: calc(16px * var(--ui-scale));
         padding: 0;
 
         display: flex;
@@ -1227,11 +1234,11 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
       }
 
       #prevQuizBtn {
-        left: 4px;
+        left: calc(4px * var(--ui-scale));
       }
 
       #nextQuizBtn {
-        right: 4px;
+        right: calc(4px * var(--ui-scale));
       }
 
       @media (max-width: 359px), (max-height: 700px) {
@@ -1251,7 +1258,7 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
         .top button {
           width: 54px;
           height: 30px;
-          font-size: 16px;
+          font-size: calc(16px * var(--ui-scale));
         }
       }
     </style>
