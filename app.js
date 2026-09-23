@@ -1045,9 +1045,6 @@ function renderKeyboard(target) {
   }
 
   const pageItems = pages[currentPage];
-  const rowCount = getKeyboardRowCount(pageItems);
-
-  keyboard.style.setProperty("--keyboard-rows", String(rowCount));
 
   keyboard.replaceChildren();
 
@@ -1067,9 +1064,7 @@ function renderKeyboard(target) {
 
   if (totalPages === 1) {
     pageInfo.textContent = "";
-    pageInfo.style.display = "none";
   } else {
-    pageInfo.style.display = "";
     pageInfo.textContent = `${currentPage + 1} / ${totalPages}`;
   }
 }
