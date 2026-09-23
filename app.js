@@ -927,7 +927,7 @@ function drawPoint(point, isBlue = false) {
   ctx.stroke();
 }
 
-function isQuizWideKey(item, keyboard) {
+function isKeyboardWideKey(item, keyboard) {
   const probe = document.createElement("button");
 
   probe.textContent = item?.symbol || "";
@@ -946,39 +946,32 @@ function isQuizWideKey(item, keyboard) {
 
   const keyboardWidth = keyboard.clientWidth;
   const columnGap = parseFloat(getComputedStyle(keyboard).columnGap) || 0;
-
   const singleCellWidth = (keyboardWidth - columnGap * 3) / 4;
 
   return naturalWidth > singleCellWidth;
 }
 
-function buildQuizKeyboardPages(items, keyboard) {
+function buildKeyboardPages(items, keyboard) {
   const columnCount = 4;
-  const capacity = 12;
+  const maxRows = 7;
+  const capacity = columnCount * maxRows;
   const pages = [];
 
   let page = [];
   let usedCells = 0;
 
   items.forEach((item) => {
-    const wide = isQuizWideKey(item, keyboard);
+    const wide = isKeyboardWideKey(item, keyboard);
     const cells = wide ? 2 : 1;
 
-    let rowPosition = usedCells % columnCount;
-
-    // 2칸짜리 키가 현재 행의 마지막 1칸에는 들어갈 수 없으므로
-    // CSS Grid와 동일하게 다음 행으로 넘기고 남은 1칸을 소비한다.
-    if (wide && rowPosition === columnCount - 1) {
+    if (wide && usedCells % columnCount === columnCount - 1) {
       usedCells += 1;
     }
 
-    // 행 넘김까지 반영했을 때 현재 4×3 페이지를 초과하면
-    // 새 페이지에서 다시 배치한다.
     if (usedCells + cells > capacity) {
       pages.push(page);
       page = [];
       usedCells = 0;
-      rowPosition = 0;
     }
 
     page.push({
@@ -996,79 +989,45 @@ function buildQuizKeyboardPages(items, keyboard) {
   return pages.length ? pages : [[]];
 }
 
+function getKeyboardRowCount(pageItems) {
+  const columnCount = 4;
+  let usedCells = 0;
+
+  pageItems.forEach(({ wide }) => {
+    if (wide && usedCells % columnCount === columnCount - 1) {
+      usedCells += 1;
+    }
+
+    usedCells += wide ? 2 : 1;
+  });
+
+  return Math.max(1, Math.min(7, Math.ceil(usedCells / columnCount)));
+}
+
 function renderKeyboard(target) {
   const items = getCurrentItems();
   const keyboard = document.getElementById(target + "Keyboard");
   const pageInfo = document.getElementById(target + "PageInfo");
 
-  if (target === "game") {
-    keyboard.classList.remove("lastRow1", "lastRow2", "lastRow3");
-    keyboard.classList.add("gameKeyboardAll");
+  keyboard.classList.toggle("gameKeyboardAll", target === "game");
 
-    const useTwoPages = items.length > 28;
-
-    let gamePages;
-
-    if (useTwoPages) {
-      const firstPageSize = Math.ceil(items.length / 2);
-
-      gamePages = [items.slice(0, firstPageSize), items.slice(firstPageSize)];
-    } else {
-      gamePages = [items];
-      gamePage = 0;
-    }
-
-    const totalPages = gamePages.length;
-
-    gamePage = Math.max(0, Math.min(totalPages - 1, gamePage));
-
-    const pageItems = gamePages[gamePage];
-    const columnCount = 4;
-    const rowCount = Math.ceil(pageItems.length / columnCount);
-    const remainder = pageItems.length % columnCount;
-
-    keyboard.style.setProperty("--game-keyboard-rows", String(rowCount));
-
-    if (remainder === 1) {
-      keyboard.classList.add("lastRow1");
-    } else if (remainder === 2) {
-      keyboard.classList.add("lastRow2");
-    } else if (remainder === 3) {
-      keyboard.classList.add("lastRow3");
-    }
-
-    keyboard.replaceChildren();
-
-    pageItems.forEach((item) => {
-      const btn = document.createElement("button");
-
-      btn.textContent = item.symbol || "";
-      btn.onclick = () => chooseKey("game", item);
-
-      keyboard.appendChild(btn);
-    });
-
-    if (totalPages === 1) {
-      pageInfo.textContent = "";
-      pageInfo.style.display = "none";
-    } else {
-      pageInfo.style.display = "";
-      pageInfo.textContent = `${gamePage + 1} / ${totalPages}`;
-    }
-
-    return;
-  }
-
-  keyboard.classList.remove("gameKeyboardAll", "lastRow1", "lastRow2", "lastRow3");
-  keyboard.style.removeProperty("--game-keyboard-rows");
-
-  const pages = buildQuizKeyboardPages(items, keyboard);
-
+  const pages = buildKeyboardPages(items, keyboard);
   const totalPages = pages.length;
 
-  quizPage = Math.max(0, Math.min(totalPages - 1, quizPage));
+  let currentPage = target === "game" ? gamePage : quizPage;
 
-  const pageItems = pages[quizPage];
+  currentPage = Math.max(0, Math.min(totalPages - 1, currentPage));
+
+  if (target === "game") {
+    gamePage = currentPage;
+  } else {
+    quizPage = currentPage;
+  }
+
+  const pageItems = pages[currentPage];
+  const rowCount = getKeyboardRowCount(pageItems);
+
+  keyboard.style.setProperty("--keyboard-rows", String(rowCount));
 
   keyboard.replaceChildren();
 
@@ -1081,13 +1040,18 @@ function renderKeyboard(target) {
       btn.classList.add("wideKey");
     }
 
-    btn.onclick = () => chooseKey("quiz", item);
+    btn.onclick = () => chooseKey(target, item);
 
     keyboard.appendChild(btn);
   });
 
-  pageInfo.style.display = "";
-  pageInfo.textContent = `${quizPage + 1} / ${totalPages}`;
+  if (totalPages === 1) {
+    pageInfo.textContent = "";
+    pageInfo.style.display = "none";
+  } else {
+    pageInfo.style.display = "";
+    pageInfo.textContent = `${currentPage + 1} / ${totalPages}`;
+  }
 }
 
 function chooseKey(target, chosen) {
@@ -1121,29 +1085,22 @@ function chooseKey(target, chosen) {
 
 function changeKeyboardPage(target, delta) {
   const items = getCurrentItems();
+  const keyboard = document.getElementById(target + "Keyboard");
 
-  if (target === "game") {
-    if (items.length <= 28) {
-      return;
-    }
+  const pages = buildKeyboardPages(items, keyboard);
+  const totalPages = pages.length;
 
-    const totalPages = 2;
-
-    gamePage = (gamePage + delta + totalPages) % totalPages;
-
-    renderKeyboard("game");
+  if (totalPages <= 1) {
     return;
   }
 
-  const keyboard = document.getElementById("quizKeyboard");
+  if (target === "game") {
+    gamePage = (gamePage + delta + totalPages) % totalPages;
+  } else {
+    quizPage = (quizPage + delta + totalPages) % totalPages;
+  }
 
-  const pages = buildQuizKeyboardPages(items, keyboard);
-
-  const totalPages = pages.length;
-
-  quizPage = (quizPage + delta + totalPages) % totalPages;
-
-  renderKeyboard("quiz");
+  renderKeyboard(target);
 }
 
 function updateQuizPrompt(item, target = "quiz") {
@@ -1313,19 +1270,6 @@ function fitSingleLineText(container) {
     row.style.fontWeight = "";
     row.style.whiteSpace = "nowrap";
     row.style.textAlign = "center";
-
-    const baseSize = parseFloat(getComputedStyle(row).fontSize);
-
-    if (row.scrollWidth <= row.clientWidth) return;
-
-    const ratio = row.clientWidth / row.scrollWidth;
-    const nextSize = Math.max(8, Math.floor(baseSize * ratio));
-
-    row.style.fontSize = nextSize + "px";
-
-    if (nextSize <= baseSize - 6) {
-      row.style.fontWeight = "400";
-    }
   });
 }
 
