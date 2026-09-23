@@ -35,11 +35,11 @@
       }
       button {
         border: 2px solid #222;
-        border-radius: 12px;
+        border-radius: 10px;
         background: #fff;
-        padding: 10px 12px;
+        padding: 7px 9px;
         font-weight: 500;
-        font-size: 16px;
+        font-size: 14px;
       }
       button.active {
         background: royalblue;
@@ -52,61 +52,82 @@
 
       .setup {
         height: 100dvh;
-        padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
+        padding: max(6px, env(safe-area-inset-top)) 6px max(6px, env(safe-area-inset-bottom));
         display: grid;
-        grid-template-rows: auto 1fr;
-        gap: 14px;
+        grid-template-rows: auto minmax(0, 1fr);
+        gap: 6px;
         max-width: 520px;
         margin: 0 auto;
       }
       .setup h1 {
         margin: 0;
-        font-size: 24px;
+        font-size: 16px;
+        line-height: 1.1;
+        text-align: center;
       }
+
       .setupPanel {
         background: white;
-        border-radius: 22px;
-        padding: 18px;
+        border-radius: 16px;
+        padding: 8px;
         min-height: 0;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 18px;
+        gap: 8px;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
+
       .setupPanel h2 {
-        margin: 0;
+        width: 100%;
+        margin: 0 auto 4px;
         text-align: center;
-        font-size: 22px;
+        font-size: 19px;
+        line-height: 1.2;
+        white-space: nowrap;
       }
+
+      .setupSelectionNotice {
+        width: 100%;
+        margin: 0 auto 12px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 700;
+        color: #555;
+      }
+
       .setupGrid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 18px;
+        gap: 8px;
+        min-height: 0;
       }
+
       .setupGrid button {
-        min-height: 72px;
-        width: 50%;
+        min-height: 48px;
+        width: min(86%, 320px);
         justify-self: center;
-
-        font-size: 24px;
+        font-size: 19px;
         font-weight: 500;
-
-        padding: 14px 16px;
+        padding: 7px 10px;
       }
+
       .setupBack {
         align-self: center;
-        min-width: 120px;
-        margin-top: 24px;
+        min-width: 100px;
+        margin-top: 16px;
       }
 
       .app {
         height: 100dvh;
-        padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom));
+        padding: max(5px, env(safe-area-inset-top)) 5px max(5px, env(safe-area-inset-bottom));
         display: none;
         grid-template-rows: auto minmax(0, 1fr);
-        gap: 8px;
+        gap: 5px;
         max-width: 520px;
         margin: 0 auto;
+        overflow: hidden;
       }
       body.running .setup {
         display: none;
@@ -123,14 +144,15 @@
       }
       .top h1 {
         margin: 0;
-        font-size: 20px;
+        font-size: 16px;
+        line-height: 1.1;
         text-align: center;
       }
       .top button {
-        width: 88px;
-        height: 52px;
+        width: 62px;
+        height: 34px;
         padding: 0;
-        font-size: 28px;
+        font-size: 13px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -151,14 +173,23 @@
       }
 
       .triple {
-        grid-template-rows: repeat(3, minmax(0, 1fr));
-        gap: 8px;
+        gap: 6px;
+        grid-template-rows: 30% 40% 30%;
       }
+
+      #quizScreen {
+        grid-template-rows: 27% 35% 38%;
+      }
+
+      #gameScreen {
+        grid-template-rows: 27% 15% 58%;
+      }
+
       .panel {
         min-height: 0;
         background: white;
-        border-radius: 18px;
-        padding: 14px 12px;
+        border-radius: 12px;
+        padding: 6px 6px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -168,25 +199,25 @@
 
       .symbolPanel {
         font-family: "Noto Sans Thai", Tahoma, "Leelawadee UI", sans-serif;
-        font-size: clamp(108px, 34svh, 220px);
+        font-size: clamp(64px, 20svh, 128px);
         font-weight: 500;
-        line-height: 1.08;
+        line-height: 1;
         white-space: pre-wrap;
         overflow-wrap: anywhere;
       }
 
       .punctuationSymbolPanel {
-        font-size: clamp(64px, 20vw, 120px);
-        line-height: 1.05;
+        font-size: clamp(42px, 14vw, 80px);
+        line-height: 1;
       }
 
       .infoPanel {
         position: relative;
         flex-direction: column;
-        gap: 8px;
-        font-size: clamp(20px, 5.5vw, 30px);
+        gap: 4px;
+        font-size: clamp(18px, 5.28vw, 25.2px);
         font-weight: 700;
-        line-height: 1.35;
+        line-height: 1.18;
         overflow-wrap: anywhere;
         word-break: keep-all;
       }
@@ -195,22 +226,22 @@
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 8px;
+        bottom: 4px;
       }
 
       .nameBlock {
         position: relative;
         width: 100%;
 
-        font-size: clamp(32px, 7.6vw, 46px);
+        font-size: clamp(24px, 6.72vw, 36px);
 
-        line-height: 1.2;
+        line-height: 1.1;
 
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 5px;
-        padding: 4px 56px 24px;
+        gap: 6px;
+        padding: 1px 30px 14px;
       }
 
       .numberNameBlock {
@@ -218,13 +249,13 @@
       }
 
       .numberMeaningBlock {
-        font-size: clamp(96px, 28vw, 180px);
+        font-size: clamp(56px, 18vw, 100px);
         line-height: 1;
         font-weight: 700;
       }
 
       .numberQuizPrompt {
-        font-size: clamp(96px, 28vw, 180px);
+        font-size: clamp(56px, 18vw, 100px);
         line-height: 1;
         font-weight: 700;
       }
@@ -238,7 +269,7 @@
         display: flex;
         align-items: center;
 
-        font-size: 180px;
+        font-size: 110px;
         line-height: 1;
         font-weight: 100;
 
@@ -251,44 +282,44 @@
 
       .nameBlock::before {
         content: "⟨";
-        left: -20px;
+        left: -12px;
       }
 
       .nameBlock::after {
         content: "⟩";
-        right: -20px;
+        right: -12px;
       }
 
       .hint {
-        font-size: clamp(16px, 5vw, 24px);
+        font-size: clamp(14.4px, 4.56vw, 20.4px);
         font-weight: 700;
         color: #444;
-        line-height: 1.35;
+        line-height: 1.2;
       }
 
       .extraPanel {
         flex-direction: column;
-        gap: 6px;
-        font-size: clamp(24px, 6.7vw, 37px);
+        gap: 3px;
+        font-size: clamp(16px, 4.8vw, 24px);
         font-weight: 800;
-        line-height: 1.25;
+        line-height: 1.12;
         overflow-wrap: anywhere;
         word-break: keep-all;
       }
       .promptPanel {
         flex-direction: column;
-        gap: 6px;
-        font-size: clamp(36px, 9vw, 54px);
+        gap: 3px;
+        font-size: clamp(22px, 6.4vw, 34px);
         font-weight: 800;
-        line-height: 1.25;
+        line-height: 1.12;
         overflow-wrap: anywhere;
         word-break: keep-all;
       }
 
       .feedbackPanel {
         flex-direction: column;
-        gap: 4px;
-        font-size: clamp(24px, 6vw, 36px);
+        gap: 2px;
+        font-size: clamp(16px, 4.8vw, 24px);
         font-weight: 500;
         line-height: 1;
         overflow-wrap: anywhere;
@@ -300,49 +331,91 @@
         max-height: 100%;
         object-fit: contain;
       }
-      .hint {
-        font-size: clamp(16px, 5vw, 24px);
-        font-weight: 700;
-        color: #444;
-        line-height: 1.35;
-      }
+
       .keyboardPanel {
-        padding: 8px;
+        padding: 4px;
         flex-direction: column;
-        gap: 6px;
+        gap: 3px;
       }
+
+      body.game #gameScreen .keyboardPanel {
+        padding: 4px 4px 14px;
+      }
+
+      .keyboardHidden {
+        visibility: hidden;
+        pointer-events: none;
+      }
+
       .keyboard {
         width: 100%;
-        flex: 1;
+        height: 90%;
+        flex: 0 0 90%;
         min-height: 0;
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         grid-template-rows: repeat(3, minmax(0, 1fr));
-        gap: 6px;
+        gap: 3px;
       }
+
       .keyboard button {
         min-width: 0;
         min-height: 0;
         padding: 0 4px;
         font-family: "Noto Sans Thai", Tahoma, "Leelawadee UI", sans-serif;
-        font-size: clamp(24px, 8vw, 40px);
+        font-size: clamp(36px, 13vw, 60px);
         line-height: 1;
         display: flex;
         align-items: center;
         justify-content: center;
+        touch-action: manipulation;
       }
       .keyboard button.empty {
         opacity: 0.16;
         pointer-events: none;
       }
+
+      #quizKeyboard button.wideKey {
+        grid-column: span 2;
+      }
+
+      #gameKeyboard.gameKeyboardAll {
+        width: 100%;
+        height: auto;
+        flex: 1 1 auto;
+        min-height: 0;
+
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-rows: repeat(var(--game-keyboard-rows), minmax(0, 1fr));
+        gap: 3px;
+      }
+
+      #gameKeyboard.gameKeyboardAll.lastRow1 button:last-child {
+        grid-column: 2 / span 2;
+      }
+
+      #gameKeyboard.gameKeyboardAll.lastRow2 button:nth-last-child(2) {
+        grid-column: 2;
+      }
+
+      #gameKeyboard.gameKeyboardAll.lastRow3 button:nth-last-child(3) {
+        grid-column: 1;
+      }
+
+      #gameKeyboard.gameKeyboardAll button {
+        font-size: clamp(28px, 9vw, 44px);
+        padding: 0;
+      }
+
       .pageInfo {
-        font-size: 13px;
+        flex: 1 1 10%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+        font-size: 16px;
         font-weight: 700;
         color: #555;
-      }
-      .progressText {
-        font-size: clamp(30px, 9vw, 48px);
-        font-weight: 700;
       }
 
       .gameEndWrap {
@@ -355,14 +428,14 @@
         align-items: center;
         justify-content: center;
 
-        gap: 18px;
+        gap: 8px;
       }
 
       #showGameResultBtn {
         min-width: 96px;
-        height: 42px;
-        padding: 0 14px;
-        font-size: 15px;
+        height: 32px;
+        padding: 0 10px;
+        font-size: 13px;
       }
 
       body.result #resultScreen {
@@ -378,6 +451,41 @@
         gap: 8px;
       }
 
+      .resultScreen.resultScatter .resultTopPanel {
+        display: flex;
+      }
+
+      .resultScreen.resultScatter .resultReportPanel {
+        display: none;
+      }
+
+      .resultScreen.resultScatter #saveReportBtn {
+        display: none;
+      }
+
+      .resultScreen.resultAnalysis .resultTopPanel {
+        display: none;
+      }
+
+      .resultScreen.resultAnalysis .resultReportPanel {
+        display: flex;
+      }
+
+      .resultScreen.resultAnalysis #saveReportBtn {
+        display: inline-block;
+      }
+
+      .resultButtonsPanel {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding: 6px;
+      }
+
+      .resultButtonsPanel button {
+        min-width: 92px;
+      }
+
       .resultTopPanel {
         display: flex;
         flex-wrap: wrap;
@@ -386,19 +494,14 @@
         align-items: center;
       }
 
-      .resultSideBox {
-        text-align: center;
-      }
-
-      .sideTitle {
-        font-size: 16px;
-        font-weight: 800;
-        color: #555;
+      .resultReportPanel {
+        position: relative;
+        flex-direction: column;
       }
 
       .resultSymbol {
         font-family: "Noto Sans Thai", Tahoma, "Leelawadee UI", sans-serif;
-        font-size: 52px;
+        font-size: 36px;
         font-weight: 700;
         line-height: 1;
       }
@@ -411,35 +514,15 @@
 
       .stimulusWrap,
       .responseWrap {
-        font-size: 24px;
-        margin: 0 0 16px 0;
+        font-size: 16px;
+        margin: 0 0 6px 0;
       }
 
       .resultSwipeHint {
         position: absolute;
         top: 50%;
         transform: translateY(-50%) scaleX(0.25);
-        font-size: 180px;
-        line-height: 1;
-        font-weight: 100;
-        color: #111;
-        opacity: 0.1;
-        pointer-events: none;
-      }
-
-      .resultSwipeHint.right {
-        right: -18px;
-      }
-
-      .resultSwipeHint.left {
-        left: -18px;
-      }
-
-      .resultSwipeHint {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%) scaleX(0.25);
-        font-size: 180px;
+        font-size: 110px;
         line-height: 1;
         font-weight: 100;
         color: #111;
@@ -458,7 +541,7 @@
 
       #resultCanvas {
         align-self: center;
-        width: 100%;
+        width: min(100%, calc(100dvh - 210px));
         aspect-ratio: 1 / 1;
         background: white;
         border-radius: 12px;
@@ -469,35 +552,20 @@
         flex-basis: 100%;
       }
 
-      .resultBottomPanel {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        overflow: hidden;
-      }
-
       #analysisText {
+        flex: 1;
+        min-height: 0;
         font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
-        font-size: 15px;
-        line-height: 1.65;
+        font-size: 13px;
+        line-height: 1.45;
         white-space: pre-wrap;
         color: #222;
         overflow-y: auto;
-      }
-
-      .resultButtons {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-      }
-
-      .resultButtons button {
-        min-width: 120px;
+        padding: 6px 4px;
       }
 
       .difficultyRow {
-        width: 75%;
+        width: 82%;
         justify-self: center;
 
         display: flex;
@@ -508,12 +576,12 @@
         flex: 1 1 0;
         min-width: 0;
         width: auto !important;
-        min-height: 52px !important;
+        min-height: 40px !important;
 
         margin: 0 !important;
         padding: 0 4px;
 
-        font-size: 18px !important;
+        font-size: 14px !important;
         white-space: nowrap;
       }
 
@@ -541,7 +609,7 @@
         align-items: center;
         justify-content: center;
 
-        padding-bottom: 34px;
+        padding-bottom: 22px;
       }
 
       .quizAnswerWrap {
@@ -554,11 +622,11 @@
         align-items: center;
         justify-content: center;
 
-        gap: 5px;
-        font-size: 1.2em;
-        line-height: 1.12;
+        gap: 6px;
+        font-size: 1.512em;
+        line-height: 1.3;
 
-        padding: 4px 56px 24px;
+        padding: 6px 34px 72px;
       }
 
       .quizPromptWrap {
@@ -570,7 +638,7 @@
         align-items: center;
         justify-content: center;
 
-        gap: 8px;
+        gap: 4px;
         position: relative;
 
         text-align: center;
@@ -607,7 +675,11 @@
         width: 100%;
         white-space: nowrap;
         text-align: center;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: visible;
+        line-height: 1.3;
+        padding-top: 2px;
+        padding-bottom: 4px;
         font-weight: inherit;
       }
 
@@ -615,41 +687,193 @@
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 8px;
+        bottom: 4px;
 
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 700;
-        opacity: 0.75;
+        color: #555;
+        opacity: 1;
         text-align: center;
       }
 
       .quizNavBtn {
         position: absolute;
-        bottom: 6px;
+        top: 80%;
+        transform: translateY(-50%);
 
-        width: 96px;
-        min-width: 96px;
-        height: 44px;
+        width: 84px;
+        min-width: 84px;
+        height: 38.4px;
 
-        font-size: 14px;
+        font-size: 24px;
         padding: 0;
       }
 
       #prevQuizBtn {
-        left: 16px;
+        left: 18px;
       }
 
       #nextQuizBtn {
-        right: 16px;
+        right: 18px;
+      }
+
+      @media (max-width: 359px), (max-height: 700px) {
+        button {
+          border-width: 1.5px;
+          border-radius: 8px;
+        }
+        .app {
+          padding: max(4px, env(safe-area-inset-top)) 4px max(4px, env(safe-area-inset-bottom));
+          gap: 4px;
+        }
+        .top {
+          gap: 4px;
+        }
+        .top h1 {
+          font-size: 14px;
+        }
+        .top button {
+          width: 54px;
+          height: 30px;
+          font-size: 16px;
+        }
+        .triple {
+          gap: 4px;
+        }
+        .panel {
+          padding: 4px;
+          border-radius: 10px;
+        }
+        .symbolPanel {
+          font-size: clamp(56px, 18svh, 108px);
+        }
+        .infoPanel {
+          font-size: clamp(16.8px, 5.04vw, 24px);
+          line-height: 1.18;
+        }
+
+        .nameBlock {
+          font-size: clamp(21.6px, 6.24vw, 31.2px);
+          padding: 0 26px 12px;
+          gap: 6px;
+        }
+
+        .nameBlock::before,
+        .nameBlock::after {
+          font-size: 90px;
+        }
+
+        .hint {
+          font-size: clamp(14.4px, 4.32vw, 19.2px);
+          line-height: 1.2;
+        }
+        .extraPanel {
+          font-size: clamp(14px, 4.2vw, 20px);
+          line-height: 1.08;
+        }
+        .promptPanel {
+          font-size: clamp(20px, 5.8vw, 30px);
+          line-height: 1.08;
+        }
+        .feedbackPanel {
+          font-size: clamp(14px, 4.2vw, 20px);
+        }
+        .keyboardPanel {
+          padding: 3px;
+          gap: 2px;
+        }
+
+        body.game #gameScreen .keyboardPanel {
+          padding: 3px 3px 12px;
+        }
+
+        .keyboard {
+          gap: 2px;
+        }
+        .keyboard button {
+          font-size: clamp(16px, 5.8vw, 26px);
+        }
+
+        #gameKeyboard.gameKeyboardAll button {
+          font-size: clamp(20px, 6.8vw, 30px);
+        }
+
+        .pageInfo {
+          font-size: 14px;
+        }
+        .quizProgress {
+          bottom: 3px;
+          font-size: 14px;
+        }
+
+        .quizNavBtn {
+          width: 74.4px;
+          min-width: 74.4px;
+          height: 33.6px;
+          font-size: 22px;
+        }
+
+        #prevQuizBtn {
+          left: 18px;
+        }
+        #nextQuizBtn {
+          right: 18px;
+        }
+        .setup {
+          padding: 4px;
+          gap: 4px;
+        }
+        .setup h1 {
+          font-size: 16px;
+        }
+        .setupPanel {
+          padding: 6px;
+          gap: 6px;
+        }
+        .setupPanel h2 {
+          font-size: 16px;
+        }
+        .setupGrid {
+          gap: 6px;
+        }
+        .setupGrid button {
+          min-height: 42px;
+          font-size: 17px;
+        }
       }
     </style>
   </head>
   <body class="learn">
     <section id="setup" class="setup">
-      <h1>태국어 문자 학습</h1>
+      <h1>태국어 문자</h1>
       <div class="setupPanel">
+        <div id="setupSelectionNotice" class="setupSelectionNotice" style="display: none"></div>
         <h2 id="setupTitle">범주를 선택하세요</h2>
-        <div id="setupGrid" class="setupGrid"></div>
+        <div id="setupGrid" class="setupGrid">
+          <button id="setupCategoryConsonant1">자음1</button>
+          <button id="setupCategoryConsonant2">자음2</button>
+          <button id="setupCategoryConsonantAll">자음전체</button>
+          <button id="setupCategoryVowelPlus">모음+</button>
+          <button id="setupCategoryNumber">숫자</button>
+          <button id="setupCategoryPunctuation">문장부호</button>
+
+          <button id="setupModeLearn" style="display: none">학습</button>
+          <button id="setupModeQuiz" style="display: none">퀴즈</button>
+
+          <div id="quizDifficultyRow" class="difficultyRow" style="display: none">
+            <button id="quizDifficultyBeginner" class="difficultyBtn beginner">초급</button>
+            <button id="quizDifficultyIntermediate" class="difficultyBtn intermediate">중급</button>
+            <button id="quizDifficultyAdvanced" class="difficultyBtn advanced">고급</button>
+          </div>
+
+          <button id="setupModeGame" style="display: none">게임</button>
+
+          <div id="gameDifficultyRow" class="difficultyRow" style="display: none">
+            <button id="gameDifficultyBeginner" class="difficultyBtn beginner">초급</button>
+            <button id="gameDifficultyIntermediate" class="difficultyBtn intermediate">중급</button>
+            <button id="gameDifficultyAdvanced" class="difficultyBtn advanced">고급</button>
+          </div>
+        </div>
         <button id="setupBack" class="setupBack" style="display: none">이전</button>
       </div>
     </section>
@@ -657,7 +881,7 @@
     <div class="app">
       <header class="top">
         <button id="backBtn">⟵</button>
-        <h1 id="screenTitle">태국어 문자 학습</h1>
+        <h1 id="screenTitle">태국어 문자</h1>
         <button id="speakBtn">🔊</button>
       </header>
 
@@ -709,7 +933,22 @@
             </div>
           </div>
           <div class="panel keyboardPanel">
-            <div id="quizKeyboard" class="keyboard"></div>
+            <div id="quizKeyboard" class="keyboard">
+              <button></button>
+              <button></button>
+              <button></button>
+              <button></button>
+
+              <button></button>
+              <button></button>
+              <button></button>
+              <button></button>
+
+              <button></button>
+              <button></button>
+              <button></button>
+              <button></button>
+            </div>
             <div id="quizPageInfo" class="pageInfo"></div>
           </div>
         </section>
@@ -737,8 +976,6 @@
         </section>
 
         <section id="resultScreen" class="screen resultScreen">
-          <div id="resultSwipeHint" class="resultSwipeHint right">⟩</div>
-
           <div class="panel resultTopPanel">
             <div class="stimulusWrap">
               <span class="axisLabel">자극:</span>
@@ -754,13 +991,14 @@
             <div id="resultSwipeRight" class="resultSwipeHint right">⟩</div>
           </div>
 
-          <div class="panel resultBottomPanel">
+          <div class="panel resultReportPanel">
             <div id="analysisText"></div>
+            <div id="resultSwipeLeft" class="resultSwipeHint left">⟨</div>
+          </div>
 
-            <div class="resultButtons">
-              <button id="saveReportBtn" style="display: none">분석보고서 저장</button>
-              <button id="restartGame">게임 다시</button>
-            </div>
+          <div class="panel resultButtonsPanel">
+            <button id="saveReportBtn">분석보고서 저장</button>
+            <button id="restartBtn">게임 다시</button>
           </div>
         </section>
       </main>

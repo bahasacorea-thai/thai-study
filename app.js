@@ -64,13 +64,13 @@ function isSameAnswer(a, b) {
 }
 
 async function loadJson() {
-  for (const path of ["data/app_items.json", "../data/app_items.json"]) {
-    try {
-      const res = await fetch(path);
-      if (res.ok) return res.json();
-    } catch (_) {}
+  const res = await fetch("data/app_items.json");
+
+  if (!res.ok) {
+    throw new Error("app_items.json load failed");
   }
-  throw new Error("app_items.json load failed");
+
+  return res.json();
 }
 
 function getCurrentItems() {
@@ -187,96 +187,145 @@ function extraBlock(item) {
 }
 
 function renderSetup() {
-  const grid = document.getElementById("setupGrid");
   const title = document.getElementById("setupTitle");
+  const notice = document.getElementById("setupSelectionNotice");
   const back = document.getElementById("setupBack");
-  grid.innerHTML = "";
+
+  const categoryButtons = [
+    document.getElementById("setupCategoryConsonant1"),
+    document.getElementById("setupCategoryConsonant2"),
+    document.getElementById("setupCategoryConsonantAll"),
+    document.getElementById("setupCategoryVowelPlus"),
+    document.getElementById("setupCategoryNumber"),
+    document.getElementById("setupCategoryPunctuation"),
+  ];
+
+  const modeButtons = [document.getElementById("setupModeLearn"), document.getElementById("setupModeQuiz"), document.getElementById("setupModeGame")];
+
+  const quizDifficultyRow = document.getElementById("quizDifficultyRow");
+  const gameDifficultyRow = document.getElementById("gameDifficultyRow");
+
   back.style.display = setupStep === "category" ? "none" : "inline-block";
 
+  categoryButtons.forEach((btn) => {
+    btn.style.display = setupStep === "category" ? "block" : "none";
+  });
+
+  modeButtons.forEach((btn) => {
+    btn.style.display = setupStep === "mode" ? "block" : "none";
+  });
+
+  quizDifficultyRow.style.display = setupStep === "mode" && selectedMode === "quiz" ? "flex" : "none";
+
+  gameDifficultyRow.style.display = setupStep === "mode" && selectedMode === "game" ? "flex" : "none";
+
   if (setupStep === "category") {
+    notice.style.display = "none";
+    notice.textContent = "";
     title.textContent = "범주를 선택하세요";
-    Object.entries(categoryLabels).forEach(([key, label]) =>
-      addSetupButton(label, () => {
-        selectedCategory = key;
-        setupStep = "mode";
-        renderSetup();
-      }),
-    );
+
+    addSetupButton("setupCategoryConsonant1", () => {
+      selectedCategory = "consonant1";
+      selectedMode = "learn";
+      setupStep = "mode";
+      renderSetup();
+    });
+
+    addSetupButton("setupCategoryConsonant2", () => {
+      selectedCategory = "consonant2";
+      selectedMode = "learn";
+      setupStep = "mode";
+      renderSetup();
+    });
+
+    addSetupButton("setupCategoryConsonantAll", () => {
+      selectedCategory = "consonantAll";
+      selectedMode = "learn";
+      setupStep = "mode";
+      renderSetup();
+    });
+
+    addSetupButton("setupCategoryVowelPlus", () => {
+      selectedCategory = "vowelPlus";
+      selectedMode = "learn";
+      setupStep = "mode";
+      renderSetup();
+    });
+
+    addSetupButton("setupCategoryNumber", () => {
+      selectedCategory = "number";
+      selectedMode = "learn";
+      setupStep = "mode";
+      renderSetup();
+    });
+
+    addSetupButton("setupCategoryPunctuation", () => {
+      selectedCategory = "punctuation";
+      selectedMode = "learn";
+      setupStep = "mode";
+      renderSetup();
+    });
+
     return;
   }
 
   if (setupStep === "mode") {
-    title.textContent = `${categoryLabels[selectedCategory]} · 모드를 선택하세요`;
+    notice.style.display = "block";
+    notice.textContent = `선택한 범주: ${categoryLabels[selectedCategory]}`;
+    title.textContent = "방식을 선택하세요";
 
-    addSetupButton("학습", () => {
+    addSetupButton("setupModeLearn", () => {
       selectedMode = "learn";
       startSelected();
     });
 
-    addSetupButton("퀴즈", () => {
+    addSetupButton("setupModeQuiz", () => {
       selectedMode = selectedMode === "quiz" ? "learn" : "quiz";
       renderSetup();
     });
 
-    if (selectedMode === "quiz") {
-      const row = document.createElement("div");
-      row.className = "difficultyRow";
+    addSetupButton("quizDifficultyBeginner", () => {
+      currentQuizDifficulty = "beginner";
+      startSelected();
+    });
 
-      Object.entries(difficultyLabels).forEach(([key, label]) => {
-        const btn = document.createElement("button");
-        btn.textContent = label;
-        btn.className = `difficultyBtn ${key}`;
+    addSetupButton("quizDifficultyIntermediate", () => {
+      currentQuizDifficulty = "intermediate";
+      startSelected();
+    });
 
-        btn.onclick = () => {
-          currentQuizDifficulty = key;
-          startSelected();
-        };
+    addSetupButton("quizDifficultyAdvanced", () => {
+      currentQuizDifficulty = "advanced";
+      startSelected();
+    });
 
-        row.appendChild(btn);
-      });
-
-      grid.appendChild(row);
-    }
-
-    addSetupButton("게임", () => {
+    addSetupButton("setupModeGame", () => {
       selectedMode = selectedMode === "game" ? "learn" : "game";
       renderSetup();
     });
 
-    if (selectedMode === "game") {
-      const row = document.createElement("div");
-      row.className = "difficultyRow";
+    addSetupButton("gameDifficultyBeginner", () => {
+      currentDifficulty = "beginner";
+      startSelected();
+    });
 
-      Object.entries(difficultyLabels).forEach(([key, label]) => {
-        const btn = document.createElement("button");
-        btn.textContent = label;
-        btn.className = `difficultyBtn ${key}`;
+    addSetupButton("gameDifficultyIntermediate", () => {
+      currentDifficulty = "intermediate";
+      startSelected();
+    });
 
-        btn.onclick = () => {
-          currentDifficulty = key;
-          startSelected();
-        };
-
-        row.appendChild(btn);
-      });
-
-      grid.appendChild(row);
-    }
-
-    return;
+    addSetupButton("gameDifficultyAdvanced", () => {
+      currentDifficulty = "advanced";
+      startSelected();
+    });
   }
 }
 
-function addSetupButton(label, onClick, className = "") {
-  const btn = document.createElement("button");
-  btn.textContent = label;
+function addSetupButton(id, onClick) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+
   btn.onclick = onClick;
-
-  if (className) {
-    btn.classList.add(className);
-  }
-
-  document.getElementById("setupGrid").appendChild(btn);
 }
 
 function startSelected() {
@@ -609,7 +658,7 @@ function renderGame() {
 
     document.getElementById("showGameResultBtn").textContent = "결과 확인";
     document.getElementById("showGameResultBtn").style.display = "inline-block";
-    document.getElementById("gameKeyboard").innerHTML = "";
+    document.getElementById("gameKeyboard").parentElement.classList.add("keyboardHidden");
     document.getElementById("gamePageInfo").textContent = "";
     document.getElementById("showGameResultBtn").onclick = showGameResult;
 
@@ -622,6 +671,8 @@ function renderGame() {
   document.getElementById("showGameResultBtn").style.display = "none";
   document.getElementById("gameInfoText").textContent = "해당 글자를 선택하세요.";
   document.getElementById("gameProgress").textContent = gameIndex + 1 + " / " + gameQueue.length;
+
+  document.getElementById("gameKeyboard").parentElement.classList.remove("keyboardHidden");
 
   renderKeyboard("game");
 }
@@ -638,7 +689,7 @@ function showGameResult() {
   setupResultSwipe();
   updateResultPage();
 
-  document.getElementById("restartGame").onclick = () => {
+  document.getElementById("restartBtn").onclick = () => {
     if (!confirmSaveIfNeeded()) return;
 
     currentMode = "game";
@@ -660,41 +711,22 @@ function showGameResult() {
 }
 
 function updateResultPage() {
-  const canvas = document.getElementById("resultCanvas");
-  const stimulus = document.querySelector(".stimulusWrap");
-  const response = document.querySelector(".responseWrap");
+  const resultScreen = document.getElementById("resultScreen");
   const analysisText = document.getElementById("analysisText");
   const saveReportBtn = document.getElementById("saveReportBtn");
-  const topPanel = document.querySelector(".resultTopPanel");
-  const bottomPanel = document.querySelector(".resultBottomPanel");
-  const resultSwipeHint = document.getElementById("resultSwipeHint");
+
+  resultScreen.classList.toggle("resultScatter", resultPage === "scatter");
+  resultScreen.classList.toggle("resultAnalysis", resultPage === "analysis");
 
   if (resultPage === "scatter") {
-    topPanel.style.display = "flex";
-    bottomPanel.style.flex = "";
-    canvas.style.display = "block";
-    stimulus.style.display = "block";
-    response.style.display = "block";
     analysisText.style.display = "none";
     saveReportBtn.style.display = "none";
-    resultSwipeHint.textContent = "⟩";
-    resultSwipeHint.className = "resultSwipeHint right";
-    resultSwipeHint.style.display = "block";
     drawResultCanvas();
     return;
   }
 
-  topPanel.style.display = "none";
-  bottomPanel.style.flex = "1";
-  canvas.style.display = "none";
-  stimulus.style.display = "none";
-  response.style.display = "none";
   analysisText.style.display = "block";
   saveReportBtn.style.display = "inline-block";
-  resultSwipeHint.textContent = "⟨";
-  resultSwipeHint.className = "resultSwipeHint left";
-  resultSwipeHint.style.display = "block";
-
   analysisText.textContent = makeAnalysisReport();
   analysisGenerated = true;
 }
@@ -895,29 +927,167 @@ function drawPoint(point, isBlue = false) {
   ctx.stroke();
 }
 
+function isQuizWideKey(item, keyboard) {
+  const probe = document.createElement("button");
+
+  probe.textContent = item?.symbol || "";
+  probe.style.position = "absolute";
+  probe.style.visibility = "hidden";
+  probe.style.pointerEvents = "none";
+  probe.style.width = "auto";
+  probe.style.maxWidth = "none";
+  probe.style.whiteSpace = "nowrap";
+
+  keyboard.appendChild(probe);
+
+  const naturalWidth = probe.scrollWidth;
+
+  probe.remove();
+
+  const keyboardWidth = keyboard.clientWidth;
+  const columnGap = parseFloat(getComputedStyle(keyboard).columnGap) || 0;
+
+  const singleCellWidth = (keyboardWidth - columnGap * 3) / 4;
+
+  return naturalWidth > singleCellWidth;
+}
+
+function buildQuizKeyboardPages(items, keyboard) {
+  const columnCount = 4;
+  const capacity = 12;
+  const pages = [];
+
+  let page = [];
+  let usedCells = 0;
+
+  items.forEach((item) => {
+    const wide = isQuizWideKey(item, keyboard);
+    const cells = wide ? 2 : 1;
+
+    let rowPosition = usedCells % columnCount;
+
+    // 2칸짜리 키가 현재 행의 마지막 1칸에는 들어갈 수 없으므로
+    // CSS Grid와 동일하게 다음 행으로 넘기고 남은 1칸을 소비한다.
+    if (wide && rowPosition === columnCount - 1) {
+      usedCells += 1;
+    }
+
+    // 행 넘김까지 반영했을 때 현재 4×3 페이지를 초과하면
+    // 새 페이지에서 다시 배치한다.
+    if (usedCells + cells > capacity) {
+      pages.push(page);
+      page = [];
+      usedCells = 0;
+      rowPosition = 0;
+    }
+
+    page.push({
+      item,
+      wide,
+    });
+
+    usedCells += cells;
+  });
+
+  if (page.length) {
+    pages.push(page);
+  }
+
+  return pages.length ? pages : [[]];
+}
+
 function renderKeyboard(target) {
   const items = getCurrentItems();
-  const pageSize = 12;
-  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
-  let page = target === "quiz" ? quizPage : gamePage;
-  page = Math.max(0, Math.min(totalPages - 1, page));
-  if (target === "quiz") quizPage = page;
-  else gamePage = page;
-
   const keyboard = document.getElementById(target + "Keyboard");
-  keyboard.innerHTML = "";
-  items.slice(page * pageSize, page * pageSize + pageSize).forEach((item) => {
+  const pageInfo = document.getElementById(target + "PageInfo");
+
+  if (target === "game") {
+    keyboard.classList.remove("lastRow1", "lastRow2", "lastRow3");
+    keyboard.classList.add("gameKeyboardAll");
+
+    const useTwoPages = items.length > 28;
+
+    let gamePages;
+
+    if (useTwoPages) {
+      const firstPageSize = Math.ceil(items.length / 2);
+
+      gamePages = [items.slice(0, firstPageSize), items.slice(firstPageSize)];
+    } else {
+      gamePages = [items];
+      gamePage = 0;
+    }
+
+    const totalPages = gamePages.length;
+
+    gamePage = Math.max(0, Math.min(totalPages - 1, gamePage));
+
+    const pageItems = gamePages[gamePage];
+    const columnCount = 4;
+    const rowCount = Math.ceil(pageItems.length / columnCount);
+    const remainder = pageItems.length % columnCount;
+
+    keyboard.style.setProperty("--game-keyboard-rows", String(rowCount));
+
+    if (remainder === 1) {
+      keyboard.classList.add("lastRow1");
+    } else if (remainder === 2) {
+      keyboard.classList.add("lastRow2");
+    } else if (remainder === 3) {
+      keyboard.classList.add("lastRow3");
+    }
+
+    keyboard.replaceChildren();
+
+    pageItems.forEach((item) => {
+      const btn = document.createElement("button");
+
+      btn.textContent = item.symbol || "";
+      btn.onclick = () => chooseKey("game", item);
+
+      keyboard.appendChild(btn);
+    });
+
+    if (totalPages === 1) {
+      pageInfo.textContent = "";
+      pageInfo.style.display = "none";
+    } else {
+      pageInfo.style.display = "";
+      pageInfo.textContent = `${gamePage + 1} / ${totalPages}`;
+    }
+
+    return;
+  }
+
+  keyboard.classList.remove("gameKeyboardAll", "lastRow1", "lastRow2", "lastRow3");
+  keyboard.style.removeProperty("--game-keyboard-rows");
+
+  const pages = buildQuizKeyboardPages(items, keyboard);
+
+  const totalPages = pages.length;
+
+  quizPage = Math.max(0, Math.min(totalPages - 1, quizPage));
+
+  const pageItems = pages[quizPage];
+
+  keyboard.replaceChildren();
+
+  pageItems.forEach(({ item, wide }) => {
     const btn = document.createElement("button");
+
     btn.textContent = item.symbol || "";
-    btn.onclick = () => chooseKey(target, item);
+
+    if (wide) {
+      btn.classList.add("wideKey");
+    }
+
+    btn.onclick = () => chooseKey("quiz", item);
+
     keyboard.appendChild(btn);
   });
-  for (let i = keyboard.children.length; i < pageSize; i++) {
-    const btn = document.createElement("button");
-    btn.className = "empty";
-    keyboard.appendChild(btn);
-  }
-  document.getElementById(target + "PageInfo").textContent = `${page + 1} / ${totalPages}`;
+
+  pageInfo.style.display = "";
+  pageInfo.textContent = `${quizPage + 1} / ${totalPages}`;
 }
 
 function chooseKey(target, chosen) {
@@ -932,6 +1102,8 @@ function chooseKey(target, chosen) {
   }
 
   const answer = gameQueue[gameIndex];
+
+  if (!answer) return;
 
   gameResults.push({
     trial: gameIndex + 1,
@@ -948,14 +1120,30 @@ function chooseKey(target, chosen) {
 }
 
 function changeKeyboardPage(target, delta) {
-  const totalPages = Math.max(1, Math.ceil(getCurrentItems().length / 12));
-  if (target === "quiz") {
-    quizPage = (quizPage + delta + totalPages) % totalPages;
-    renderKeyboard("quiz");
-  } else {
+  const items = getCurrentItems();
+
+  if (target === "game") {
+    if (items.length <= 28) {
+      return;
+    }
+
+    const totalPages = 2;
+
     gamePage = (gamePage + delta + totalPages) % totalPages;
+
     renderKeyboard("game");
+    return;
   }
+
+  const keyboard = document.getElementById("quizKeyboard");
+
+  const pages = buildQuizKeyboardPages(items, keyboard);
+
+  const totalPages = pages.length;
+
+  quizPage = (quizPage + delta + totalPages) % totalPages;
+
+  renderKeyboard("quiz");
 }
 
 function updateQuizPrompt(item, target = "quiz") {
@@ -1008,8 +1196,6 @@ function updateQuizPrompt(item, target = "quiz") {
 }
 
 function showQuizAnswer(chosen) {
-  const progressText = currentQuizDifficulty === "beginner" ? `<div class="quizProgress">${quizIndex} / ${quizQueue.length}</div>` : "";
-
   document.getElementById("quizInfoWrap").style.display = "none";
   document.getElementById("quizAnswerWrap").style.display = "flex";
   document.getElementById("quizThaiName").textContent = chosen.thaiName || "";
@@ -1125,27 +1311,33 @@ function fitSingleLineText(container) {
   rows.forEach((row) => {
     row.style.fontSize = "";
     row.style.fontWeight = "";
-
-    const baseSize = parseFloat(getComputedStyle(row).fontSize);
-
-    let size = baseSize;
-
     row.style.whiteSpace = "nowrap";
     row.style.textAlign = "center";
 
-    while (row.scrollWidth > row.clientWidth && size > 8) {
-      size -= 1;
-      row.style.fontSize = size + "px";
-    }
+    const baseSize = parseFloat(getComputedStyle(row).fontSize);
 
-    if (size <= baseSize - 6) {
+    if (row.scrollWidth <= row.clientWidth) return;
+
+    const ratio = row.clientWidth / row.scrollWidth;
+    const nextSize = Math.max(8, Math.floor(baseSize * ratio));
+
+    row.style.fontSize = nextSize + "px";
+
+    if (nextSize <= baseSize - 6) {
       row.style.fontWeight = "400";
     }
   });
 }
 
 function shuffle(a) {
-  return [...a].sort(() => Math.random() - 0.5);
+  const arr = [...a];
+
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+
+  return arr;
 }
 
 function getThaiVoice() {
@@ -1292,6 +1484,28 @@ async function init() {
 }
 
 if ("speechSynthesis" in window) speechSynthesis.onvoiceschanged = getThaiVoice;
+
+function refitCurrentScreen() {
+  if (!document.body.classList.contains("running")) return;
+
+  if (currentMode === "learn") {
+    fitSingleLineText(document.getElementById("learnNameBlock"));
+    fitSingleLineText(document.getElementById("learnMeaning")?.parentElement);
+  }
+
+  if (currentMode === "quiz") {
+    fitSingleLineText(document.getElementById("quizPromptWrap"));
+    fitSingleLineText(document.getElementById("quizAnswerWrap"));
+  }
+
+  if (currentMode === "game") {
+    fitSingleLineText(document.getElementById("gamePromptWrap"));
+  }
+}
+
+window.addEventListener("resize", () => requestAnimationFrame(refitCurrentScreen));
+window.addEventListener("orientationchange", () => requestAnimationFrame(refitCurrentScreen));
+
 init().catch((err) => {
   console.error(err);
   alert("data/app_items.json을 불러오지 못했습니다.");
