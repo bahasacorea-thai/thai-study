@@ -1,1020 +1,44 @@
-// app_syllable_clean.js
-// Source: app_syllable_clean.xlsx / sheet ITEMS_V_SYLLABLE_CLEAN
-// Generated from the spreadsheet row order and column schema.
+// Data is loaded from data/app_syllable_items.json
+let ITEMS_V_SYLLABLE = [];
 
-const ITEMS_V_SYLLABLE = [
-  {
-    index: 1,
-    collation: 6,
-    pattern: "◌ะ",
-    korean: "아",
-    rtgs: "a",
-    ipa: "/aʔ/",
-    formationType: "after",
+function normalizeSyllableItem(row) {
+  return {
+    index: Number(row.index) || 0,
+    collation: Number(row.collation) || 0,
+    pattern: row.pattern || "",
+    canonical: row.canonical || "",
+    korean: row.korean || "",
+    rtgs: row.rtgs || "",
+    ipa: row.ipa || "",
+    formationType: row.formationType || "",
     codaRule: {
-      main: "forbidden",
-      note: "",
+      main: row.codaRule || "",
+      note: row["codaRule.note"] || "",
     },
     onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 2,
-    collation: 7,
-    pattern: "◌า◌",
-    korean: "아",
-    rtgs: "a",
-    ipa: "/aː/",
-    formationType: "after",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 3,
-    collation: 8,
-    pattern: "◌าย",
-    korean: "아이",
-    rtgs: "ai",
-    ipa: "/aːj/",
-    formationType: "after",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 4,
-    collation: 9,
-    pattern: "◌าว",
-    korean: "아우",
-    rtgs: "ao",
-    ipa: "/aːw/",
-    formationType: "after",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 5,
-    collation: 53,
-    pattern: "◌ุ◌",
-    korean: "우",
-    rtgs: "u",
-    ipa: "/u/",
-    formationType: "below",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 6,
-    collation: 55,
-    pattern: "◌ู◌",
-    korean: "우",
-    rtgs: "u",
-    ipa: "/uː/",
-    formationType: "below",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 7,
-    collation: 54,
-    pattern: "◌ุย",
-    korean: "우이",
-    rtgs: "ui",
-    ipa: "/uj/",
-    formationType: "below",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 8,
-    collation: 56,
-    pattern: "◌ูย",
-    korean: "우이",
-    rtgs: "ui",
-    ipa: "/uːj/",
-    formationType: "below",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 9,
-    collation: 47,
-    pattern: "◌ิ◌",
-    korean: "이",
-    rtgs: "i",
-    ipa: "/i/",
-    formationType: "above",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 10,
-    collation: 49,
-    pattern: "◌ี◌",
-    korean: "이",
-    rtgs: "i",
-    ipa: "/iː/",
-    formationType: "above",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 11,
-    collation: 48,
-    pattern: "◌ิว",
-    korean: "이우",
-    rtgs: "io",
-    ipa: "/iw/",
-    formationType: "above",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 12,
-    collation: 50,
-    pattern: "◌ีว",
-    korean: "이우",
-    rtgs: "io",
-    ipa: "/iːw/",
-    formationType: "above",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 13,
-    collation: 51,
-    pattern: "◌ึ◌",
-    korean: "으",
-    rtgs: "ue",
-    ipa: "/ɯ/",
-    formationType: "above",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 14,
-    collation: 52,
-    pattern: "◌ื◌",
-    korean: "으",
-    rtgs: "ue",
-    ipa: "/ɯː/",
-    formationType: "above",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 15,
-    collation: 11,
-    pattern: "เ◌◌",
-    korean: "에",
-    rtgs: "e",
-    ipa: "/eː/",
-    formationType: "before",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 16,
-    collation: 27,
-    pattern: "แ◌◌",
-    korean: "애",
-    rtgs: "ae",
-    ipa: "/ɛː/",
-    formationType: "before",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 17,
-    collation: 30,
-    pattern: "โ◌◌",
-    korean: "오",
-    rtgs: "o",
-    ipa: "/oː/",
-    formationType: "before",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 18,
-    collation: 33,
-    pattern: "ใ◌◌",
-    korean: "아이",
-    rtgs: "ai",
-    ipa: "/ai/",
-    formationType: "before",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 19,
-    collation: 34,
-    pattern: "ไ◌◌",
-    korean: "아이",
-    rtgs: "ai",
-    ipa: "/ai/",
-    formationType: "before",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 20,
-    collation: 16,
-    pattern: "เ◌ะ",
-    korean: "에",
-    rtgs: "e",
-    ipa: "/e/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 21,
-    collation: 13,
-    pattern: "เ◌ว",
-    korean: "에우",
-    rtgs: "eo",
-    ipa: "/eːw/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 22,
-    collation: 29,
-    pattern: "แ◌ะ",
-    korean: "애",
-    rtgs: "ae",
-    ipa: "/ɛ/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 23,
-    collation: 28,
-    pattern: "แ◌ว",
-    korean: "애우",
-    rtgs: "aeo",
-    ipa: "/ɛːw/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 24,
-    collation: 32,
-    pattern: "โ◌ะ",
-    korean: "오",
-    rtgs: "o",
-    ipa: "/o/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 25,
-    collation: 31,
-    pattern: "โ◌ย",
-    korean: "오이",
-    rtgs: "oi",
-    ipa: "/oːj/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 26,
-    collation: 35,
-    pattern: "ไ◌ย",
-    korean: "아이",
-    rtgs: "ai",
-    ipa: "/ai/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 27,
-    collation: 20,
-    pattern: "เ◌ีย◌",
-    korean: "이아",
-    rtgs: "ia",
-    ipa: "/iːa/",
-    formationType: "wrap",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 28,
-    collation: 22,
-    pattern: "เ◌ียะ",
-    korean: "이아",
-    rtgs: "ia",
-    ipa: "/ia/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 29,
-    collation: 21,
-    pattern: "เ◌ียว",
-    korean: "이아우",
-    rtgs: "iao",
-    ipa: "/iaw/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 30,
-    collation: 23,
-    pattern: "เ◌ือ◌",
-    korean: "으아",
-    rtgs: "uea",
-    ipa: "/ɯːa/",
-    formationType: "wrap",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 31,
-    collation: 25,
-    pattern: "เ◌ือะ",
-    korean: "으아",
-    rtgs: "uea",
-    ipa: "/ɯa/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 32,
-    collation: 24,
-    pattern: "เ◌ือย",
-    korean: "으아이",
-    rtgs: "ueai",
-    ipa: "/ɯaj/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 33,
-    collation: 14,
-    pattern: "เ◌อ◌",
-    korean: "어",
-    rtgs: "oe",
-    ipa: "/ɤː/",
-    formationType: "wrap",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 34,
-    collation: 15,
-    pattern: "เ◌อะ",
-    korean: "어",
-    rtgs: "oe",
-    ipa: "/ɤ/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 35,
-    collation: 17,
-    pattern: "เ◌า",
-    korean: "아우",
-    rtgs: "ao",
-    ipa: "/aw/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 36,
-    collation: 18,
-    pattern: "เ◌าะ",
-    korean: "오",
-    rtgs: "o",
-    ipa: "/ɔ/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 37,
-    collation: 41,
-    pattern: "◌ั◌",
-    korean: "아",
-    rtgs: "a",
-    ipa: "/a/C",
-    formationType: "above",
-    codaRule: {
-      main: "required",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 38,
-    collation: 42,
-    pattern: "◌ัย",
-    korean: "아이",
-    rtgs: "ai",
-    ipa: "/aj/",
-    formationType: "above",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 39,
-    collation: 43,
-    pattern: "◌ัว",
-    korean: "우아",
-    rtgs: "ua",
-    ipa: "/uːa/",
-    formationType: "backClosed",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 40,
-    collation: 45,
-    pattern: "◌ัวะ",
-    korean: "우아",
-    rtgs: "ua",
-    ipa: "/ua/",
-    formationType: "backClosed",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 41,
-    collation: 44,
-    pattern: "◌ัวย",
-    korean: "우아이",
-    rtgs: "uai",
-    ipa: "/uːaj/",
-    formationType: "backClosed",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 42,
-    collation: 4,
-    pattern: "◌อ◌",
-    korean: "오",
-    rtgs: "o",
-    ipa: "/ɔː/",
-    formationType: "after",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 43,
-    collation: 5,
-    pattern: "◌อย",
-    korean: "오이",
-    rtgs: "oi",
-    ipa: "/ɔːj/",
-    formationType: "after",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 44,
-    collation: 10,
-    pattern: "เ◌็◌",
-    korean: "에",
-    rtgs: "e",
-    ipa: "/e/C",
-    formationType: "frontClosed",
-    codaRule: {
-      main: "required",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 45,
-    collation: 19,
-    pattern: "เ◌ิ◌",
-    korean: "어",
-    rtgs: "oe",
-    ipa: "/ɤ/C",
-    formationType: "frontClosed",
-    codaRule: {
-      main: "required",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 46,
-    collation: 26,
-    pattern: "แ◌็◌",
-    korean: "애",
-    rtgs: "ae",
-    ipa: "/ɛ/C",
-    formationType: "frontClosed",
-    codaRule: {
-      main: "required",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 47,
-    collation: 46,
-    pattern: "◌ํา",
-    korean: "암",
-    rtgs: "am",
-    ipa: "/am/",
-    formationType: "after",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 48,
-    collation: 2,
-    pattern: "◌รร◌",
-    korean: "아",
-    rtgs: "a",
-    ipa: "/a/C",
-    formationType: "flank",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "forbidden",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 49,
-    collation: 3,
-    pattern: "◌ว◌",
-    korean: "우아",
-    rtgs: "ua",
-    ipa: "/uːa/C",
-    formationType: "flank",
-    codaRule: {
-      main: "required",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "forbidden",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 50,
-    collation: 38,
-    pattern: "ฦ",
-    korean: "르",
-    rtgs: "lue",
-    ipa: "/lɯ/",
-    formationType: "special",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "forbidden",
-      note: "no C allowed",
-    },
-    note: "",
-  },
-  {
-    index: 51,
-    collation: 36,
-    pattern: "ฤ",
-    korean: "르",
-    rtgs: "rue",
-    ipa: "/rɯ/",
-    formationType: "special",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "forbidden",
-      note: "only one C allowed",
-    },
-    note: "also /ri/",
-  },
-  {
-    index: 52,
-    collation: 37,
-    pattern: "ฤๅ",
-    korean: "르",
-    rtgs: "rue",
-    ipa: "/rɯː/",
-    formationType: "special",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "forbidden",
-      note: "no C allowed",
-    },
-    note: "",
-  },
-  {
-    index: 53,
-    collation: 39,
-    pattern: "ฦๅ",
-    korean: "르",
-    rtgs: "lue",
-    ipa: "/lɯː/",
-    formationType: "special",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "forbidden",
-      note: "no C allowed",
-    },
-    note: "",
-  },
-  {
-    index: 54,
-    collation: 1,
-    pattern: "◌็",
-    korean: "오",
-    rtgs: "o",
-    ipa: "/ɔ/",
-    formationType: "above",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "forbidden",
-      note: "",
-    },
-    note: "mai tai khu standalone; e.g. ก็",
-  },
-  {
-    index: 55,
-    collation: 40,
-    pattern: "◌็อ◌",
-    korean: "오",
-    rtgs: "o",
-    ipa: "/ɔ/C",
-    formationType: "backClosed",
-    codaRule: {
-      main: "allowed",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-  {
-    index: 56,
-    collation: 12,
-    pattern: "เ◌ย",
-    korean: "어이",
-    rtgs: "oei",
-    ipa: "/ɤːj/",
-    formationType: "wrap",
-    codaRule: {
-      main: "forbidden",
-      note: "",
-    },
-    onsetRule: {
-      cluster: "allowed",
-      note: "",
-    },
-    note: "",
-  },
-];
+      cluster: row["onsetRule.cluster"] || "",
+      note: row["onsetRule.note"] || "",
+    },
+    note: row.note || "",
+  };
+}
+
+async function loadSyllableItems() {
+  const response = await fetch("data/app_syllable_items.json");
+  if (!response.ok) {
+    throw new Error("app_syllable_items.json을 불러오지 못했습니다.");
+  }
+
+  const rows = await response.json();
+  ITEMS_V_SYLLABLE = rows.map(normalizeSyllableItem);
+
+  idx = 0;
+  render();
+}
 
 /////////////////////////////////////////////// 통제부 ///////////////////////////////////////////////
 let currentCategory = "pattern";
+let currentSyllableSet = "basic";
 
 let currentConsonantIndex = 0;
 
@@ -1068,6 +92,14 @@ const ITEMS_CONSONANT_SYMBOLS = [
 let idx = 0;
 
 function getCurrentItems() {
+  if (currentSyllableSet === "basic") {
+    return ITEMS_V_SYLLABLE.filter((item) => item.canonical === "O");
+  }
+
+  if (currentSyllableSet === "additional") {
+    return ITEMS_V_SYLLABLE.filter((item) => item.canonical !== "O");
+  }
+
   return ITEMS_V_SYLLABLE;
 }
 
@@ -1087,7 +119,15 @@ function setActiveCategory(buttonId) {
   document.getElementById(buttonId).classList.add("active");
 }
 
+function isIndependentCvItem(item) {
+  return item.pattern === "ฤ◌" || item.pattern === "ฤๅ" || item.pattern === "ฦ◌" || item.pattern === "ฦๅ";
+}
+
 function getDisplaySyllable(item) {
+  if (isIndependentCvItem(item)) {
+    return item.pattern;
+  }
+
   const consonant = ITEMS_CONSONANT_SYMBOLS[currentConsonantIndex];
   const replacement = currentCategory === "oang" ? "อ" : currentCategory === "kokai" ? consonant : null;
 
@@ -1109,6 +149,16 @@ function getDisplaySyllable(item) {
     .join("");
 }
 
+function getDisplaySyllableHtml(item) {
+  const display = getDisplaySyllable(item);
+
+  if (!display.endsWith("◌")) {
+    return "<span>" + display + "</span>";
+  }
+
+  return "<span>" + display.slice(0, -1) + '<span style="color: red;">◌</span>' + "</span>";
+}
+
 function hasOnsetSlot(item) {
   const chars = [...item.pattern];
   const slots = chars.map((ch, i) => (ch === "◌" ? i : -1)).filter((i) => i !== -1);
@@ -1121,6 +171,10 @@ function hasOnsetSlot(item) {
 }
 
 function getDisplayKorean(item) {
+  if (isIndependentCvItem(item)) {
+    return item.korean;
+  }
+
   if (currentCategory !== "kokai" || !hasOnsetSlot(item)) {
     return item.korean;
   }
@@ -1144,6 +198,10 @@ function getDisplayKorean(item) {
 }
 
 function getDisplayRtgs(item) {
+  if (isIndependentCvItem(item)) {
+    return item.rtgs;
+  }
+
   if (currentCategory !== "kokai" || !hasOnsetSlot(item)) {
     return item.rtgs;
   }
@@ -1152,6 +210,10 @@ function getDisplayRtgs(item) {
 }
 
 function getDisplayIpa(item) {
+  if (isIndependentCvItem(item)) {
+    return item.ipa;
+  }
+
   if (currentCategory !== "kokai" || !hasOnsetSlot(item)) {
     return item.ipa;
   }
@@ -1166,22 +228,21 @@ function getDisplayIpa(item) {
 function getCodaText(rule) {
   if (!rule || !rule.main) return "";
 
-  if (rule.main === "forbidden") return "종성: 불가";
-  if (rule.main === "required") return "종성: 필수";
-  if (rule.main === "allowed") return "종성: 허용";
+  if (rule.main === "forbidden") return "종성 제약: 불가";
+  if (rule.main === "required") return "종성 제약: 필수";
+  if (rule.main === "allowed") return "종성 제약: 허용";
 
-  return "종성: " + rule.main;
+  return "종성 제약: " + rule.main;
 }
 
 function getOnsetText(rule) {
   if (!rule || !rule.cluster) return "";
 
-  if (rule.cluster === "forbidden") return "초성 자음군: 불가";
-  if (rule.cluster === "required") return "초성 자음군: 필수";
-  if (rule.cluster === "allowed") return "초성 자음군: 허용";
-  if (rule.cluster === "restricted") return "초성 자음군: 제한";
+  if (rule.cluster === "allowed") return "초성 제약: 자음군 허용";
+  if (rule.cluster === "only singleton allowed") return "초성 제약: 홑자음만 허용";
+  if (rule.cluster === "no C allowed") return "초성 제약: 자음군 불가";
 
-  return "초성 자음군: " + rule.cluster;
+  return "초성 제약: " + rule.cluster;
 }
 
 function getFormationText(value) {
@@ -1192,26 +253,18 @@ function getFormationText(value) {
     above: "상위형",
     below: "하위형",
     before: "전위형",
-    frontClosed: "앞닫힌형",
-    backClosed: "뒤닫힌형",
+    frontClosed: "전폐형",
+    backClosed: "후폐형",
     wrap: "포위형",
     flank: "중심형",
     special: "특수형",
   };
 
-  return "형태: " + (labels[value] || value);
+  return "중성 모양: " + (labels[value] || value);
 }
 
 function getRuleNote(item) {
   const lines = [];
-
-  if (item.codaRule && item.codaRule.note) {
-    lines.push("종성 참고: " + item.codaRule.note);
-  }
-
-  if (item.onsetRule && item.onsetRule.note) {
-    lines.push("초성 참고: " + item.onsetRule.note);
-  }
 
   if (item.note) {
     lines.push("기타: " + item.note);
@@ -1223,8 +276,9 @@ function getRuleNote(item) {
 function render() {
   const items = getCurrentItems();
   const x = items[idx];
+  if (!x) return;
 
-  document.getElementById("syllableSymbol").textContent = getDisplaySyllable(x);
+  document.getElementById("syllableSymbol").innerHTML = getDisplaySyllableHtml(x);
 
   document.getElementById("learnKorean").textContent = "한글: " + getDisplayKorean(x);
   document.getElementById("learnRtgs").textContent = "RTGS: " + getDisplayRtgs(x);
@@ -1236,30 +290,61 @@ function render() {
   document.getElementById("learnNote").textContent = getRuleNote(x);
 }
 
-function changeCategory(category, buttonId) {
-  confirmSaveIfNeeded();
+function showSetupPage(pageId) {
+  document.querySelectorAll(".setupPage").forEach((page) => {
+    page.hidden = page.id !== pageId;
+  });
+}
 
+function selectMobileCategory(category, buttonId) {
   currentCategory = category;
   idx = 0;
 
-  gameQueue = [];
-  gameIndex = 0;
-  gameResults = [];
-  window.resultPoints = [];
-  resultSaved = false;
-  analysisGenerated = false;
-  reportSaved = false;
-
   setActiveCategory(buttonId);
+  render();
 
-  document.getElementById("learn").style.display = "block";
+  const categoryNames = {
+    pattern: "공백",
+    oang: "오앙(อ)",
+    kokai: "꼬까이(ก)",
+  };
+
+  document.getElementById("selectedCategoryLabel").textContent = "초성으로 " + categoryNames[category] + "을 선택하셨습니다.";
+
+  showSetupPage("setupModePage");
+}
+
+function updateStudyHeader(modeName) {
+  const categoryNames = {
+    pattern: "공백형",
+    oang: "오앙형",
+    kokai: "꼬까이형",
+  };
+
+  document.getElementById("studyHeaderTitle").textContent = categoryNames[currentCategory] + " · " + modeName + " 모드";
+}
+
+function closeMobileSetup() {
+  const mobileSetup = document.getElementById("mobileSetup");
+  const studyHeader = document.getElementById("studyHeader");
+
+  mobileSetup.style.display = "none";
+  studyHeader.hidden = false;
+}
+
+function reopenMobileSetup() {
+  const mobileSetup = document.getElementById("mobileSetup");
+  const studyHeader = document.getElementById("studyHeader");
+
+  studyHeader.hidden = true;
+  mobileSetup.style.display = "block";
+
+  document.getElementById("learn").style.display = "none";
   document.getElementById("quiz").style.display = "none";
   document.getElementById("game").style.display = "none";
   document.getElementById("resultView").style.display = "none";
-  document.getElementById("speak").style.display = "inline-block";
 
-  setActiveMode("learnTab");
-  render();
+  showSetupPage("setupModePage");
 }
 
 document.getElementById("prev").onclick = () => {
@@ -1351,62 +436,157 @@ function playWrong() {
   });
 }
 
-function renderPrompt(targetId, item) {
-  document.getElementById(targetId).innerHTML = `
-    <div>${getDisplayKorean(item)}</div>
-    <div>${getDisplayRtgs(item)}</div>
-    <div>${getDisplayIpa(item)}</div>
-  `;
+let quizQueue = [];
+let quizIndex = 0;
+let quizChoicePage = 0;
+
+const QUIZ_CHOICES_PER_PAGE = 16;
+
+function renderPrompt(item) {
+  document.getElementById("quizKorean").textContent = getDisplayKorean(item);
+  document.getElementById("quizRtgs").textContent = getDisplayRtgs(item);
+  document.getElementById("quizIpa").textContent = getDisplayIpa(item);
 }
 
-function quiz() {
+function clearQuizAnswer() {
+  document.getElementById("answerKorean").textContent = "";
+  document.getElementById("answerRtgs").textContent = "";
+  document.getElementById("answerIpa").textContent = "";
+}
+
+function renderQuizAnswer(item) {
+  document.getElementById("answerKorean").textContent = getDisplayKorean(item);
+  document.getElementById("answerRtgs").textContent = getDisplayRtgs(item);
+  document.getElementById("answerIpa").textContent = getDisplayIpa(item);
+}
+
+function hasSamePronInfo(a, b) {
+  return getDisplayKorean(a) === getDisplayKorean(b) && getDisplayRtgs(a) === getDisplayRtgs(b) && getDisplayIpa(a) === getDisplayIpa(b);
+}
+
+function renderQuizChoices() {
   const items = getCurrentItems();
-  const correct = items[Math.floor(Math.random() * items.length)];
-
-  window.currentQuizItem = correct;
-
-  document.getElementById("quizTitle").textContent = "제시된 발음에 해당하는 음절을 선택하세요.";
-  document.getElementById("quizSymbol").textContent = "";
-  document.getElementById("result").textContent = "";
-
-  renderPrompt("quizPrompt", correct);
-
   const box = document.getElementById("choices");
+
+  const totalPages = Math.max(1, Math.ceil(items.length / QUIZ_CHOICES_PER_PAGE));
+
+  quizChoicePage = Math.max(0, Math.min(quizChoicePage, totalPages - 1));
+
+  const start = quizChoicePage * QUIZ_CHOICES_PER_PAGE;
+  const pageItems = items.slice(start, start + QUIZ_CHOICES_PER_PAGE);
+
   box.innerHTML = "";
 
-  items.forEach((v) => {
+  pageItems.forEach((v) => {
     const b = document.createElement("button");
-    b.textContent = getDisplaySyllable(v);
+    b.innerHTML = getDisplaySyllableHtml(v);
 
     b.onclick = () => {
-      if (v.collation === correct.collation) {
+      renderQuizAnswer(v);
+
+      if (hasSamePronInfo(v, window.currentQuizItem)) {
         playCorrect();
-        document.getElementById("result").innerHTML = `
-          <div>
-            <div>${getDisplaySyllable(correct)}</div>
-            <div>${getDisplayKorean(correct)}</div>
-            <div>${getDisplayRtgs(correct)}</div>
-            <div>${getDisplayIpa(correct)}</div>
-          </div>
-        `;
       } else {
         playWrong();
-        document.getElementById("result").innerHTML = `
-          <div>
-            <div>${getDisplaySyllable(v)}</div>
-            <div>${getDisplayKorean(v)}</div>
-            <div>${getDisplayRtgs(v)}</div>
-            <div>${getDisplayIpa(v)}</div>
-          </div>
-        `;
       }
     };
 
     box.appendChild(b);
   });
+
+  document.getElementById("choicePageInfo").textContent = quizChoicePage + 1 + " / " + totalPages;
 }
 
-document.getElementById("newQuiz").onclick = quiz;
+function renderQuizQuestion() {
+  if (!quizQueue.length) return;
+
+  const correct = quizQueue[quizIndex];
+
+  window.currentQuizItem = correct;
+
+  document.getElementById("quizTitle").textContent = "제시된 발음에 해당하는 음절을 선택하세요.";
+
+  document.getElementById("quizSymbol").textContent = "";
+
+  renderPrompt(correct);
+  clearQuizAnswer();
+
+  document.getElementById("quizProgressBar").style.width = ((quizIndex + 1) / quizQueue.length) * 100 + "%";
+
+  document.getElementById("prevQuiz").disabled = quizIndex === 0;
+
+  document.getElementById("newQuiz").disabled = quizIndex === quizQueue.length - 1;
+
+  quizChoicePage = 0;
+  renderQuizChoices();
+}
+
+function quiz() {
+  quizQueue = shuffle(getCurrentItems());
+  quizIndex = 0;
+  quizChoicePage = 0;
+
+  renderQuizQuestion();
+}
+
+document.getElementById("prevQuiz").onclick = () => {
+  if (quizIndex === 0) return;
+
+  quizIndex -= 1;
+  renderQuizQuestion();
+};
+
+document.getElementById("newQuiz").onclick = () => {
+  if (quizIndex >= quizQueue.length - 1) return;
+
+  quizIndex += 1;
+  renderQuizQuestion();
+};
+
+const quizChoices = document.getElementById("choices");
+
+let quizSwipeStartX = 0;
+let quizSwipeStartY = 0;
+
+quizChoices.addEventListener(
+  "touchstart",
+  (event) => {
+    const touch = event.changedTouches[0];
+
+    quizSwipeStartX = touch.clientX;
+    quizSwipeStartY = touch.clientY;
+  },
+  { passive: true },
+);
+
+quizChoices.addEventListener(
+  "touchend",
+  (event) => {
+    const touch = event.changedTouches[0];
+
+    const deltaX = touch.clientX - quizSwipeStartX;
+    const deltaY = touch.clientY - quizSwipeStartY;
+
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) {
+      return;
+    }
+
+    const totalPages = Math.max(1, Math.ceil(getCurrentItems().length / QUIZ_CHOICES_PER_PAGE));
+
+    if (deltaX < 0) {
+      if (quizChoicePage >= totalPages - 1) return;
+
+      quizChoicePage += 1;
+    } else {
+      if (quizChoicePage === 0) return;
+
+      quizChoicePage -= 1;
+    }
+
+    renderQuizChoices();
+  },
+  { passive: true },
+);
 
 /////////////////////////////////////////////// 게임 모드 ///////////////////////////////////////////////
 let gameQueue = [];
@@ -1421,6 +601,47 @@ let gameDifficulty = "advanced";
 let gameStartTime = null;
 let gameEndTime = null;
 let trialStartTime = null;
+let gameChoicePage = 0;
+const GAME_CHOICES_PER_PAGE = 16;
+
+function renderGameChoices() {
+  const items = getCurrentItems();
+  const box = document.getElementById("gameChoices");
+  const totalPages = Math.max(1, Math.ceil(items.length / GAME_CHOICES_PER_PAGE));
+
+  gameChoicePage = Math.max(0, Math.min(gameChoicePage, totalPages - 1));
+
+  const start = gameChoicePage * GAME_CHOICES_PER_PAGE;
+  const pageItems = items.slice(start, start + GAME_CHOICES_PER_PAGE);
+
+  box.innerHTML = "";
+
+  pageItems.forEach((v) => {
+    const b = document.createElement("button");
+    b.innerHTML = getDisplaySyllableHtml(v);
+
+    b.onclick = () => {
+      const x = gameQueue[gameIndex];
+
+      gameResults.push({
+        trial: gameIndex + 1,
+        repetition: x.repetition,
+        difficulty: gameDifficulty,
+        question: x.collation,
+        answer: v.collation,
+        correct: v.collation === x.collation,
+        rt: Date.now() - trialStartTime,
+      });
+
+      gameIndex += 1;
+      renderGame();
+    };
+
+    box.appendChild(b);
+  });
+
+  document.getElementById("gameChoicePageInfo").textContent = gameChoicePage + 1 + " / " + totalPages;
+}
 
 const difficultySettings = {
   beginner: 1,
@@ -1466,52 +687,69 @@ function renderGame() {
   const x = gameQueue[gameIndex];
   trialStartTime = Date.now();
 
-  document.getElementById("gameKorean").textContent = x.korean;
-  document.getElementById("gameRtgs").textContent = x.rtgs;
-  document.getElementById("gameIpa").textContent = x.ipa;
-  // document.getElementById("gamePrompt").textContent = getDisplaySyllable(x);
-  document.getElementById("gamePrompt").textContent = "";
+  document.getElementById("gameTitle").textContent = "제시된 발음에 해당하는 음절을 선택하세요.";
+  document.getElementById("gameSymbol").textContent = "";
+
+  document.getElementById("gameKorean").textContent = getDisplayKorean(x);
+  document.getElementById("gameRtgs").textContent = getDisplayRtgs(x);
+  document.getElementById("gameIpa").textContent = getDisplayIpa(x);
+
+  document.getElementById("gameFormation").textContent = getFormationText(x.formationType);
+  document.getElementById("gameCoda").textContent = getCodaText(x.codaRule);
+  document.getElementById("gameOnset").textContent = getOnsetText(x.onsetRule);
+  document.getElementById("gameNote").textContent = getRuleNote(x);
 
   document.getElementById("gameProgressText").textContent = gameIndex + 1 + " / " + gameQueue.length;
 
   const progress = ((gameIndex + 1) / gameQueue.length) * 100;
   document.getElementById("progressBar").style.width = progress + "%";
 
-  const box = document.getElementById("gameChoices");
-  box.innerHTML = "";
-
-  getCurrentItems().forEach((v) => {
-    const b = document.createElement("button");
-    b.textContent = getDisplaySyllable(v);
-
-    b.onclick = () => {
-      gameResults.push({
-        trial: gameIndex + 1,
-        repetition: x.repetition,
-        difficulty: gameDifficulty,
-        question: x.collation,
-        answer: v.collation,
-        correct: v.collation === x.collation,
-        rt: Date.now() - trialStartTime,
-      });
-
-      gameIndex += 1;
-      renderGame();
-    };
-
-    box.appendChild(b);
-  });
+  gameChoicePage = 0;
+  renderGameChoices();
 }
 
-function setDifficulty(level) {
-  gameDifficulty = level;
+const gameChoices = document.getElementById("gameChoices");
 
-  document.querySelectorAll(".difficultyBox button").forEach((btn) => {
-    btn.classList.remove("active");
-  });
+let gameSwipeStartX = 0;
+let gameSwipeStartY = 0;
 
-  document.getElementById(level + "Btn").classList.add("active");
-}
+gameChoices.addEventListener(
+  "touchstart",
+  (event) => {
+    const touch = event.changedTouches[0];
+
+    gameSwipeStartX = touch.clientX;
+    gameSwipeStartY = touch.clientY;
+  },
+  { passive: true },
+);
+
+gameChoices.addEventListener(
+  "touchend",
+  (event) => {
+    const touch = event.changedTouches[0];
+
+    const deltaX = touch.clientX - gameSwipeStartX;
+    const deltaY = touch.clientY - gameSwipeStartY;
+
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) {
+      return;
+    }
+
+    const totalPages = Math.max(1, Math.ceil(getCurrentItems().length / GAME_CHOICES_PER_PAGE));
+
+    if (deltaX < 0) {
+      if (gameChoicePage >= totalPages - 1) return;
+      gameChoicePage += 1;
+    } else {
+      if (gameChoicePage === 0) return;
+      gameChoicePage -= 1;
+    }
+
+    renderGameChoices();
+  },
+  { passive: true },
+);
 
 function getPointRadius(r) {
   if (r.repetition >= 3) return 9;
@@ -1528,6 +766,13 @@ function showGameResult() {
   const ctx = canvas.getContext("2d");
   const W = canvas.width;
   const H = canvas.height;
+
+  const items = getCurrentItems();
+
+  const indexMap = {};
+  items.forEach((item, i) => {
+    indexMap[item.collation] = i + 1;
+  });
 
   ctx.clearRect(0, 0, W, H);
 
@@ -1602,7 +847,7 @@ function showGameResult() {
   }
 
   const total = gameResults.length;
-  const correctCount = gameResults.filter((r) => r.question === r.answer).length;
+  const correctCount = gameResults.filter((r) => r.correct).length;
   const accuracy = total === 0 ? 0 : Math.round((correctCount / total) * 10000) / 100;
 
   ctx.fillStyle = "#111";
@@ -1613,15 +858,15 @@ function showGameResult() {
   window.resultPoints = [];
 
   gameResults.forEach((r) => {
-    const x = sx(r.question);
-    const y = sy(r.answer);
+    const x = sx(indexMap[r.question]);
+    const y = sy(indexMap[r.answer]);
     const radius = getPointRadius(r);
 
     window.resultPoints.push({ x, y, r });
 
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = r.question === r.answer ? "#111" : "#d11";
+    ctx.strokeStyle = r.correct ? "#111" : "#d11";
     ctx.lineWidth = 2;
     ctx.stroke();
   });
@@ -1661,7 +906,7 @@ function drawPoint(point, isBlue = false) {
 
   ctx.beginPath();
   ctx.arc(point.x, point.y, drawRadius, 0, Math.PI * 2);
-  ctx.strokeStyle = isBlue ? "blue" : point.r.question === point.r.answer ? "#111" : "#d11";
+  ctx.strokeStyle = isBlue ? "blue" : point.r.correct ? "#111" : "#d11";
   ctx.lineWidth = isBlue ? 3 : 2;
   ctx.stroke();
 }
@@ -1805,50 +1050,102 @@ function confirmSaveIfNeeded() {
 
 /////////////////////////////////////////////// 버튼 연결 ///////////////////////////////////////////////
 document.getElementById("speak").onclick = () => {
+  if (document.getElementById("game").style.display === "block") {
+    return;
+  }
+
   let item;
 
-  if (document.getElementById("game").style.display === "block") {
-    item = gameQueue[gameIndex];
-  } else if (document.getElementById("quiz").style.display === "block") {
+  if (document.getElementById("quiz").style.display === "block") {
     item = window.currentQuizItem;
   } else {
     item = getCurrentItems()[idx];
   }
 
   if (!item) return;
+
   speakThai(getDisplaySyllable(item));
 };
 
 document.getElementById("learnTab").onclick = () => {
   confirmSaveIfNeeded();
-  setActiveMode("learnTab");
-  document.getElementById("learn").style.display = "block";
+
+  document.getElementById("learn").style.display = "grid";
   document.getElementById("quiz").style.display = "none";
   document.getElementById("game").style.display = "none";
   document.getElementById("resultView").style.display = "none";
   document.getElementById("speak").style.display = "inline-block";
+
+  setActiveMode("learnTab");
+  updateStudyHeader("학습");
+  closeMobileSetup();
+  render();
 };
 
 document.getElementById("quizTab").onclick = () => {
-  confirmSaveIfNeeded();
-  setActiveMode("quizTab");
+  document.getElementById("gameDifficultyRow").style.display = "none";
+  document.getElementById("quizDifficultyRow").style.display = "flex";
+};
+
+function startQuizWithDifficulty(level) {
+  gameDifficulty = level;
+
   document.getElementById("learn").style.display = "none";
   document.getElementById("quiz").style.display = "block";
   document.getElementById("game").style.display = "none";
   document.getElementById("resultView").style.display = "none";
   document.getElementById("speak").style.display = "inline-block";
+
+  setActiveMode("quizTab");
+  updateStudyHeader("퀴즈");
+  closeMobileSetup();
   quiz();
+}
+
+document.getElementById("quizDifficultyBeginner").onclick = () => {
+  startQuizWithDifficulty("beginner");
+};
+
+document.getElementById("quizDifficultyIntermediate").onclick = () => {
+  startQuizWithDifficulty("intermediate");
+};
+
+document.getElementById("quizDifficultyAdvanced").onclick = () => {
+  startQuizWithDifficulty("advanced");
 };
 
 document.getElementById("gameTab").onclick = () => {
+  document.getElementById("quizDifficultyRow").style.display = "none";
+  document.getElementById("gameDifficultyRow").style.display = "flex";
+};
+
+function startGameWithDifficulty(level) {
+  gameDifficulty = level;
+
   confirmSaveIfNeeded();
-  setActiveMode("gameTab");
+
   document.getElementById("learn").style.display = "none";
   document.getElementById("quiz").style.display = "none";
   document.getElementById("game").style.display = "block";
   document.getElementById("resultView").style.display = "none";
-  document.getElementById("speak").style.display = "none";
+  document.getElementById("speak").style.display = "inline-block";
+
+  setActiveMode("gameTab");
+  updateStudyHeader("게임");
+  closeMobileSetup();
   startGame();
+}
+
+document.getElementById("gameDifficultyBeginner").onclick = () => {
+  startGameWithDifficulty("beginner");
+};
+
+document.getElementById("gameDifficultyIntermediate").onclick = () => {
+  startGameWithDifficulty("intermediate");
+};
+
+document.getElementById("gameDifficultyAdvanced").onclick = () => {
+  startGameWithDifficulty("advanced");
 };
 
 document.getElementById("showResult").onclick = showGameResult;
@@ -1900,34 +1197,35 @@ document.getElementById("restartGame").onclick = () => {
   startGame();
 };
 
-document.getElementById("beginnerBtn").onclick = () => {
-  setDifficulty("beginner");
-  startGame();
+document.getElementById("patternBtn").onclick = () => {
+  selectMobileCategory("pattern", "patternBtn");
 };
 
-document.getElementById("intermediateBtn").onclick = () => {
-  setDifficulty("intermediate");
-  startGame();
+document.getElementById("oangBtn").onclick = () => {
+  selectMobileCategory("oang", "oangBtn");
 };
 
-document.getElementById("advancedBtn").onclick = () => {
-  setDifficulty("advanced");
-  startGame();
+document.getElementById("kokaiBtn").onclick = () => {
+  selectMobileCategory("kokai", "kokaiBtn");
 };
 
-document.getElementById("consonantBtn").onclick = () => {
-  changeCategory("pattern", "consonantBtn");
+document.getElementById("backToCategory").onclick = () => {
+  showSetupPage("setupCategoryPage");
 };
 
-document.getElementById("vowelBtn").onclick = () => {
-  changeCategory("oang", "vowelBtn");
+document.getElementById("backToSetup").onclick = () => {
+  reopenMobileSetup();
 };
 
-document.getElementById("numberBtn").onclick = () => {
-  changeCategory("kokai", "numberBtn");
-};
+document.getElementById("learn").style.display = "none";
+document.getElementById("quiz").style.display = "none";
+document.getElementById("game").style.display = "none";
+document.getElementById("resultView").style.display = "none";
+document.getElementById("studyHeader").hidden = true;
 
-setDifficulty("advanced");
-setActiveMode("learnTab");
-setActiveCategory("consonantBtn");
-render();
+showSetupPage("setupCategoryPage");
+
+loadSyllableItems().catch((err) => {
+  console.error(err);
+  alert("데이터를 불러오지 못했습니다. GitHub Pages나 Live Server에서 실행해 주십시오.");
+});

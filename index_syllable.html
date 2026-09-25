@@ -13,7 +13,8 @@
       gtag("config", "G-RR3ZQXWTWK");
     </script>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#f3f1ef" />
     <title>Thai Syllable Study</title>
     <style>
       body {
@@ -35,22 +36,28 @@
         flex-wrap: wrap;
       }
 
+      .syllableSet,
       .category,
-      .mode {
+      .mode,
+      #speak {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 6px;
       }
 
-      /* 모드 버튼 */
-      .mode button {
-        min-width: 110px;
+      .topControls {
+        display: flex;
+        align-items: center;
+        gap: 26px; /* 단추군 사이 간격 확대 */
+        flex-wrap: wrap;
       }
 
-      /* 범주 버튼 */
-      .category button {
-        min-width: 66px;
-        padding: 10px 12px;
+      .mode button,
+      .category button,
+      .syllableSet button,
+      #speak {
+        min-width: 62px;
+        padding: 7px 10px;
       }
 
       .mode button.active {
@@ -60,6 +67,11 @@
 
       .category button.active {
         background: royalblue;
+        color: white;
+      }
+
+      .syllableSet button.active {
+        background: springgreen;
         color: white;
       }
 
@@ -113,6 +125,12 @@
         margin: 0 0 10px 0;
       }
 
+      #learnRtgs,
+      #learnIpa {
+        font-family: "Noto Sans", sans-serif;
+        white-space: nowrap;
+      }
+
       .symbol {
         height: 100%;
         display: flex;
@@ -121,6 +139,10 @@
         font-size: 180px;
         text-align: center;
         font-family: "Noto Sans Thai", "Tahoma", "Leelawadee UI", sans-serif;
+      }
+
+      .syllable-coda-slot {
+        color: red;
       }
 
       .bottombar {
@@ -151,7 +173,7 @@
       }
 
       #speak:hover {
-        background: royalblue;
+        background: mediumpurple;
         color: white;
       }
 
@@ -160,30 +182,22 @@
         margin-bottom: 0px;
       }
 
-      .quizTop {
-        display: grid;
-        grid-template-columns: 60% 40%;
-
-        align-items: center;
-
-        gap: 0px;
-        margin-top: 20px;
-
-        background: white;
-        border-radius: 20px;
-        padding: 20px;
-
-        min-height: 350px;
+      .quizTop,
+      .gameTop {
+        min-height: 0 !important;
+        height: 300px !important;
+        margin: 10px 0 0 !important;
+        padding: 4px !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-rows: 116px 176px !important;
+        gap: 4px !important;
+        overflow: hidden;
       }
 
       .quizSide {
-        display: grid;
-        grid-template-rows: 1fr 60px;
-
-        justify-items: center;
-        align-items: center;
-        height: 100%;
-        transform: translateX(-60px);
+        grid-column: 1 / -1;
+        height: 176px !important;
       }
 
       #quizImg {
@@ -199,49 +213,26 @@
         align-self: center;
       }
 
-      /* #choices {
-        display: grid;
-        grid-template-columns: repeat(15, 1fr);
-        margin-top: 20px;
-        gap: 8px;
-        width: 1400px;
-        max-width: none;
-        margin-left: 50%;
-        transform: translateX(-50%);
-      } */
       #choices {
         display: grid;
-        grid-template-columns: repeat(15, 72px);
-        justify-content: center;
         margin: 20px auto 0 auto;
-        gap: 4px;
+        gap: 6px;
         width: 100%;
+        grid-template-columns: repeat(14, 66px);
       }
 
-      /* #choices button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 50px;
-        line-height: 46px;
-        background: white;
-        color: black;
-        transition: 0.15s;
-        font-size: 42px;
-        white-space: nowrap;
-      } */
       #choices button {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 46px;
+        height: 42px;
         line-height: 1.1;
         padding: 2px 4px;
         margin: 0;
         background: white;
         color: black;
         transition: 0.15s;
-        font-size: 28px;
+        font-size: 26px;
         white-space: nowrap;
       }
 
@@ -255,12 +246,14 @@
         align-items: center;
         justify-content: center;
 
-        min-height: 180px;
+        width: 100%;
+        height: 100%;
+
+        text-align: center;
 
         font-size: 32px;
-        line-height: 1.5;
-        font-weight: bold;
-        text-align: center;
+        line-height: 1.7;
+        font-weight: 400;
       }
 
       .gameCard {
@@ -284,7 +277,7 @@
 
         text-align: center;
         font-size: 28px;
-        font-weight: bold;
+        font-weight: 400;
       }
 
       .gameInfo {
@@ -300,11 +293,11 @@
         justify-content: center; /* 상하 가운데 */
         align-items: center; /* 좌우 가운데 */
         /* padding-left: 20px;
-        padding-right: 20px; */
+              padding-right: 20px; */
 
         font-size: 32px;
         line-height: 1.5;
-        font-weight: bold;
+        font-weight: 400;
 
         gap: 6px;
       }
@@ -326,47 +319,35 @@
         object-fit: contain;
       }
 
-      /* #gameChoices {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-        gap: 8px;
-        margin-top: 20px;
-        width: 100%;
-        max-width: 100%;
-      } */
       #gameChoices {
-        display: grid;
-        grid-template-columns: repeat(15, 72px);
-        justify-content: center;
-        margin: 20px auto 0 auto;
-        gap: 4px;
-        width: 100%;
+        height: 214px;
+        overflow: hidden;
+        touch-action: pan-y;
+        user-select: none;
       }
 
-      /* #gameChoices button {
+      #gameChoicePageInfo {
+        height: 24px;
+        margin: 0;
         display: flex;
-        justify-content: center;
         align-items: center;
-        height: 50px;
-        line-height: 46px;
-        background: white;
-        color: black;
-        transition: 0.15s;
-        font-size: 42px;
-        white-space: nowrap;
-      } */
+        justify-content: center;
+        font-size: 13px;
+        line-height: 1;
+      }
+
       #gameChoices button {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 46px;
+        height: 42px;
         line-height: 1.1;
         padding: 2px 4px;
         margin: 0;
         background: white;
         color: black;
         transition: 0.15s;
-        font-size: 28px;
+        font-size: 26px;
         white-space: nowrap;
       }
 
@@ -465,10 +446,10 @@
       }
 
       /* #responseSymbol,
-      #stimulusSymbol {
-        font-size: 96px;
-        line-height: 1;
-      } */
+            #stimulusSymbol {
+              font-size: 96px;
+              line-height: 1;
+            } */
       #responseSymbol,
       #stimulusSymbol {
         font-size: 64px;
@@ -558,16 +539,21 @@
       }
 
       .syllableSymbol,
-      .quizPrompt,
-      .gamePrompt {
+      .gamePrompt,
+      .quizPromptLeft,
+      .quizPromptCenter {
         height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        font-family: "Noto Sans Thai", "Tahoma", "Leelawadee UI", sans-serif;
         white-space: pre-line;
+      }
+
+      .syllableSymbol,
+      .gamePrompt {
+        font-family: "Noto Sans Thai", "Tahoma", "Leelawadee UI", sans-serif;
       }
 
       .syllableSymbol {
@@ -575,27 +561,47 @@
         line-height: 1;
       }
 
-      /* .quizPrompt {
-        font-size: 42px;
-        line-height: 1.45;
-        font-weight: bold;
-      } */
-      .quizPrompt {
-        font-size: 36px;
-        line-height: 1.9;
-        font-weight: bold;
-      }
-
       .gamePrompt {
-        font-size: 120px;
-        line-height: 1;
+        font-size: 28px;
+        line-height: 1.7;
+        font-weight: 400;
       }
 
+      .gamePrompt p {
+        margin: 0;
+      }
+
+      .quizPromptLeft,
+      .gamePromptLeft,
+      .quizPromptCenter,
+      .gamePromptCenter {
+        min-height: 240px;
+
+        padding: 18px;
+        box-sizing: border-box;
+
+        font-size: 32px;
+        line-height: 1.7;
+        font-weight: 400;
+      }
+
+      .quizPromptLeft p,
+      .gamePromptLeft p,
+      .quizPromptCenter p,
+      .gamePromptCenter p {
+        margin: 0;
+      }
+
+      #learnRtgs,
       #learnIpa,
       #gameIpa,
-      #quizPrompt div:nth-child(3),
+      #quizIpa,
       #result div div:nth-child(4) {
         font-family: "Doulos SIL", serif;
+      }
+
+      #quizNote {
+        color: #555;
       }
 
       @media (max-width: 768px) {
@@ -755,26 +761,842 @@
           flex-wrap: wrap;
         }
       }
+
+      @media (max-width: 768px) {
+        .card {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          height: auto !important;
+          min-height: 0 !important;
+          padding: 20px 12px !important;
+          gap: 18px !important;
+        }
+
+        .pronInfo,
+        .ruleInfo {
+          width: 100% !important;
+          padding-left: 0 !important;
+          align-items: center !important;
+          text-align: center !important;
+          font-size: 20px !important;
+          line-height: 1.6 !important;
+        }
+
+        .symbolBox,
+        .symbolArea,
+        .patternBox {
+          width: 100% !important;
+          font-size: 72px !important;
+          text-align: center !important;
+        }
+
+        .topbar {
+          flex-wrap: wrap !important;
+          gap: 8px !important;
+        }
+
+        #choices.basic,
+        #gameChoices.basic {
+          grid-template-columns: repeat(8, 62px);
+          justify-content: center;
+        }
+
+        #choices.additional,
+        #gameChoices.additional {
+          grid-template-columns: repeat(7, 62px);
+          justify-content: center;
+        }
+
+        #choices.all,
+        #gameChoices.all {
+          grid-template-columns: repeat(14, 62px);
+          justify-content: center;
+        }
+      }
+
+      /* =========================================================
+               MOBILE REBUILD — 320×508 baseline
+               PC logic/IDs are preserved; layout is rebuilt for touch.
+               ========================================================= */
+      :root {
+        --mobile-w: 320px;
+        --ui-gap: 4px;
+        --radius: 10px;
+        --control-h: 30px;
+      }
+
+      @media (max-width: 768px) {
+        * {
+          box-sizing: border-box;
+        }
+        html,
+        body {
+          width: 100%;
+          min-height: 100%;
+          margin: 0;
+        }
+        body {
+          padding: 4px 0;
+          background: #f3f1ef;
+          overflow-x: hidden;
+          font-size: 13px;
+        }
+        .wrap {
+          width: min(100%, 520px);
+          max-width: 520px;
+          margin: 0 auto;
+          padding: 0 4px;
+        }
+        .wrap > h1 {
+          height: 26px;
+          margin: 0 0 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 15px;
+          line-height: 1;
+        }
+
+        /* top controls: four compact rows, no PC wrapping behavior */
+        .topbar {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 3px !important;
+          margin: 0 0 4px;
+        }
+        .syllableSet,
+        .category,
+        .mode,
+        .topbar > div:last-child {
+          width: 100%;
+          display: grid !important;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr;
+          gap: 3px !important;
+        }
+
+        .topbar button,
+        .mode button,
+        .category button,
+        .syllableSet button,
+        #speak {
+          width: 100% !important;
+          min-width: 0 !important;
+          height: var(--control-h);
+          margin: 0 !important;
+          padding: 0 4px !important;
+          border: 1px solid #777;
+          border-radius: 8px;
+          font-size: 12px !important;
+          line-height: 1;
+          background: #fff;
+        }
+        .mode button.active {
+          background: #e53935;
+          color: #fff;
+        }
+        .category button.active {
+          background: #4169e1;
+          color: #fff;
+        }
+        .syllableSet button.active {
+          background: #38d878;
+          color: #111;
+        }
+        #speak {
+          background: #fff;
+        }
+
+        /* common white mobile panels */
+        .card,
+        .quizTop,
+        .gameTop,
+        #resultView {
+          border-radius: var(--radius) !important;
+          background: #fff;
+          box-shadow: none;
+        }
+
+        /* LEARN — information / symbol / rule, compact vertical card */
+        #learn {
+          margin: 0;
+        }
+        .card {
+          height: 440px !important;
+          min-height: 0 !important;
+          margin: 0 !important;
+          padding: 0px !important;
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          grid-template-rows: repeat(3, minmax(0, 1fr)) !important;
+          gap: 4px !important;
+          overflow: hidden;
+          position: relative !important;
+        }
+
+        .card::before,
+        .card::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: #ddd;
+          z-index: 2;
+          pointer-events: none;
+        }
+
+        .card::before {
+          top: calc((100% - 8px) / 3);
+        }
+
+        .card::after {
+          bottom: calc((100% - 8px) / 3);
+        }
+
+        .pronInfo,
+        .ruleInfo {
+          width: 100% !important;
+          height: 100% !important;
+          padding: 0 8px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          text-align: center !important;
+          font-size: 22.5px !important;
+          line-height: 1.35 !important;
+          overflow: hidden;
+        }
+        .pronInfo {
+          flex-direction: column;
+        }
+        .ruleInfo {
+          flex-direction: column;
+          font-size: 19.5px !important;
+        }
+        .pronInfo p,
+        .ruleInfo p {
+          margin: 1px 0 !important;
+        }
+
+        .syllableSymbol,
+        .symbol {
+          width: 100% !important;
+          height: 100% !important;
+          min-height: 0 !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          font-size: clamp(69.6px, 28.8vw, 98.4px) !important;
+          line-height: 1.2 !important;
+          overflow: visible !important;
+        }
+        .bottombar {
+          height: 42px;
+          margin: 4px 0 0 !important;
+          display: grid !important;
+          grid-template-columns: 1fr 1fr;
+          gap: 6px !important;
+        }
+        .bottombar button {
+          width: 100%;
+          min-width: 0 !important;
+          height: 38px;
+          margin: 0 !important;
+          padding: 0 !important;
+          font-size: 14px;
+        }
+
+        /* QUIZ — prompt card + swipeable 4×4 answer keyboard */
+        #quiz {
+          margin: 0;
+        }
+
+        #quizTitle,
+        #gameTitle {
+          min-height: 30px;
+          margin: 0 0 4px !important;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2px 6px;
+          font-size: 13px;
+          line-height: 1.2;
+          text-align: center;
+        }
+
+        #quizSymbol,
+        #gameSymbol {
+          display: none !important;
+        }
+
+        .quizTop,
+        .gameTop {
+          min-height: 0 !important;
+          height: 164px !important;
+          margin: 10px 0 0 !important;
+          padding: 4px !important;
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          grid-template-rows: 116px 40px !important;
+          gap: 4px !important;
+          overflow: hidden;
+        }
+
+        .quizPromptLeft,
+        .gamePromptLeft,
+        .quizPromptCenter,
+        .gamePromptCenter {
+          min-height: 0 !important;
+          height: 100% !important;
+          padding: 5px !important;
+          display: flex !important;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          font-size: 13px !important;
+          line-height: 1.6 !important;
+          text-align: center;
+          border-radius: 8px;
+          background: #fafafa;
+        }
+
+        .quizSide,
+        .gameSide {
+          grid-column: 1 / -1;
+          height: 40px !important;
+          display: grid !important;
+          grid-template-columns: 66px 1fr 66px;
+          gap: 4px;
+          align-items: center;
+          padding: 0 4px;
+        }
+
+        .gameSide .progressBox {
+          grid-column: 1;
+        }
+
+        .gameSide #gameProgressText {
+          grid-column: 2;
+          text-align: center;
+        }
+
+        .gameSide #showResult {
+          grid-column: 3;
+        }
+
+        #prevQuiz,
+        #newQuiz {
+          width: 66px !important;
+          min-width: 0 !important;
+          height: 32px;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+
+        .quizProgressBox {
+          width: 100%;
+          height: 10px;
+          margin: 8px 0;
+          background: #ddd;
+          border-radius: 5px;
+          overflow: hidden;
+        }
+
+        #quizProgressBar {
+          width: 0%;
+          height: 100%;
+          background: royalblue;
+          transition: width 0.2s ease;
+        }
+
+        #choices,
+        #gameChoices,
+        #choices.basic,
+        #choices.additional,
+        #choices.all,
+        #gameChoices.basic,
+        #gameChoices.additional,
+        #gameChoices.all {
+          width: 100% !important;
+          margin: 4px 0 0 !important;
+          padding: 8px 5px 10px !important;
+          display: grid !important;
+          grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+          grid-auto-rows: 46px;
+          gap: 4px !important;
+          justify-content: stretch !important;
+          align-content: start;
+          overflow: hidden;
+          background: #fff;
+          border-radius: var(--radius);
+        }
+
+        #choices,
+        #gameChoices {
+          height: 214px;
+          touch-action: pan-y;
+          user-select: none;
+          margin-top: 14px !important;
+        }
+
+        #choicePageInfo,
+        #gameChoicePageInfo {
+          height: 24px;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 13px;
+          line-height: 1;
+        }
+
+        #choices button,
+        #gameChoices button {
+          width: 100% !important;
+          min-width: 0 !important;
+          height: 46px !important;
+          margin: 0 !important;
+          padding: 0 2px !important;
+          border-radius: 8px;
+          font-size: 25px !important;
+          line-height: 1 !important;
+        }
+
+        /* GAME — difficulty row, information card, answer keyboard */
+        .gameHeader {
+          min-height: 34px;
+          margin: 0 0 4px !important;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          align-items: center;
+          gap: 4px;
+        }
+        #gameTitle {
+          margin: 0 !important;
+          font-size: 15px;
+          text-align: left;
+          padding-left: 4px;
+        }
+        .difficultyBox {
+          position: static !important;
+          transform: none !important;
+          display: flex !important;
+          gap: 3px !important;
+        }
+        .difficultyBox button {
+          min-width: 0 !important;
+          width: 48px;
+          height: 28px;
+          margin: 0 !important;
+          padding: 0 !important;
+          font-size: 11px !important;
+        }
+        .difficultyBox button.active {
+          outline-width: 2px !important;
+          transform: none !important;
+        }
+        .gameCard {
+          height: 142px !important;
+          margin: 0 !important;
+          padding: 4px !important;
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          grid-template-rows: 94px 40px !important;
+          gap: 4px !important;
+          overflow: hidden;
+        }
+        .gameInfo,
+        .gameImageBox {
+          width: 100% !important;
+          height: 100% !important;
+          padding: 5px !important;
+          border-radius: 8px;
+          background: #fafafa;
+          font-size: 14px !important;
+          line-height: 1.35 !important;
+          text-align: center !important;
+          align-items: center !important;
+          overflow: hidden;
+        }
+        .gamePrompt {
+          font-size: 12px !important;
+          line-height: 1.35 !important;
+        }
+        .gameProgress {
+          grid-column: 1 / -1;
+          width: 100% !important;
+          height: 80px !important;
+          display: grid !important;
+          grid-template-columns: 1fr 72px 74px;
+          align-items: center !important;
+          gap: 5px;
+          font-size: 12px !important;
+        }
+        .progressBox {
+          width: 100% !important;
+          height: 10px;
+          margin: 0 !important;
+        }
+        #gameProgressText {
+          margin: 0 !important;
+          font-size: 11px;
+        }
+        #showResult {
+          min-width: 0 !important;
+          height: 30px;
+          margin: 0 !important;
+          padding: 0 4px !important;
+          font-size: 11px !important;
+        }
+        #gameChoices {
+          height: 214px;
+        }
+
+        /* RESULT — one-column, readable and scrollable on phone */
+        #resultView {
+          margin: 0 !important;
+          padding: 8px !important;
+          max-height: calc(100dvh - 34px);
+          overflow-y: auto;
+        }
+        #resultView h2 {
+          margin: 0 0 8px !important;
+          font-size: 17px;
+        }
+        .resultPlotWrap {
+          width: 100%;
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          gap: 6px !important;
+        }
+        #resultCanvas {
+          grid-column: 1 / -1;
+          grid-row: 1;
+          width: min(100%, 300px) !important;
+          height: auto !important;
+          aspect-ratio: 1 / 1;
+          justify-self: center;
+        }
+        .sideSymbol {
+          min-height: 52px;
+        }
+        #responseSymbol,
+        #stimulusSymbol {
+          font-size: 42px !important;
+        }
+        .analysisSide {
+          width: 100% !important;
+          height: auto !important;
+          max-height: 220px;
+          padding: 10px !important;
+          font-size: 12px !important;
+          overflow-y: auto;
+        }
+        #analysisLeft {
+          grid-column: 1 / -1;
+        }
+        #analysisRight {
+          grid-column: 1 / -1;
+        }
+        #r2Text {
+          font-size: 18px !important;
+          margin: 8px 0 !important;
+        }
+        #downloadResult,
+        #analyzeResult,
+        #restartGame {
+          min-width: 0 !important;
+          margin: 3px !important;
+          padding: 8px 10px !important;
+          font-size: 12px !important;
+        }
+
+        button {
+          touch-action: manipulation;
+        }
+      }
+
+      /* =========================================================
+         MOBILE SETUP — 2 STEP PAGES
+         ========================================================= */
+
+      @media (max-width: 768px) {
+        #mobileSetup {
+          width: 100%;
+          height: calc(100dvh - 8px);
+        }
+
+        .setupPage {
+          width: 100%;
+          height: 100%;
+          padding: 28px 16px 18px;
+
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          background: #f3f1ef;
+        }
+
+        .setupPage[hidden] {
+          display: none !important;
+        }
+
+        .setupPage h1 {
+          width: 100%;
+          margin: 18px 0 42px;
+
+          text-align: center;
+          font-size: 22px;
+          line-height: 1.2;
+        }
+
+        .setupInstruction {
+          width: 100%;
+          margin: 0 0 16px;
+
+          font-size: 14px;
+          font-weight: 600;
+          line-height: 1.6;
+          text-align: center;
+          white-space: nowrap;
+        }
+
+        .setupGroupTitle,
+        .selectedCategoryLabel {
+          width: 184px;
+          margin: 0 0 12px;
+
+          font-size: 14px;
+          font-weight: 600;
+          text-align: left;
+        }
+
+        .setupChoices {
+          width: 100%;
+
+          display: flex !important;
+          flex-direction: column;
+          gap: 8px !important;
+        }
+
+        .setupChoices button {
+          width: min(86%, 320px) !important;
+          height: auto !important;
+          min-width: 0 !important;
+          min-height: 56px !important;
+
+          align-self: center;
+
+          margin: 0 !important;
+          padding: 7px 10px !important;
+
+          border: 1.5px solid #777;
+          border-radius: 10px;
+
+          background: white;
+          color: black;
+
+          font-size: 19px !important;
+          font-weight: 500;
+        }
+
+        .setupPage .category button.active,
+        .setupPage .mode button.active {
+          background: white;
+          color: black;
+        }
+
+        .setupBack {
+          width: auto !important;
+          height: auto !important;
+          min-width: 100px !important;
+          min-height: 0 !important;
+
+          align-self: center;
+
+          margin: 16px 0 0 !important;
+          padding: 7px 9px !important;
+
+          font-size: 14px !important;
+        }
+
+        #studyHeader {
+          width: 100%;
+          height: 34px;
+
+          grid-template-columns: 48px 1fr 48px;
+          align-items: center;
+          gap: 4px;
+
+          margin-bottom: 4px;
+        }
+
+        #studyHeader:not([hidden]) {
+          display: grid;
+        }
+
+        #studyHeader button {
+          width: 48px;
+          min-width: 0;
+          height: 30px;
+          margin: 0;
+          padding: 0;
+          font-size: 15px;
+        }
+
+        #studyHeaderTitle {
+          text-align: center;
+          font-size: 15px;
+          font-weight: 700;
+        }
+
+        #mobileSetup:not([style*="display: none"]) ~ #studyHeader,
+        #mobileSetup:not([style*="display: none"]) ~ #studyHeader ~ #learn,
+        #mobileSetup:not([style*="display: none"]) ~ #studyHeader ~ #quiz,
+        #mobileSetup:not([style*="display: none"]) ~ #studyHeader ~ #game,
+        #mobileSetup:not([style*="display: none"]) ~ #studyHeader ~ #resultView {
+          display: none;
+        }
+      }
+      #setupModePage .difficultyRow {
+        width: 82%;
+        align-self: center;
+
+        display: flex;
+        gap: 6px;
+      }
+
+      #setupModePage .difficultyRow .difficultyBtn {
+        flex: 1 1 0;
+
+        width: auto !important;
+        min-width: 0 !important;
+        min-height: 40px !important;
+        height: auto !important;
+
+        margin: 0 !important;
+        padding: 0 4px !important;
+
+        font-size: 14px !important;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      #setupModePage .difficultyBtn.beginner {
+        background: linear-gradient(145deg, #f3c59c, #b66a38, #e1a170);
+        color: #2b1207;
+      }
+
+      #setupModePage .difficultyBtn.intermediate {
+        background: linear-gradient(145deg, #f5f5f5, #b5b5b5, #ededed);
+        color: #222;
+      }
+
+      #setupModePage .difficultyBtn.advanced {
+        background: linear-gradient(145deg, #fff5b8, #cfa126, #ffe27a);
+        color: #3d2a00;
+      }
     </style>
   </head>
 
   <body>
+    <!-- =============================================================================== -->
+    <!-- 태국어 음절 구조 분류 -->
+    <!-- =============================================================================== -->
+    <!-- [1] 음절 자모 -->
+    <!-- [1.1] 모음 구체형 -->
+    <!-- [1.1.1] 일체형 -->
+    <!-- [1.1.1-A] 무기호 독립형 -->
+    <!-- - 초중 일체형(CV): ฤ(rue), ฦ(lue) -->
+    <!-- - 중종 일체형(VC): ใ(ai), ไ(ai) -->
+    <!-- [1.1.1-B] 기호 결합형 -->
+    <!-- - 중종 일체형(VC): ำ(am), ัว -->
+    <!-- [1.1.2] 조합형: 초성과 중성은 필수, 종성은 선택 -->
+    <!-- [1.1.2-A] 초성 -->
+    <!-- - 단순자음: ก- -->
+    <!-- - 중복자음: กล- -->
+    <!-- [1.1.2-B] 중성 -->
+    <!-- [1.1.2-B-1] 부속 기호 -->
+    <!-- - 선도형: เ- -->
+    <!-- - 후속형: -า -->
+    <!-- - 호위형: เ-า -->
+    <!-- - 지상형: ิ, ี, ึ, ื -->
+    <!-- - 지하형: ุ, ู -->
+    <!-- - 지상호위형: เ ีย -->
+    <!-- [1.1.2-B-2] 단독 기호 관절형: -ว-, -อ- -->
+    <!-- [1.1.2-C] 종성 결합 형태 -->
+    <!-- - 불가형: ะ -->
+    <!-- - 양문형: กวน(kuan), นอน(non) -->
+    <!-- - 선택형 / 단자음(이중모음): -ย, -ว -->
+    <!-- - 선택형 / 단자음(진성자음): -ม -->
+    <!-- [2] 중복 자음 수 -->
+    <!-- - 초성 중복 자음 -->
+    <!-- - 종성 중복 자음 -->
+    <!-- [3] 모음 내재형 -->
+    <!-- - o 실현형(경음절): คน(kon) / 무기호 관절형과 유사 -->
+    <!-- - a 실현형(중음절): สนุก(sanuk), อร่อย(aroi), เจริญ(chareun) / 무기호 독립형과 유사 -->
+    <!-- - a/o 실현형(경/중음절): ถนน(tanon) -->
+    <!-- [4] 음절 부가 기호 -->
+    <!-- - 종성 결합 기호(마이타이쿠): ั -->
+    <!-- - 종성 결합 기호(마이한아캇): ั -->
+    <!-- - 성조 기호(완나육, วรรณยุกต์): ่, ้, ๊, ๋ -->
+    <!-- - 묵음 부호(탄타캇): ์ -->
+    <!-- =============================================================================== -->
+
     <div class="wrap">
-      <h1>태국어 음절 학습</h1>
-      <div class="topbar">
-        <div class="category">
-          <button id="consonantBtn" class="active">기호형</button>
-          <button id="vowelBtn">오앙형</button>
-          <button id="numberBtn">꼬까이형</button>
-        </div>
-        <div class="mode">
-          <button id="learnTab">학습 모드</button>
-          <button id="quizTab">퀴즈 모드</button>
-          <button id="gameTab">게임 모드</button>
-        </div>
-        <div>
-          <button id="speak">음절 듣기</button>
-        </div>
+      <div id="mobileSetup">
+        <!-- 1페이지: 초성 모양 선택 -->
+        <section id="setupCategoryPage" class="setupPage">
+          <h1>태국어 음절</h1>
+
+          <div class="setupInstruction">초성을 선택하세요.</div>
+
+          <div class="setupChoices category">
+            <button id="patternBtn" type="button">공백</button>
+            <button id="oangBtn" type="button">오앙</button>
+            <button id="kokaiBtn" type="button">꼬까이</button>
+          </div>
+        </section>
+
+        <!-- 2페이지: 모드 선택 -->
+        <section id="setupModePage" class="setupPage" hidden>
+          <h1>태국어 음절</h1>
+
+          <div class="setupInstruction">
+            <div id="selectedCategoryLabel">초성으로 공백을 선택하셨습니다.</div>
+            <div>모드를 선택하세요.</div>
+          </div>
+
+          <div class="setupChoices mode">
+            <button id="learnTab" type="button">학습</button>
+
+            <button id="quizTab" type="button">퀴즈</button>
+
+            <div id="quizDifficultyRow" class="difficultyRow" style="display: none">
+              <button id="quizDifficultyBeginner" class="difficultyBtn beginner" type="button">초급</button>
+              <button id="quizDifficultyIntermediate" class="difficultyBtn intermediate" type="button">중급</button>
+              <button id="quizDifficultyAdvanced" class="difficultyBtn advanced" type="button">고급</button>
+            </div>
+
+            <button id="gameTab" type="button">게임</button>
+
+            <div id="gameDifficultyRow" class="difficultyRow" style="display: none">
+              <button id="gameDifficultyBeginner" class="difficultyBtn beginner" type="button">초급</button>
+              <button id="gameDifficultyIntermediate" class="difficultyBtn intermediate" type="button">중급</button>
+              <button id="gameDifficultyAdvanced" class="difficultyBtn advanced" type="button">고급</button>
+            </div>
+          </div>
+
+          <button id="backToCategory" class="setupBack" type="button">← 이전</button>
+        </section>
+      </div>
+
+      <div id="studyHeader" hidden>
+        <button id="backToSetup" type="button">←</button>
+        <div id="studyHeaderTitle">태국어 음절</div>
+        <button id="speak" type="button">🔊</button>
       </div>
       <div id="learn">
         <div class="card">
@@ -799,35 +1621,52 @@
         <h2 id="quizTitle"></h2>
         <div id="quizSymbol" class="symbol"></div>
         <div class="quizTop">
-          <div id="quizPrompt" class="quizPrompt"></div>
+          <div class="quizPromptLeft">
+            <p id="quizKorean"></p>
+            <p id="quizRtgs"></p>
+            <p id="quizIpa"></p>
+          </div>
+
+          <div class="quizPromptCenter">
+            <p id="answerKorean"></p>
+            <p id="answerRtgs"></p>
+            <p id="answerIpa"></p>
+          </div>
 
           <div class="quizSide">
-            <p id="result"></p>
+            <button id="prevQuiz">이전</button>
+
+            <div class="quizProgressBox">
+              <div id="quizProgressBar"></div>
+            </div>
+
             <button id="newQuiz">다음</button>
           </div>
         </div>
+
         <div id="choices"></div>
+        <div id="choicePageInfo">1 / 1</div>
       </div>
 
       <div id="game" style="display: none">
-        <div class="gameHeader">
-          <h2 id="gameTitle">실전 게임</h2>
-          <div class="difficultyBox">
-            <button id="beginnerBtn">초급</button>
-            <button id="intermediateBtn">중급</button>
-            <button id="advancedBtn">고급</button>
-          </div>
-        </div>
-        <div class="gameCard">
-          <div class="gameInfo">
+        <h2 id="gameTitle"></h2>
+        <div id="gameSymbol" class="symbol"></div>
+
+        <div class="gameTop">
+          <div class="gamePromptLeft">
             <p id="gameKorean"></p>
             <p id="gameRtgs"></p>
             <p id="gameIpa"></p>
           </div>
-          <div class="gameImageBox">
-            <div id="gamePrompt" class="gamePrompt"></div>
+
+          <div class="gamePromptCenter">
+            <p id="gameFormation"></p>
+            <p id="gameCoda"></p>
+            <p id="gameOnset"></p>
+            <p id="gameNote"></p>
           </div>
-          <div class="gameProgress">
+
+          <div class="gameSide">
             <div class="progressBox">
               <div id="progressBar"></div>
             </div>
@@ -836,7 +1675,9 @@
             <button id="showResult">결과 보기</button>
           </div>
         </div>
+
         <div id="gameChoices"></div>
+        <div id="gameChoicePageInfo">1 / 1</div>
       </div>
 
       <div id="resultView" style="display: none">
@@ -875,6 +1716,7 @@
         </div>
       </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="gameAnalysis_syllable.js"></script>
     <script src="app_syllable.js"></script>
   </body>
