@@ -291,9 +291,15 @@ function render() {
 }
 
 function showSetupPage(pageId) {
-  document.querySelectorAll(".setupPage").forEach((page) => {
-    page.hidden = page.id !== pageId;
-  });
+  if (pageId === "setupModePage") {
+    document.body.classList.add("setup-mode");
+    return;
+  }
+
+  document.body.classList.remove("setup-mode");
+
+  document.getElementById("quizDifficultyRow").classList.remove("show");
+  document.getElementById("gameDifficultyRow").classList.remove("show");
 }
 
 function selectMobileCategory(category, buttonId) {
@@ -325,37 +331,113 @@ function updateStudyHeader(modeName) {
 }
 
 function closeMobileSetup() {
-  const mobileSetup = document.getElementById("mobileSetup");
-  const studyHeader = document.getElementById("studyHeader");
-
-  mobileSetup.style.display = "none";
-  studyHeader.hidden = false;
+  document.body.classList.add("running");
 }
 
 function reopenMobileSetup() {
-  const mobileSetup = document.getElementById("mobileSetup");
-  const studyHeader = document.getElementById("studyHeader");
-
-  studyHeader.hidden = true;
-  mobileSetup.style.display = "block";
+  document.body.classList.remove("running");
 
   document.getElementById("learn").style.display = "none";
   document.getElementById("quiz").style.display = "none";
   document.getElementById("game").style.display = "none";
   document.getElementById("resultView").style.display = "none";
 
+  document.getElementById("quizDifficultyRow").classList.remove("show");
+  document.getElementById("gameDifficultyRow").classList.remove("show");
+
+  document.querySelectorAll(".setupChoices.mode button").forEach((button) => {
+    button.classList.remove("active");
+  });
+
+  document.querySelectorAll(".difficultyBtn").forEach((button) => {
+    button.classList.remove("active");
+  });
+
   showSetupPage("setupModePage");
 }
 
-document.getElementById("prev").onclick = () => {
-  idx = (idx - 1 + getCurrentItems().length) % getCurrentItems().length;
-  render();
-};
+function showPreviousLearnItem() {
+  const items = getCurrentItems();
+  if (!items.length) return;
 
-document.getElementById("next").onclick = () => {
-  idx = (idx + 1) % getCurrentItems().length;
+  idx = (idx - 1 + items.length) % items.length;
   render();
-};
+}
+
+function showNextLearnItem() {
+  const items = getCurrentItems();
+  if (!items.length) return;
+
+  idx = (idx + 1) % items.length;
+  render();
+}
+
+const learnSwipeTarget = document.querySelector("#learn .card");
+
+let learnTouchStartX = 0;
+let learnTouchStartY = 0;
+
+learnSwipeTarget.addEventListener(
+  "touchstart",
+  (event) => {
+    const touch = event.changedTouches[0];
+
+    learnTouchStartX = touch.clientX;
+    learnTouchStartY = touch.clientY;
+  },
+  { passive: true },
+);
+
+learnSwipeTarget.addEventListener(
+  "touchend",
+  (event) => {
+    const touch = event.changedTouches[0];
+
+    const deltaX = touch.clientX - learnTouchStartX;
+    const deltaY = touch.clientY - learnTouchStartY;
+
+    if (Math.abs(deltaX) < 50) return;
+    if (Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+    if (deltaX < 0) {
+      showNextLearnItem();
+    } else {
+      showPreviousLearnItem();
+    }
+  },
+  { passive: true },
+);
+
+let learnPointerStartX = 0;
+let learnPointerStartY = 0;
+let learnPointerActive = false;
+
+learnSwipeTarget.addEventListener("pointerdown", (event) => {
+  if (event.pointerType === "touch") return;
+
+  learnPointerStartX = event.clientX;
+  learnPointerStartY = event.clientY;
+  learnPointerActive = true;
+});
+
+learnSwipeTarget.addEventListener("pointerup", (event) => {
+  if (event.pointerType === "touch") return;
+  if (!learnPointerActive) return;
+
+  learnPointerActive = false;
+
+  const deltaX = event.clientX - learnPointerStartX;
+  const deltaY = event.clientY - learnPointerStartY;
+
+  if (Math.abs(deltaX) < 50) return;
+  if (Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+  if (deltaX < 0) {
+    showNextLearnItem();
+  } else {
+    showPreviousLearnItem();
+  }
+});
 
 /////////////////////////////////////////////// 음성 ///////////////////////////////////////////////
 function getThaiVoice() {
@@ -623,6 +705,10 @@ function renderGameChoices() {
     b.onclick = () => {
       const x = gameQueue[gameIndex];
 
+      if (!x) {
+        return;
+      }
+
       gameResults.push({
         trial: gameIndex + 1,
         repetition: x.repetition,
@@ -681,6 +767,11 @@ function renderGame() {
     document.getElementById("progressBar").style.width = "100%";
     document.getElementById("gameProgressText").textContent = "게임 종료!";
     document.getElementById("showResult").style.display = "inline-block";
+
+    document.querySelectorAll("#gameChoices button").forEach((button) => {
+      button.disabled = true;
+    });
+
     return;
   }
 
@@ -1083,8 +1174,8 @@ document.getElementById("learnTab").onclick = () => {
 };
 
 document.getElementById("quizTab").onclick = () => {
-  document.getElementById("gameDifficultyRow").style.display = "none";
-  document.getElementById("quizDifficultyRow").style.display = "flex";
+  document.getElementById("gameDifficultyRow").classList.remove("show");
+  document.getElementById("quizDifficultyRow").classList.add("show");
 };
 
 function startQuizWithDifficulty(level) {
@@ -1115,8 +1206,8 @@ document.getElementById("quizDifficultyAdvanced").onclick = () => {
 };
 
 document.getElementById("gameTab").onclick = () => {
-  document.getElementById("quizDifficultyRow").style.display = "none";
-  document.getElementById("gameDifficultyRow").style.display = "flex";
+  document.getElementById("quizDifficultyRow").classList.remove("show");
+  document.getElementById("gameDifficultyRow").classList.add("show");
 };
 
 function startGameWithDifficulty(level) {
@@ -1221,8 +1312,8 @@ document.getElementById("learn").style.display = "none";
 document.getElementById("quiz").style.display = "none";
 document.getElementById("game").style.display = "none";
 document.getElementById("resultView").style.display = "none";
-document.getElementById("studyHeader").hidden = true;
 
+document.body.classList.remove("running");
 showSetupPage("setupCategoryPage");
 
 loadSyllableItems().catch((err) => {

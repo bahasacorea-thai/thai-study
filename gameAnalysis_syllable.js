@@ -88,70 +88,6 @@ function makeWrongPairText(pair) {
   return `${getDisplaySyllable(q)} (${getDisplayKorean(q)}, ${getDisplayRtgs(q)}, ${getDisplayIpa(q)}) → ${getDisplaySyllable(a)} (${getDisplayKorean(a)}, ${getDisplayRtgs(a)}, ${getDisplayIpa(a)}) : ${pair.count}회`;
 }
 
-function makeStudyStrategy(accuracyInfo, wrongPairs) {
-  if (accuracyInfo.total === 0) {
-    return ["아직 게임 결과가 없습니다.", "게임을 먼저 완료한 뒤 분석을 확인하십시오."];
-  }
-
-  if (wrongPairs.length === 0) {
-    return ["오답이 없습니다.", "현재 단계에서는 다음 음절 범주나 다음 단계로 넘어가도 좋습니다."];
-  }
-
-  const strategies = [];
-
-  if (wrongPairs.length <= 3) {
-    strategies.push("오답이 특정 음절쌍에 제한되어 있습니다.");
-    strategies.push("전체 음절 유형을 다시 반복하기보다 아래 혼동 음절쌍만 집중 복습하십시오.");
-  } else {
-    strategies.push("오답이 여러 음절에 분산되어 있습니다.");
-    strategies.push("학습 모드에서 전체 음절을 공부한 뒤 다시 게임을 실행하는 것이 좋습니다.");
-  }
-
-  strategies.push("틀린 음절은 모양, 한글 표기, 로마자 표기를 함께 비교하십시오.");
-
-  return strategies;
-}
-
-function makeGameAnalysis(results) {
-  const accuracyInfo = getAccuracyInfo(results);
-  const wrongPairs = getWrongPairs(results);
-  const topWrongPairs = wrongPairs.slice(0, 5);
-
-  const lines = [];
-
-  lines.push("학습 분석");
-  lines.push("");
-  lines.push(`정답률: ${accuracyInfo.accuracy.toFixed(2)}%`);
-  lines.push(`정답: ${accuracyInfo.correct} / ${accuracyInfo.total}`);
-  lines.push(`오답: ${accuracyInfo.wrong}`);
-  lines.push("");
-  lines.push("종합 평가");
-  lines.push(makeLevelComment(accuracyInfo.accuracy));
-  lines.push("");
-
-  if (topWrongPairs.length > 0) {
-    lines.push("주요 혼동 음절");
-    topWrongPairs.forEach((pair) => {
-      lines.push("- " + makeWrongPairText(pair));
-    });
-    lines.push("");
-  }
-
-  lines.push("추천 전략");
-  makeStudyStrategy(accuracyInfo, wrongPairs).forEach((text) => {
-    lines.push("- " + text);
-  });
-
-  return lines.join("\n");
-}
-
-function renderGameAnalysis(targetId, results) {
-  const target = document.getElementById(targetId);
-  if (!target) return;
-
-  target.textContent = makeGameAnalysis(results);
-}
-
 function makeDiagnosisText(results) {
   const accuracyInfo = getAccuracyInfo(results);
   const rtInfo = getRtInfo(results);
@@ -197,7 +133,8 @@ function makeDiagnosisText(results) {
     .map(([collation, count]) => ({
       item: getItemByCollation(Number(collation)),
       count,
-    }));
+    }))
+    .filter(({ item }) => item);
 
   if (hardItems.length > 0) {
     lines.push("");

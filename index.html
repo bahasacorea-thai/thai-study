@@ -754,6 +754,40 @@ Wide item은 item count가 아니라 실제 소비 slot 수로 pagination한다.
         word-break: keep-all;
       }
 
+      .learnSwipeArrows {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      #learnInfo::before,
+      #learnInfo::after {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        font-size: calc(110px * var(--ui-scale));
+        line-height: 1;
+        font-weight: 100;
+        transform: scaleX(0.25);
+        color: #111;
+        opacity: 0.1;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      #learnInfo::before {
+        content: "⟨";
+        left: 0;
+      }
+
+      #learnInfo::after {
+        content: "⟩";
+        right: 0;
+      }
+
       #learnThaiName,
       #learnKoreanName,
       #learnRtgsName,
