@@ -21,7 +21,6 @@ let reportSaved = false;
 let setupStep = "category";
 let selectedCategory = "consonant1";
 let selectedMode = "learn";
-let currentQuizDifficulty = "beginner";
 let quizQueue = [];
 let quizIndex = 0;
 
@@ -227,7 +226,6 @@ function renderSetup() {
 
   const modeButtons = [document.getElementById("setupModeLearn"), document.getElementById("setupModeQuiz"), document.getElementById("setupModeGame")];
 
-  const quizDifficultyRow = document.getElementById("quizDifficultyRow");
   const gameDifficultyRow = document.getElementById("gameDifficultyRow");
 
   back.style.display = setupStep === "category" ? "none" : "inline-block";
@@ -239,8 +237,6 @@ function renderSetup() {
   modeButtons.forEach((btn) => {
     btn.style.display = setupStep === "mode" ? "block" : "none";
   });
-
-  quizDifficultyRow.style.display = setupStep === "mode" && selectedMode === "quiz" ? "flex" : "none";
 
   gameDifficultyRow.style.display = setupStep === "mode" && selectedMode === "game" ? "flex" : "none";
 
@@ -305,22 +301,7 @@ function renderSetup() {
     });
 
     addSetupButton("setupModeQuiz", () => {
-      selectedMode = selectedMode === "quiz" ? "learn" : "quiz";
-      renderSetup();
-    });
-
-    addSetupButton("quizDifficultyBeginner", () => {
-      currentQuizDifficulty = "beginner";
-      startSelected();
-    });
-
-    addSetupButton("quizDifficultyIntermediate", () => {
-      currentQuizDifficulty = "intermediate";
-      startSelected();
-    });
-
-    addSetupButton("quizDifficultyAdvanced", () => {
-      currentQuizDifficulty = "advanced";
+      selectedMode = "quiz";
       startSelected();
     });
 
@@ -385,16 +366,26 @@ function resetResultState() {
   const stimulusSymbol = document.getElementById("stimulusSymbol");
   const responseSymbol = document.getElementById("responseSymbol");
   const analysisText = document.getElementById("analysisText");
-  const saveReportBtn = document.getElementById("saveReportBtn");
+  const analyzeResultBtn = document.getElementById("analyzeResultBtn");
+  const resultPageInfo = document.getElementById("resultPageInfo");
   const canvas = document.getElementById("resultCanvas");
 
   if (stimulusSymbol) stimulusSymbol.textContent = "";
   if (responseSymbol) responseSymbol.textContent = "";
+
   if (analysisText) {
     analysisText.textContent = "";
     analysisText.style.display = "none";
   }
-  if (saveReportBtn) saveReportBtn.style.display = "none";
+
+  if (analyzeResultBtn) {
+    analyzeResultBtn.disabled = false;
+  }
+
+  if (resultPageInfo) {
+    resultPageInfo.textContent = "1 / 2";
+  }
+
   if (canvas) canvas.style.display = "block";
 }
 
@@ -601,47 +592,24 @@ function randomItem() {
 }
 
 function makeQuizQueue() {
-  const items = getCurrentItems();
-
-  if (currentQuizDifficulty === "beginner") {
-    return shuffle([...items]);
-  }
-
-  if (currentQuizDifficulty === "intermediate") {
-    const queue = [];
-
-    for (let i = 0; i < 3; i++) {
-      queue.push(...shuffle([...items]));
-    }
-
-    return shuffle(queue);
-  }
-
-  return null;
+  return shuffle([...getCurrentItems()]);
 }
 
 function startQuiz(direction = "next") {
-  if (direction === "prev" && quizHistoryIndex > 0) {
-    quizHistoryIndex -= 1;
-    quizItem = quizHistory[quizHistoryIndex];
-  } else if (currentQuizDifficulty === "advanced") {
-    quizItem = randomItem();
-    quizHistory = quizHistory.slice(0, quizHistoryIndex + 1);
-    quizHistory.push(quizItem);
-    quizHistoryIndex = quizHistory.length - 1;
-  } else {
-    if (quizQueue.length === 0 || quizIndex >= quizQueue.length) {
-      quizQueue = makeQuizQueue();
-      quizIndex = 0;
-    }
-
-    quizItem = quizQueue[quizIndex];
-    quizIndex += 1;
-
-    quizHistory = quizHistory.slice(0, quizHistoryIndex + 1);
-    quizHistory.push(quizItem);
-    quizHistoryIndex = quizHistory.length - 1;
+  if (quizQueue.length === 0) {
+    quizQueue = makeQuizQueue();
+    quizIndex = 0;
   }
+
+  if (direction === "prev") {
+    if (quizIndex > 1) {
+      quizIndex -= 1;
+    }
+  } else if (quizIndex < quizQueue.length) {
+    quizIndex += 1;
+  }
+
+  quizItem = quizQueue[quizIndex - 1];
 
   quizPage = 0;
   updateQuizPrompt(quizItem);
@@ -649,7 +617,7 @@ function startQuiz(direction = "next") {
   document.getElementById("quizInfoWrap").style.display = "grid";
   document.getElementById("quizAnswerWrap").style.display = "none";
   document.getElementById("quizInfoText").textContent = "해당 글자를 선택하세요.";
-  document.getElementById("quizProgress").textContent = currentQuizDifficulty === "beginner" ? `${quizIndex} / ${quizQueue.length}` : "";
+  document.getElementById("quizProgress").textContent = `${quizIndex} / ${quizQueue.length}`;
 
   renderKeyboard("quiz");
 }
@@ -731,6 +699,20 @@ function showGameResult() {
   setupResultSwipe();
   updateResultPage();
 
+  document.getElementById("saveResultBtn").onclick = () => {
+    downloadResultImage(analysisGenerated);
+  };
+
+  document.getElementById("analyzeResultBtn").onclick = () => {
+    if (!analysisGenerated) {
+      document.getElementById("analysisText").textContent = makeAnalysisReport();
+      analysisGenerated = true;
+    }
+
+    resultPage = "analysis";
+    updateResultPage();
+  };
+
   document.getElementById("restartBtn").onclick = () => {
     if (!confirmSaveIfNeeded()) return;
 
@@ -746,31 +728,32 @@ function showGameResult() {
 
     startGame();
   };
-
-  document.getElementById("saveReportBtn").onclick = () => {
-    downloadResultImage(true);
-  };
 }
 
 function updateResultPage() {
   const resultScreen = document.getElementById("resultScreen");
   const analysisText = document.getElementById("analysisText");
-  const saveReportBtn = document.getElementById("saveReportBtn");
+  const analyzeResultBtn = document.getElementById("analyzeResultBtn");
+  const resultPageInfo = document.getElementById("resultPageInfo");
 
   resultScreen.classList.toggle("resultScatter", resultPage === "scatter");
   resultScreen.classList.toggle("resultAnalysis", resultPage === "analysis");
 
+  resultPageInfo.textContent = resultPage === "scatter" ? "1 / 2" : "2 / 2";
+
   if (resultPage === "scatter") {
     analysisText.style.display = "none";
-    saveReportBtn.style.display = "none";
     drawResultCanvas();
-    return;
+  } else {
+    if (!analysisGenerated) {
+      analysisText.textContent = makeAnalysisReport();
+      analysisGenerated = true;
+    }
+
+    analysisText.style.display = "block";
   }
 
-  analysisText.style.display = "block";
-  saveReportBtn.style.display = "inline-block";
-  analysisText.textContent = makeAnalysisReport();
-  analysisGenerated = true;
+  analyzeResultBtn.disabled = analysisGenerated;
 }
 
 function makeAnalysisReport() {
@@ -1203,7 +1186,7 @@ function showQuizAnswer(chosen) {
   quizThaiName.textContent = chosen.thaiName || "";
   quizKoreanName.textContent = chosen.koreanName || "";
   document.getElementById("quizRtgsName").textContent = chosen.rtgsName || "";
-  document.getElementById("quizAnswerProgress").textContent = currentQuizDifficulty === "beginner" ? `${quizIndex} / ${quizQueue.length}` : "";
+  document.getElementById("quizAnswerProgress").textContent = `${quizIndex} / ${quizQueue.length}`;
 
   fitSingleLineText(quizAnswerWrap);
 

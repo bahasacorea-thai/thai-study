@@ -1018,15 +1018,6 @@
 
       .quizProgressBox {
         width: 100%;
-        height: 10px;
-        margin: 0;
-        background: #ddd;
-        border-radius: 5px;
-        overflow: hidden;
-      }
-
-      .quizProgressBox {
-        width: 100%;
         height: 20px;
         margin: 0;
         background: #ddd;
@@ -1189,23 +1180,79 @@
         font-size: 11px;
       }
 
-      /* RESULT — one-column, readable and scrollable on phone */
+      /* RESULT — content / page indicator / fixed controls */
       #resultView {
+        width: 100%;
+        height: calc(100dvh - 50px);
+        min-height: 0;
         margin: 0;
-        padding: 8px;
-        max-height: calc(100dvh - 34px);
-        overflow-y: auto;
+        padding: 0;
+        display: grid;
+        grid-template-rows:
+          minmax(0, 1fr)
+          var(--control-h)
+          var(--control-h);
+        gap: var(--ui-gap);
+        overflow: hidden;
+        align-items: stretch;
       }
-      #resultView h2 {
-        margin: 0 0 8px;
+
+      .resultPages {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        overscroll-behavior-x: contain;
+      }
+
+      .resultPages::-webkit-scrollbar {
+        display: none;
+      }
+
+      .resultPage {
+        flex: 0 0 100%;
+        width: 100%;
+        min-width: 100%;
+        height: 100%;
+        min-height: 0;
+        padding:
+          calc(var(--ui-gap) + var(--ui-gap))
+          calc(var(--ui-gap) + var(--ui-gap))
+          calc(
+            var(--control-h) +
+            var(--control-h) +
+            var(--ui-gap) +
+            var(--ui-gap)
+          );
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .resultPage h2 {
+        min-height: var(--control-h);
+        margin: 0 0 var(--ui-gap);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-size: 17px;
       }
+
       .resultPlotWrap {
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 6px;
+        gap: calc(var(--ui-gap) + var(--ui-gap));
       }
+
       #resultCanvas {
         grid-column: 1 / -1;
         grid-row: 1;
@@ -1214,38 +1261,95 @@
         aspect-ratio: 1 / 1;
         justify-self: center;
       }
+
       .sideSymbol {
         min-height: 52px;
       }
+
       #responseSymbol,
       #stimulusSymbol {
         font-size: 42px;
       }
+
+      #r2Text {
+        font-size: 18px;
+        margin: calc(var(--ui-gap) + var(--ui-gap)) 0 0;
+      }
+
+      .resultAnalysisContent {
+        width: 100%;
+        display: block;
+        text-align: left;
+      }
+
       .analysisSide {
         width: 100%;
         height: auto;
-        max-height: 220px;
+        max-height: none;
+        margin: 0 0 calc(var(--ui-gap) + var(--ui-gap));
         padding: 10px;
+        overflow: visible;
         font-size: 12px;
-        overflow-y: auto;
+        line-height: 1.5;
+        white-space: pre-line;
       }
-      #analysisLeft {
-        grid-column: 1 / -1;
+
+      #resultPageInfo {
+        position: fixed;
+        left: 50%;
+        bottom: calc(
+          max(6px, env(safe-area-inset-bottom)) +
+          var(--control-h) +
+          var(--ui-gap)
+        );
+        transform: translateX(-50%);
+        z-index: 999;
+
+        width: calc(100% - 12px);
+        max-width: calc(var(--app-w) - 12px);
+        height: var(--control-h);
+        margin: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: white;
+        font-size: 13px;
+        line-height: 1;
+        user-select: none;
+        pointer-events: none;
       }
-      #analysisRight {
-        grid-column: 1 / -1;
+
+      .resultActions {
+        position: fixed;
+        left: 50%;
+        bottom: max(6px, env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        z-index: 1000;
+
+        width: calc(100% - 12px);
+        max-width: calc(var(--app-w) - 12px);
+        height: var(--control-h);
+
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--ui-gap);
       }
-      #r2Text {
-        font-size: 18px;
-        margin: 8px 0;
-      }
+
       #downloadResult,
       #analyzeResult,
       #restartGame {
+        width: 100%;
         min-width: 0;
-        margin: 3px;
-        padding: 8px 10px;
+        height: var(--control-h);
+        margin: 0;
+        padding: 0 4px;
         font-size: 12px;
+      }
+
+      #analyzeResult:disabled {
+        opacity: 0.4;
       }
 
       button {
@@ -1303,7 +1407,7 @@
         width: 100%;
         margin: 0 auto 4px;
         text-align: center;
-        font-size: 19px;
+        font-size: 16px;
         font-weight: 700;
         line-height: 1.2;
         white-space: nowrap;
@@ -1314,7 +1418,7 @@
       }
 
       .setupChoices {
-        width: min(86%, 320px);
+        width: min(57.33%, 213.33px);
         max-width: none;
         display: grid;
         grid-template-columns: 1fr;
@@ -1333,7 +1437,7 @@
       }
 
       #setupModePage .difficultyRow {
-        width: 82%;
+        width: 143%;
         justify-self: center;
         align-self: center;
         display: none;
@@ -1434,16 +1538,15 @@
     <!-- - 중종 일체형(VC): ำ(am), ัว -->
     <!-- [1.1.2] 조합형: 초성과 중성은 필수, 종성은 선택 -->
     <!-- [1.1.2-A] 초성 -->
-    <!-- - 단순자음: ก- -->
-    <!-- - 중복자음: กล- -->
+    <!-- - 단자음: ก- -->
+    <!-- - 자음군: กล- -->
     <!-- [1.1.2-B] 중성 -->
     <!-- [1.1.2-B-1] 부속 기호 -->
-    <!-- - 선도형: เ- -->
-    <!-- - 후속형: -า -->
+    <!-- - 전위형: เ- -->
+    <!-- - 후위형: -า -->
     <!-- - 호위형: เ-า -->
-    <!-- - 지상형: ิ, ี, ึ, ื -->
-    <!-- - 지하형: ุ, ู -->
-    <!-- - 지상호위형: เ ีย -->
+    <!-- - 상위형: ิ, ี, ึ, ื -->
+    <!-- - 하위형: ุ, ู -->
     <!-- [1.1.2-B-2] 단독 기호 관절형: -ว-, -อ- -->
     <!-- [1.1.2-C] 종성 결합 형태 -->
     <!-- - 불가형: ะ -->
@@ -1487,12 +1590,6 @@
           <button id="learnTab" type="button">학습</button>
 
           <button id="quizTab" type="button">퀴즈</button>
-
-          <div id="quizDifficultyRow" class="difficultyRow">
-            <button id="quizDifficultyBeginner" class="difficultyBtn beginner" type="button">초급</button>
-            <button id="quizDifficultyIntermediate" class="difficultyBtn intermediate" type="button">중급</button>
-            <button id="quizDifficultyAdvanced" class="difficultyBtn advanced" type="button">고급</button>
-          </div>
 
           <button id="gameTab" type="button">게임</button>
 
@@ -1608,31 +1705,45 @@
       </div>
 
       <div id="resultView" style="display: none">
-        <h2>게임 결과</h2>
+        <div id="resultPages" class="resultPages">
+          <section id="resultPlotPage" class="resultPage">
+            <h2>게임 결과</h2>
 
-        <div class="resultPlotWrap">
-          <div id="analysisLeft" class="analysisSide" style="display: none"></div>
+            <div class="resultPlotWrap">
+              <div class="sideSymbol">
+                <div class="sideTitle">자극:</div>
+                <div id="stimulusSymbol"></div>
+              </div>
 
-          <div class="sideSymbol">
-            <div class="sideTitle">자극:</div>
-            <div id="stimulusSymbol"></div>
-          </div>
+              <canvas id="resultCanvas" width="700" height="700"></canvas>
 
-          <canvas id="resultCanvas" width="700" height="700"></canvas>
+              <div class="sideSymbol">
+                <div class="sideTitle">반응:</div>
+                <div id="responseSymbol"></div>
+              </div>
+            </div>
 
-          <div class="sideSymbol">
-            <div class="sideTitle">반응:</div>
-            <div id="responseSymbol"></div>
-          </div>
+            <p id="r2Text"></p>
+          </section>
 
-          <div id="analysisRight" class="analysisSide" style="display: none"></div>
+          <section id="resultAnalysisPage" class="resultPage">
+            <h2>결과 분석 및 전략·대책</h2>
+
+            <div class="resultAnalysisContent">
+              <div id="analysisLeft" class="analysisSide"></div>
+              <div id="analysisRight" class="analysisSide"></div>
+            </div>
+          </section>
         </div>
 
-        <p id="r2Text"></p>
+        <div id="resultPageInfo">1 / 2</div>
 
-        <button id="downloadResult">결과 저장</button>
-        <button id="analyzeResult">결과 분석</button>
-        <button id="restartGame">게임 다시</button>
+        <div class="resultActions">
+          <button id="downloadResult">결과 저장</button>
+          <button id="analyzeResult">결과 분석</button>
+          <button id="restartGame">게임 다시</button>
+        </div>
+      </div>
 
         <div id="reportView" style="display: none">
           <h2>분석 보고서</h2>

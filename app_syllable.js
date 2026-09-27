@@ -152,7 +152,7 @@ function getDisplaySyllable(item) {
 function getDisplaySyllableHtml(item) {
   const display = getDisplaySyllable(item);
 
-  if (!display.endsWith("◌")) {
+  if (item.codaRule.main === "forbidden" || !display.endsWith("◌")) {
     return "<span>" + display + "</span>";
   }
 
@@ -228,39 +228,40 @@ function getDisplayIpa(item) {
 function getCodaText(rule) {
   if (!rule || !rule.main) return "";
 
-  if (rule.main === "forbidden") return "종성 제약: 불가";
-  if (rule.main === "required") return "종성 제약: 필수";
-  if (rule.main === "allowed") return "종성 제약: 허용";
+  if (rule.main === "forbidden") return "종성: 불가";
+  if (rule.main === "required") return "종성: 필수";
+  if (rule.main === "allowed") return "종성: 허용";
 
-  return "종성 제약: " + rule.main;
+  return "종성: " + rule.main;
 }
 
 function getOnsetText(rule) {
   if (!rule || !rule.cluster) return "";
 
-  if (rule.cluster === "allowed") return "초성 제약: 자음군 허용";
-  if (rule.cluster === "only singleton allowed") return "초성 제약: 홑자음만 허용";
-  if (rule.cluster === "no C allowed") return "초성 제약: 자음군 불가";
+  if (rule.cluster === "CC allowed") return "초성: 자음군 허용";
+  if (rule.cluster === "only C allowed") return "초성: 단자음만 허용";
+  if (rule.cluster === "no C allowed") return "초성: 자음군 불가";
 
-  return "초성 제약: " + rule.cluster;
+  return "초성: " + rule.cluster;
 }
 
 function getFormationText(value) {
   if (!value) return "";
 
   const labels = {
-    after: "후위형",
-    above: "상위형",
-    below: "하위형",
-    before: "전위형",
-    frontClosed: "전폐형",
-    backClosed: "후폐형",
-    wrap: "포위형",
-    flank: "중심형",
-    special: "특수형",
+    following: "후위형",
+    overlying: "상위형",
+    underlying: "하위형",
+    preceding: "전위형",
+    frontBlocking: "전폐형",
+    backBlocking: "후폐형",
+    escorting: "호위형",
+    flanking: "대동형",
+    surrounding: "포위형",
+    independent: "독립형",
   };
 
-  return "중성 모양: " + (labels[value] || value);
+  return "중성: " + (labels[value] || value);
 }
 
 function getRuleNote(item) {
@@ -298,9 +299,139 @@ function showSetupPage(pageId) {
 
   document.body.classList.remove("setup-mode");
 
-  document.getElementById("quizDifficultyRow").classList.remove("show");
   document.getElementById("gameDifficultyRow").classList.remove("show");
 }
+
+//==============================================================================
+// 선행하는 텍스트에 따른 조사 결정 함수
+//==============================================================================
+function getTextBeforeParenthesis(value) {
+  return String(value ?? "")
+    .split(/[([{（［｛]/u, 1)[0]
+    .trim();
+}
+
+function getSinoKoreanNumberEnding(numberText) {
+  const digits = String(numberText)
+    .replace(/,/g, "")
+    .replace(/^0+(?=\d)/, "");
+
+  if (!/^\d+$/.test(digits)) {
+    return "";
+  }
+
+  if (/^0+$/.test(digits)) {
+    return "영";
+  }
+
+  const digitNames = ["영", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
+
+  const smallUnits = ["", "십", "백", "천"];
+
+  const largeUnits = ["", "만", "억", "조", "경", "해", "자", "양", "구", "간", "정", "재", "극"];
+
+  const groups = [];
+
+  for (let end = digits.length; end > 0; end -= 4) {
+    const start = Math.max(0, end - 4);
+    groups.unshift(digits.slice(start, end));
+  }
+
+  const readGroup = (group) => {
+    const padded = group.padStart(4, "0");
+    let result = "";
+
+    for (let i = 0; i < 4; i += 1) {
+      const digit = Number(padded[i]);
+
+      if (digit === 0) {
+        continue;
+      }
+
+      const unitIndex = 3 - i;
+
+      if (digit !== 1 || unitIndex === 0) {
+        result += digitNames[digit];
+      }
+
+      result += smallUnits[unitIndex];
+    }
+
+    return result;
+  };
+
+  let reading = "";
+
+  groups.forEach((group, index) => {
+    const groupReading = readGroup(group);
+
+    if (!groupReading) {
+      return;
+    }
+
+    const largeUnitIndex = groups.length - 1 - index;
+
+    reading += groupReading;
+
+    if (largeUnitIndex > 0) {
+      reading += largeUnits[largeUnitIndex] ?? "";
+    }
+  });
+
+  return reading;
+}
+
+function getKoreanParticleBase(value) {
+  const text = getTextBeforeParenthesis(value);
+
+  if (!text) {
+    return "";
+  }
+
+  const numberMatch = text.match(/(?:\d{1,3}(?:,\d{3})+|\d+)$/u);
+
+  if (numberMatch) {
+    return getSinoKoreanNumberEnding(numberMatch[0]);
+  }
+
+  const koreanMatch = text.match(/[가-힣](?=[^가-힣]*$)/u);
+
+  return koreanMatch ? koreanMatch[0] : "";
+}
+
+function hasKoreanFinalConsonant(value) {
+  const base = getKoreanParticleBase(value);
+
+  if (!base) {
+    return false;
+  }
+
+  const lastChar = [...base].reverse().find((char) => {
+    const code = char.charCodeAt(0);
+    return code >= 0xac00 && code <= 0xd7a3;
+  });
+
+  if (!lastChar) {
+    return false;
+  }
+
+  return (lastChar.charCodeAt(0) - 0xac00) % 28 !== 0;
+}
+
+function getKoreanParticle(value, particlePair) {
+  const hasFinal = hasKoreanFinalConsonant(value);
+
+  const particlePairs = {
+    "은/는": hasFinal ? "은" : "는",
+    "이/가": hasFinal ? "이" : "가",
+    "을/를": hasFinal ? "을" : "를",
+    "와/과": hasFinal ? "과" : "와",
+    "과/와": hasFinal ? "과" : "와",
+  };
+
+  return particlePairs[particlePair] ?? "";
+}
+//==============================================================================
 
 function selectMobileCategory(category, buttonId) {
   currentCategory = category;
@@ -315,7 +446,11 @@ function selectMobileCategory(category, buttonId) {
     kokai: "꼬까이(ก)",
   };
 
-  document.getElementById("selectedCategoryLabel").textContent = "초성으로 " + categoryNames[category] + "을 선택하셨습니다.";
+  const categoryName = categoryNames[category];
+
+  const particle = getKoreanParticle(categoryName, "을/를");
+
+  document.getElementById("selectedCategoryLabel").textContent = "초성으로 " + categoryName + particle + " 선택하셨습니다.";
 
   showSetupPage("setupModePage");
 }
@@ -342,7 +477,6 @@ function reopenMobileSetup() {
   document.getElementById("game").style.display = "none";
   document.getElementById("resultView").style.display = "none";
 
-  document.getElementById("quizDifficultyRow").classList.remove("show");
   document.getElementById("gameDifficultyRow").classList.remove("show");
 
   document.querySelectorAll(".setupChoices.mode button").forEach((button) => {
@@ -445,18 +579,24 @@ function getThaiVoice() {
   return voices.find((v) => v.lang === "th-TH") || voices.find((v) => v.lang.startsWith("th")) || null;
 }
 
+let speechTimer = null;
+
 function speakThai(text) {
   if (!("speechSynthesis" in window)) return;
 
-  const u = new SpeechSynthesisUtterance(text.replaceAll("◌", ""));
-  u.lang = "th-TH";
-  u.rate = 0.75;
-
-  const thaiVoice = getThaiVoice();
-  if (thaiVoice) u.voice = thaiVoice;
-
+  clearTimeout(speechTimer);
   speechSynthesis.cancel();
-  speechSynthesis.speak(u);
+
+  speechTimer = setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(text.replaceAll("◌", ""));
+    u.lang = "th-TH";
+    u.rate = 0.75;
+
+    const thaiVoice = getThaiVoice();
+    if (thaiVoice) u.voice = thaiVoice;
+
+    speechSynthesis.speak(u);
+  }, 80);
 }
 
 if ("speechSynthesis" in window) {
@@ -797,6 +937,8 @@ function renderGame() {
 
   gameChoicePage = 0;
   renderGameChoices();
+
+  speakThai(getDisplaySyllable(x));
 }
 
 const gameChoices = document.getElementById("gameChoices");
@@ -969,17 +1111,32 @@ function showGameResult() {
   document.getElementById("responseSymbol").textContent = "";
   document.getElementById("stimulusSymbol").textContent = "";
 
-  document.getElementById("analysisLeft").style.display = "block";
-  document.getElementById("analysisRight").style.display = "block";
-  document.getElementById("analysisLeft").style.visibility = "hidden";
-  document.getElementById("analysisRight").style.visibility = "hidden";
-
   document.getElementById("analysisLeft").textContent = "";
   document.getElementById("analysisRight").textContent = "";
+
+  const resultPages = document.getElementById("resultPages");
+  resultPages.scrollLeft = 0;
+
+  document.getElementById("resultPageInfo").textContent = "1 / 2";
+
+  const analyzeResultButton = document.getElementById("analyzeResult");
+  analyzeResultButton.disabled = false;
 
   hoveredPoint = null;
   selectedPoint = null;
 }
+
+const resultPages = document.getElementById("resultPages");
+
+resultPages.addEventListener("scroll", () => {
+  const pageWidth = resultPages.clientWidth;
+
+  if (!pageWidth) return;
+
+  const page = Math.round(resultPages.scrollLeft / pageWidth) + 1;
+
+  document.getElementById("resultPageInfo").textContent = page + " / 2";
+});
 
 let hoveredPoint = null;
 let selectedPoint = null;
@@ -1141,13 +1298,11 @@ function confirmSaveIfNeeded() {
 
 /////////////////////////////////////////////// 버튼 연결 ///////////////////////////////////////////////
 document.getElementById("speak").onclick = () => {
-  if (document.getElementById("game").style.display === "block") {
-    return;
-  }
-
   let item;
 
-  if (document.getElementById("quiz").style.display === "block") {
+  if (document.getElementById("game").style.display === "block") {
+    item = gameQueue[gameIndex];
+  } else if (document.getElementById("quiz").style.display === "block") {
     item = window.currentQuizItem;
   } else {
     item = getCurrentItems()[idx];
@@ -1175,11 +1330,6 @@ document.getElementById("learnTab").onclick = () => {
 
 document.getElementById("quizTab").onclick = () => {
   document.getElementById("gameDifficultyRow").classList.remove("show");
-  document.getElementById("quizDifficultyRow").classList.add("show");
-};
-
-function startQuizWithDifficulty(level) {
-  gameDifficulty = level;
 
   document.getElementById("learn").style.display = "none";
   document.getElementById("quiz").style.display = "block";
@@ -1191,22 +1341,9 @@ function startQuizWithDifficulty(level) {
   updateStudyHeader("퀴즈");
   closeMobileSetup();
   quiz();
-}
-
-document.getElementById("quizDifficultyBeginner").onclick = () => {
-  startQuizWithDifficulty("beginner");
-};
-
-document.getElementById("quizDifficultyIntermediate").onclick = () => {
-  startQuizWithDifficulty("intermediate");
-};
-
-document.getElementById("quizDifficultyAdvanced").onclick = () => {
-  startQuizWithDifficulty("advanced");
 };
 
 document.getElementById("gameTab").onclick = () => {
-  document.getElementById("quizDifficultyRow").classList.remove("show");
   document.getElementById("gameDifficultyRow").classList.add("show");
 };
 
@@ -1250,16 +1387,25 @@ document.getElementById("downloadResult").onclick = () => {
 };
 
 document.getElementById("analyzeResult").onclick = () => {
+  if (analysisGenerated) return;
+
   analysisGenerated = true;
-
-  document.getElementById("analysisLeft").style.display = "block";
-  document.getElementById("analysisRight").style.display = "block";
-
-  document.getElementById("analysisLeft").style.visibility = "visible";
-  document.getElementById("analysisRight").style.visibility = "visible";
 
   document.getElementById("analysisLeft").textContent = makeDiagnosisText(gameResults);
   document.getElementById("analysisRight").textContent = makeStrategyText(gameResults);
+
+  const analyzeResultButton = document.getElementById("analyzeResult");
+  analyzeResultButton.disabled = true;
+
+  const resultPages = document.getElementById("resultPages");
+  const resultAnalysisPage = document.getElementById("resultAnalysisPage");
+
+  resultAnalysisPage.scrollTop = 0;
+
+  resultPages.scrollTo({
+    left: resultPages.clientWidth,
+    behavior: "smooth",
+  });
 };
 
 document.getElementById("restartGame").onclick = () => {
